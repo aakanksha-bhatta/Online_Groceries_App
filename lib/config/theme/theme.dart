@@ -6,6 +6,11 @@ class AppTheme {
     return ThemeData(
       brightness: Brightness.light,
       primaryColor: AppColor.green,
+      textTheme: TextTheme(
+        displayMedium: TextStyle(
+          color: AppColor.white
+        )
+      )
     );
   }
   static ThemeData darkTheme(){

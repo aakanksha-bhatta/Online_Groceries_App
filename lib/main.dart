@@ -9,7 +9,7 @@ void main() {
   runApp(
     ScreenUtilInit(
       designSize: Size(414, 896),
-      minTextAdapt: true,
+      minTextAdapt: true, 
       splitScreenMode: true,
       ensureScreenSize: true,
       builder: (context, child) => const ProviderScope(child: MyApp()),
@@ -29,7 +29,7 @@ class MyApp extends StatelessWidget {
           theme: AppTheme.lightTheme(),
           darkTheme: AppTheme.darkTheme(),
           debugShowCheckedModeBanner: false,
-          home: SplashScreen(),
+          home: const SplashScreen(),
         );
       },
     );
