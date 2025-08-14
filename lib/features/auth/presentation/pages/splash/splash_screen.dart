@@ -11,6 +11,8 @@ class SplashScreen extends ConsumerWidget {
       body: Container(
         decoration: BoxDecoration(
           color: theme.primaryColor,
+          
+
         ),
       ),
     );

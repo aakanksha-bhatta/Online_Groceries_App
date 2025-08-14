@@ -1,11 +1,20 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:online_groceries_app/config/theme/theme.dart';
 import 'package:online_groceries_app/config/theme/theme_provider.dart';
 import 'package:online_groceries_app/features/auth/presentation/pages/splash/splash_screen.dart';
 
 void main() {
-  runApp(const ProviderScope(child: MyApp()));
+  runApp(
+    ScreenUtilInit(
+      designSize: Size(414, 896),
+      minTextAdapt: true,
+      splitScreenMode: true,
+      ensureScreenSize: true,
+      builder: (context, child) => const ProviderScope(child: MyApp()),
+    ),
+  );
 }
 
 class MyApp extends StatelessWidget {
