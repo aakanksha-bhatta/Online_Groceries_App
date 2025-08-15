@@ -71,6 +71,8 @@ flutter:
   assets:
     - assets/icons/carrot.svg
     - assets/icons/nectar.svg
+    - assets/images/onboarding.png
+    
   #   - images/a_dot_ham.jpeg
 
   # An image asset can refer to one or more resolution-specific "variants", see
@@ -87,12 +89,12 @@ flutter:
   fonts:
     - family: Poppins
       fonts:
-        - asset: fonts/Poppins-Regular.ttf
+        - asset: assets/fonts/poppins/Poppins-Regular.ttf
         # - asset: fonts/Schyler-Italic.ttf
         #   style: italic
     - family: OpenSans
       fonts:
-        - asset: fonts/OpenSans-Medium.ttf
+        - asset: assets/fonts/openSans/OpenSans-Medium.ttf
         # - asset: fonts/TrajanPro_Bold.ttf
   
   # For details regarding fonts from package dependencies,

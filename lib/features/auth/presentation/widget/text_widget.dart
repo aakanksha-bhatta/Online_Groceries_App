@@ -29,7 +29,7 @@ class TextWidget extends StatelessWidget {
         fontSize: fontSize,
         fontWeight: fontWeight,
         color: color,
-        height: 1.25,
+        height: height,
         letterSpacing: letterSpacing,
       ),
     );
