@@ -18,6 +18,7 @@ class SplashScreen extends ConsumerWidget {
           // crossAxisAlignment: CrossAxisAlignment.center,
           children: [
             SvgPicture.asset('assets/icons/carrot.svg'),
+            SizedBox(width: 18.36.w,),
             Column(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
@@ -26,8 +27,9 @@ class SplashScreen extends ConsumerWidget {
                   title: 'online groceriet',
                   fontSize: 14.sp,
                   fontWeight: FontWeight.w400,
+                  // height
                   color: theme.textTheme.displayMedium!.color!,
-                  letterSpacing:1.2,
+                  letterSpacing:5.8,
                 ),
               ],
             ),

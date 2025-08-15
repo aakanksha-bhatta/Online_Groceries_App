@@ -7,6 +7,7 @@ class TextWidget extends StatelessWidget {
   final Color color;
   final String? fontFamily;
   final double letterSpacing;
+  final double? height;
 
   const TextWidget({
     super.key,
@@ -15,7 +16,8 @@ class TextWidget extends StatelessWidget {
     required this.fontWeight,
     required this.color,
     this.fontFamily,
-    required this.letterSpacing,
+    required this.letterSpacing, 
+    this.height,
   });
 
   @override
@@ -23,10 +25,11 @@ class TextWidget extends StatelessWidget {
     return Text(
       title,
       style: TextStyle(
-        // fontFamily: 'Gilroy',
+        fontFamily: 'OpenSans',
         fontSize: fontSize,
         fontWeight: fontWeight,
         color: color,
+        height: 1.25,
         letterSpacing: letterSpacing,
       ),
     );
