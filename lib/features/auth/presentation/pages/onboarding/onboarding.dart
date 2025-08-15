@@ -1,9 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/svg.dart';
+import 'package:go_router/go_router.dart';
 import 'package:online_groceries_app/features/auth/presentation/widget/custom_button_widget.dart';
 import 'package:online_groceries_app/features/auth/presentation/widget/text_widget.dart';
 import 'package:online_groceries_app/l10n/app_localizations.dart';
+import 'package:online_groceries_app/config/route/path.dart';
 
 class Onboarding extends StatelessWidget {
   const Onboarding({super.key});
@@ -11,7 +13,7 @@ class Onboarding extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
-    final loc = AppLocalizations.of(context);
+    final loc = AppLocalizations.of(context)!;
     return Scaffold(
       body: Stack(
         children: [
@@ -44,30 +46,33 @@ class Onboarding extends StatelessWidget {
                     ),
                     SizedBox(height: 12.66.h),
                     TextWidget(
-                      title: 'Welcome',
+                      title: loc.welcome,
                       fontSize: 48.sp,
                       fontWeight: FontWeight.w600,
-                      color:theme.textTheme.displayMedium!.color! ,
+                      color: theme.textTheme.displayMedium!.color!,
                       letterSpacing: 0,
                     ),
                     TextWidget(
-                      title: 'to our store',
+                      title: loc.toOurStore,
                       fontSize: 48.sp,
                       fontWeight: FontWeight.w600,
-                      color:theme.textTheme.displayMedium!.color! ,
+                      color: theme.textTheme.displayMedium!.color!,
                       height: 0.6,
                       letterSpacing: 0,
                     ),
                     TextWidget(
-                      title: 'Ger your groceries in as fast as one hour',
+                      title: loc.gerYourGroceriesInAsFastAsOneHour,
                       fontSize: 16.sp,
                       fontWeight: FontWeight.w400,
-                      color:theme.textTheme.displayMedium!.color! ,
+                      color: theme.textTheme.displayMedium!.color!,
                       letterSpacing: 0,
                       height: 2.7,
                     ),
                     SizedBox(height: 40.88.h),
-                    CustomButtonWidget(buttonName: "Get Started")
+                    CustomButtonWidget(
+                      buttonName: loc.getStarted,
+                      onPressed: () =>context.go(Path.login),
+                    ),
                   ],
                 ),
               ),

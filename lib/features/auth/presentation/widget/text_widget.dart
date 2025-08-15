@@ -9,6 +9,9 @@ class TextWidget extends StatelessWidget {
   final double letterSpacing;
   final double? height;
 
+  /// Optional span parts (e.g. for styling a word differently)
+  final List<InlineSpan>? spans;
+
   const TextWidget({
     super.key,
     required this.title,
@@ -16,21 +19,38 @@ class TextWidget extends StatelessWidget {
     required this.fontWeight,
     required this.color,
     this.fontFamily,
-    required this.letterSpacing, 
+    required this.letterSpacing,
     this.height,
+    this.spans,
   });
 
   @override
   Widget build(BuildContext context) {
+    if (spans != null && spans!.isNotEmpty) {
+      return RichText(
+        text: TextSpan(
+          text: title,
+          style: TextStyle(
+            fontSize: fontSize,
+            fontWeight: fontWeight,
+            color: color,
+            fontFamily: fontFamily ?? 'OpenSans',
+            letterSpacing: letterSpacing,
+            height: height,
+          ),
+          children: spans,
+        ),
+      );
+    }
     return Text(
       title,
       style: TextStyle(
-        fontFamily: 'OpenSans',
         fontSize: fontSize,
         fontWeight: fontWeight,
         color: color,
-        height: height,
+        fontFamily: fontFamily ?? 'OpenSans',
         letterSpacing: letterSpacing,
+        height: height,
       ),
     );
   }

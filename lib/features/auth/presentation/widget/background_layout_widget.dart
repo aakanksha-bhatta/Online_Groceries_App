@@ -1,0 +1,27 @@
+import 'package:flutter/material.dart';
+import 'package:online_groceries_app/config/constants/app_color.dart';
+// import 'package:online_groceries_app/features/auth/presentation/widget/input_text_form_widget.dart';
+
+class BackgroundLayoutWidget extends StatelessWidget {
+  final Widget dynamicWidget;
+
+  const BackgroundLayoutWidget({super.key, required this.dynamicWidget});
+
+  @override
+  Widget build(BuildContext context) {
+    return Stack(
+      children: [
+        Container(
+          decoration: BoxDecoration(
+            color: AppColor.white,
+            image: DecorationImage(
+              image: AssetImage('assets/images/mask_group.png'),
+              fit: BoxFit.fill,
+            ),
+          ),
+        ),
+        dynamicWidget
+      ],
+    );
+  }
+}

@@ -2,12 +2,11 @@ import 'package:flutter/material.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:online_groceries_app/config/route/route.dart';
 import 'package:online_groceries_app/config/theme/theme.dart';
 import 'package:online_groceries_app/config/theme/theme_provider.dart';
 import 'package:online_groceries_app/core/services/language_provider.dart';
-import 'package:online_groceries_app/features/auth/presentation/pages/splash/splash_screen.dart';
 import 'package:online_groceries_app/l10n/app_localizations.dart';
-import 'package:online_groceries_app/l10n/app_localizations_de.dart';
 
 void main() {
   runApp(
@@ -29,11 +28,12 @@ class MyApp extends StatelessWidget {
       builder: (context, ref, _) {
         final themeMode = ref.watch(themeModeProvider);
         final appLocale = ref.watch(localeProvider);
-        return MaterialApp(
+        return MaterialApp.router(
           themeMode: themeMode,
           theme: AppTheme.lightTheme(),
           darkTheme: AppTheme.darkTheme(),
           debugShowCheckedModeBanner: false,
+          routerConfig: router,
           locale: appLocale,
           supportedLocales: const[
             Locale('en'),
@@ -46,7 +46,6 @@ class MyApp extends StatelessWidget {
             GlobalWidgetsLocalizations.delegate,
             GlobalCupertinoLocalizations.delegate
           ],
-          home: const SplashScreen(),
         );
       },
     );
