@@ -1,12 +1,15 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:online_groceries_app/features/auth/presentation/widget/text_widget.dart';
 
 class InputTextFormWidget extends StatelessWidget {
   final TextEditingController? controller;
   final String? hintText;
+  final String? labelText;
   final bool obscureText;
   final TextInputType keyboardType;
   final String? Function(String?)? validator;
-  
+  final Widget? suffixIcon;
 
   const InputTextFormWidget({
     super.key,
@@ -15,33 +18,45 @@ class InputTextFormWidget extends StatelessWidget {
     this.obscureText = false,
     this.keyboardType = TextInputType.text,
     this.validator,
+    this.labelText,
+    this.suffixIcon,
   });
 
   @override
   Widget build(BuildContext context) {
-    return Padding(
-      padding: const EdgeInsets.all(24.8),
-      // if (labelTxt != null && labelTxt!.isNotEmpty) ...[
-      //       TextWidget(
-      //         txt: labelTxt!,
-      //         fontWeight: FontWeight.w600,
-      //         fontSize: 12.sp,
-      //         txtColor: Color(0xFF979797),
-      //       ),
-      //       SizedBox(height: 8.h),
-      //     ] else ...[
-      //       SizedBox(height: 2.h),
-      // ],
-      child: TextFormField(
-        controller: controller,
-        obscureText: obscureText,
-        keyboardType: keyboardType,
-        validator: validator,
-        decoration: InputDecoration(
-          hintText: hintText,
-          contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        if (labelText != null && labelText!.isNotEmpty) ...[
+          TextWidget(
+            title: labelText!,
+            fontSize: 16.sp,
+            fontWeight: FontWeight.w600,
+            color: const Color(0xff7C7C7C),
+            letterSpacing: 0,
+          ),
+          SizedBox(height: 8.h),
+        ] else ...[
+          SizedBox(height: 2.h),
+        ],
+        TextFormField(
+          controller: controller,
+          obscureText: obscureText,
+          keyboardType: keyboardType,
+          validator: validator,
+          decoration: InputDecoration(
+            hintText: hintText,
+            contentPadding: const EdgeInsets.symmetric(
+              horizontal: 16,
+              vertical: 12,
+            ),
+            suffixIcon: suffixIcon,
+            focusedBorder: UnderlineInputBorder(
+              borderSide: BorderSide(color: Color(0xFFE2E2E2)),
+            ),
+          ),
         ),
-      ),
+      ],
     );
   }
 }

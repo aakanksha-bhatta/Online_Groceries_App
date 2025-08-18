@@ -1,3 +1,4 @@
+import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 
 class TextWidget extends StatelessWidget {
@@ -8,8 +9,7 @@ class TextWidget extends StatelessWidget {
   final String? fontFamily;
   final double letterSpacing;
   final double? height;
-
-  /// Optional span parts (e.g. for styling a word differently)
+  final void Function()? onTap;
   final List<InlineSpan>? spans;
 
   const TextWidget({
@@ -22,6 +22,7 @@ class TextWidget extends StatelessWidget {
     required this.letterSpacing,
     this.height,
     this.spans,
+     this.onTap,
   });
 
   @override

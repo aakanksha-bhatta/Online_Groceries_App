@@ -2,6 +2,7 @@ import 'package:go_router/go_router.dart';
 import 'package:online_groceries_app/config/route/path.dart';
 import 'package:online_groceries_app/features/auth/presentation/pages/login/login_page.dart';
 import 'package:online_groceries_app/features/auth/presentation/pages/onboarding/onboarding.dart';
+import 'package:online_groceries_app/features/auth/presentation/pages/signup/signup_screen.dart';
 import 'package:online_groceries_app/features/auth/presentation/pages/splash/splash_screen.dart';
 
 final GoRouter router = GoRouter(
@@ -19,5 +20,9 @@ final GoRouter router = GoRouter(
       path: Path.login,
       builder: (context, state) => LoginPage(),
     ),    
+     GoRoute(
+      path: Path.signup,
+      builder: (context, state) => SignupScreen(),
+    ), 
   ]
 );

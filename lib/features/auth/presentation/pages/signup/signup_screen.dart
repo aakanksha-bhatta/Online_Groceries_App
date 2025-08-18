@@ -2,22 +2,21 @@ import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:flutter_svg/flutter_svg.dart';
-import 'package:go_router/go_router.dart';
+import 'package:flutter_svg/svg.dart';
 import 'package:online_groceries_app/config/route/path.dart';
+import 'package:go_router/go_router.dart';
 import 'package:online_groceries_app/features/auth/presentation/provider/state_provider.dart';
 import 'package:online_groceries_app/features/auth/presentation/widget/background_layout_widget.dart';
 import 'package:online_groceries_app/features/auth/presentation/widget/custom_button_widget.dart';
 import 'package:online_groceries_app/features/auth/presentation/widget/input_text_form_widget.dart';
 import 'package:online_groceries_app/features/auth/presentation/widget/text_widget.dart';
 
-class LoginPage extends ConsumerWidget {
-  const LoginPage({super.key});
+class SignupScreen extends ConsumerWidget {
+  const SignupScreen({super.key});
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final isVisible = ref.watch(passwordVisibilityProvider); //listen current state value 
-
+    final isVisible = ref.watch(passwordVisibilityProvider);
     return Scaffold(
       resizeToAvoidBottomInset: true,
       body: BackgroundLayoutWidget(
@@ -37,7 +36,7 @@ class LoginPage extends ConsumerWidget {
               ),
               SizedBox(height: 100.21.h),
               TextWidget(
-                title: "Loging",
+                title: "Sign Up",
                 fontSize: 26.sp,
                 fontWeight: FontWeight.w600,
                 color: const Color(0xFF181725),
@@ -46,7 +45,7 @@ class LoginPage extends ConsumerWidget {
               ),
               SizedBox(height: 15.h),
               TextWidget(
-                title: "Enter your emails and password",
+                title: "Enter your credentials to continue",
                 fontSize: 16.sp,
                 height: 1.5,
                 fontWeight: FontWeight.w400,
@@ -54,9 +53,9 @@ class LoginPage extends ConsumerWidget {
                 letterSpacing: 0,
               ),
               SizedBox(height: 40.h),
-              InputTextFormWidget(
-                labelText: 'Email',
-              ),
+              InputTextFormWidget(labelText: 'Username'),
+              SizedBox(height: 30.h),
+              InputTextFormWidget(labelText: 'Email'),
               SizedBox(height: 30.h),
               InputTextFormWidget(
                 labelText: 'Password',
@@ -64,35 +63,74 @@ class LoginPage extends ConsumerWidget {
                 suffixIcon: IconButton(
                   onPressed: () {
                     // .notifier updating state
-                    ref
-                        .read(passwordVisibilityProvider.notifier)
-                        .state = !isVisible;
+                    ref.read(passwordVisibilityProvider.notifier).state =
+                        !isVisible;
                   },
-                  icon:
-                      Icon(isVisible ? Icons.visibility : Icons.visibility_off),
+                  icon: Icon(
+                    isVisible ? Icons.visibility : Icons.visibility_off,
+                  ),
                 ),
               ),
               Padding(
                 padding: EdgeInsets.only(top: 20.h, right: 4.w),
                 child: Align(
                   alignment: Alignment.centerRight,
-                  child: TextWidget(
-                    title: 'Forget Password?',
-                    fontSize: 14.sp,
-                    fontWeight: FontWeight.w400,
-                    color: const Color(0xFF181725),
-                    letterSpacing: 0,
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.start,
+                    children: [
+                      Row(
+                        children: [
+                          TextWidget(
+                            title:
+                                'By continuing you agree to our',
+                            fontSize: 14.sp,
+                            fontWeight: FontWeight.w400,
+                            color: const Color(0xFF7C7C7C),
+                            letterSpacing: 0,
+                          ),
+                          TextWidget(
+                            title:
+                                ' Terms of Service ',
+                            fontSize: 14.sp,
+                            fontWeight: FontWeight.w400,
+                            color: const Color(0xFF53B175),
+                            letterSpacing: 0,
+                          ),
+                        ],
+                      ),
+                      Row(
+                        children: [
+                          TextWidget(
+                            title:
+                                'and',
+                            fontSize: 14.sp,
+                            fontWeight: FontWeight.w400,
+                            color: const Color(0xFF7C7C7C),
+                            letterSpacing: 0,
+                          ),
+                          TextWidget(
+                            title:
+                                ' Privacy Policy',
+                            fontSize: 14.sp,
+                            fontWeight: FontWeight.w400,
+                            color: const Color(0xFF53B175),
+                            letterSpacing: 0,
+                          ),
+                        ],
+                      ),
+                    ],
                   ),
                 ),
               ),
               SizedBox(height: 30.h),
-              CustomButtonWidget(buttonName: "Log In"),
+              CustomButtonWidget(buttonName: "Sign Up"),
               SizedBox(height: 25.h),
               Row(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
                   TextWidget(
-                    title: "Don’t have an account?",
+                    onTap: () => SignupScreen(),
+                    title: "Already have an account?",
                     fontSize: 14.sp,
                     fontWeight: FontWeight.w600,
                     color: Colors.black,
@@ -100,7 +138,7 @@ class LoginPage extends ConsumerWidget {
                     letterSpacing: 0.5,
                     spans: [
                       TextSpan(
-                        text: ' SignUp',
+                        text: ' SignIn',
                         style: TextStyle(
                           fontSize: 14.sp,
                           fontWeight: FontWeight.w600,
@@ -110,10 +148,9 @@ class LoginPage extends ConsumerWidget {
                         ),
                         recognizer: TapGestureRecognizer()
                         ..onTap = (){
-                          context.go(Path.signup);
-                        }
+                          context.go(Path.login);
+                        } 
                       ),
-                      
                     ],
                   ),
                 ],
