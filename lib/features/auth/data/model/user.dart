@@ -3,7 +3,7 @@ class User {
   final String? useremail;
   final String? userpassword;
 
-  User({this.useremail, this.username, this.userpassword});
+  User({this.username, this.useremail, this.userpassword});
 
   factory User.fromJson(Map<String, dynamic> json) {
     return User(
@@ -13,7 +13,7 @@ class User {
     );
   }
 
-  Map<String, dynamic> json() {
+  Map<String, dynamic> toJson() {
     return {
       'username': username,
       'useremail': useremail,

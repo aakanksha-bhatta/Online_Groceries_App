@@ -115,7 +115,7 @@ abstract class AppLocalizations {
   /// No description provided for @gerYourGroceriesInAsFastAsOneHour.
   ///
   /// In en, this message translates to:
-  /// **'Ger your groceries in as fast as one hour'**
+  /// **'Get your groceries in as fast as one hour'**
   String get gerYourGroceriesInAsFastAsOneHour;
 
   /// No description provided for @getStarted.
@@ -123,6 +123,114 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Get Started'**
   String get getStarted;
+
+  /// No description provided for @loging.
+  ///
+  /// In en, this message translates to:
+  /// **'Login'**
+  String get loging;
+
+  /// No description provided for @enterYourEmailAndPassword.
+  ///
+  /// In en, this message translates to:
+  /// **'Enter your email and password'**
+  String get enterYourEmailAndPassword;
+
+  /// No description provided for @email.
+  ///
+  /// In en, this message translates to:
+  /// **'Email'**
+  String get email;
+
+  /// No description provided for @password.
+  ///
+  /// In en, this message translates to:
+  /// **'Password'**
+  String get password;
+
+  /// No description provided for @forgetPassword.
+  ///
+  /// In en, this message translates to:
+  /// **'Forget Password?'**
+  String get forgetPassword;
+
+  /// No description provided for @login.
+  ///
+  /// In en, this message translates to:
+  /// **'Log In'**
+  String get login;
+
+  /// No description provided for @loginSuccess.
+  ///
+  /// In en, this message translates to:
+  /// **'Login Successful!'**
+  String get loginSuccess;
+
+  /// No description provided for @invalidCredentials.
+  ///
+  /// In en, this message translates to:
+  /// **'Invalid email or password'**
+  String get invalidCredentials;
+
+  /// No description provided for @dontHaveAccount.
+  ///
+  /// In en, this message translates to:
+  /// **'Don’t have an account?'**
+  String get dontHaveAccount;
+
+  /// No description provided for @signUp.
+  ///
+  /// In en, this message translates to:
+  /// **'Sign Up'**
+  String get signUp;
+
+  /// No description provided for @alreadyHaveAccount.
+  ///
+  /// In en, this message translates to:
+  /// **'Already have an account?'**
+  String get alreadyHaveAccount;
+
+  /// No description provided for @signIn.
+  ///
+  /// In en, this message translates to:
+  /// **'Sign In'**
+  String get signIn;
+
+  /// No description provided for @privacyPolicy.
+  ///
+  /// In en, this message translates to:
+  /// **' Privacy Policy'**
+  String get privacyPolicy;
+
+  /// No description provided for @termsOfService.
+  ///
+  /// In en, this message translates to:
+  /// **' Terms of Service'**
+  String get termsOfService;
+
+  /// No description provided for @byContinuingYouAgree.
+  ///
+  /// In en, this message translates to:
+  /// **'By continuing you agree to our'**
+  String get byContinuingYouAgree;
+
+  /// No description provided for @enterCredentialsToContinue.
+  ///
+  /// In en, this message translates to:
+  /// **'Enter your credentials to continue'**
+  String get enterCredentialsToContinue;
+
+  /// No description provided for @username.
+  ///
+  /// In en, this message translates to:
+  /// **'Username'**
+  String get username;
+
+  /// No description provided for @and.
+  ///
+  /// In en, this message translates to:
+  /// **'and'**
+  String get and;
 }
 
 class _AppLocalizationsDelegate

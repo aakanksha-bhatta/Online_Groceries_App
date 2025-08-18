@@ -1,7 +1,25 @@
 {
   "@@locale": "en",
   "welcome": "Welcome",
-  "toOurStore":"to our store",
-  "gerYourGroceriesInAsFastAsOneHour" : "Ger your groceries in as fast as one hour",
-  "getStarted" : "Get Started"
+  "toOurStore": "to our store",
+  "gerYourGroceriesInAsFastAsOneHour": "Get your groceries in as fast as one hour",
+  "getStarted": "Get Started",
+  "loging": "Login",
+  "enterYourEmailAndPassword": "Enter your email and password",
+  "email": "Email",
+  "password": "Password",
+  "forgetPassword": "Forget Password?",
+  "login": "Log In",
+  "loginSuccess": "Login Successful!",
+  "invalidCredentials": "Invalid email or password",
+  "dontHaveAccount": "Don’t have an account?",
+  "signUp": "Sign Up",
+  "alreadyHaveAccount": "Already have an account?",
+  "signIn": "Sign In",
+  "privacyPolicy": " Privacy Policy",
+  "termsOfService": " Terms of Service",
+  "byContinuingYouAgree": "By continuing you agree to our",
+  "enterCredentialsToContinue": "Enter your credentials to continue",
+  "username": "Username",
+  "and": "and"
 }
