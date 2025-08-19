@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:online_groceries_app/features/auth/presentation/widget/text_widget.dart';
 
@@ -10,6 +11,8 @@ class InputTextFormWidget extends StatelessWidget {
   final TextInputType keyboardType;
   final String? Function(String?)? validator;
   final Widget? suffixIcon;
+  final List<TextInputFormatter>? inputFormatters;
+  final void Function(String)? onChanged;
 
   const InputTextFormWidget({
     super.key,
@@ -20,6 +23,8 @@ class InputTextFormWidget extends StatelessWidget {
     this.validator,
     this.labelText,
     this.suffixIcon,
+    this.inputFormatters,
+    this.onChanged,
   });
 
   @override
@@ -40,6 +45,7 @@ class InputTextFormWidget extends StatelessWidget {
           SizedBox(height: 2.h),
         ],
         TextFormField(
+          inputFormatters: inputFormatters,
           controller: controller,
           obscureText: obscureText,
           keyboardType: keyboardType,
@@ -52,10 +58,10 @@ class InputTextFormWidget extends StatelessWidget {
             ),
             suffixIcon: suffixIcon,
             focusedBorder: UnderlineInputBorder(
-              borderSide: BorderSide(color: Color(0xFFE2E2E2), width: 1
-              ),
+              borderSide: BorderSide(color: Color(0xFFE2E2E2), width: 1),
             ),
           ),
+          onChanged: onChanged,
         ),
       ],
     );

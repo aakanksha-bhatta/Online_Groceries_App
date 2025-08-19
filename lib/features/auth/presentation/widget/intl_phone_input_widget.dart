@@ -27,7 +27,7 @@ class IntlPhoneInputWidget extends StatelessWidget {
             style: TextStyle(
               fontSize: 16.sp,
               fontWeight: FontWeight.w600,
-              color: const Color(0xffE2E2E2),
+              color: const Color(0xFF7C7C7C),
             ),
           ),
           SizedBox(height: 8.h),
@@ -37,14 +37,14 @@ class IntlPhoneInputWidget extends StatelessWidget {
           disableLengthCheck: true,
           initialCountryCode: initialCountryCode,
           enabled: isEnable ?? true,
-          decoration: InputDecoration(  
+          decoration: InputDecoration(
             // enabled: false,
             contentPadding: const EdgeInsets.symmetric(
               horizontal: 16,
               vertical: 12,
             ),
             border: UnderlineInputBorder(
-              borderSide: BorderSide(color: Color(0xFFE2E2E2), width: 1),
+              borderSide: BorderSide(color: Color(0xFFE2E2E2)),
             ),
           ),
           onChanged: (phone) {},

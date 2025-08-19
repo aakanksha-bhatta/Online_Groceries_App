@@ -6,23 +6,29 @@ class BackgroundLayoutWidget extends StatelessWidget {
   final Widget dynamicWidget;
   final Color? bgColor;
 
-  const BackgroundLayoutWidget({super.key, required this.dynamicWidget, this.bgColor});
+  const BackgroundLayoutWidget({
+    super.key,
+    required this.dynamicWidget,
+    this.bgColor,
+  });
 
   @override
   Widget build(BuildContext context) {
-    return Stack(
-      children: [
-        Container(
-          decoration: BoxDecoration(
-            color:bgColor ?? AppColor.white,
-            image: DecorationImage(
-              image: AssetImage('assets/images/mask_group.png'),
-              fit: BoxFit.fill,
+    return Scaffold(
+      body: Stack(
+        children: [
+          Container(
+            decoration: BoxDecoration(
+              color: bgColor ?? AppColor.white,
+              image: DecorationImage(
+                image: AssetImage('assets/images/mask_group.png'),
+                fit: BoxFit.fill,
+              ),
             ),
           ),
-        ),
-        dynamicWidget
-      ],
+          dynamicWidget,
+        ],
+      ),
     );
   }
 }

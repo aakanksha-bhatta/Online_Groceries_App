@@ -6,4 +6,6 @@ class Path {
   static const home = '/home';
   static const signin = '/signin';
   static const mobile = '/mobile';
+  static const verification = '/verification';
+  static const location = '/location';
 }

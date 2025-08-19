@@ -44,6 +44,7 @@ dependencies:
     sdk: flutter
   go_router: ^16.1.0
   flutter_intl_phone_field: ^0.0.7
+  mask_text_input_formatter: ^2.9.0
 
 dev_dependencies:
   flutter_test:
@@ -80,6 +81,7 @@ flutter:
     - assets/images/mask_group.png
     - assets/icons/carrot_color.svg
     - assets/images/signin_bg.png
+    - assets/images/location.svg
 
   #   - images/a_dot_ham.jpeg
 
