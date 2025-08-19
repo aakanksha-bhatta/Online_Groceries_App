@@ -52,7 +52,8 @@ class InputTextFormWidget extends StatelessWidget {
             ),
             suffixIcon: suffixIcon,
             focusedBorder: UnderlineInputBorder(
-              borderSide: BorderSide(color: Color(0xFFE2E2E2)),
+              borderSide: BorderSide(color: Color(0xFFE2E2E2), width: 1
+              ),
             ),
           ),
         ),

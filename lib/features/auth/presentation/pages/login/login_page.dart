@@ -15,7 +15,7 @@ import 'package:online_groceries_app/features/auth/presentation/widget/text_widg
 import 'package:online_groceries_app/l10n/app_localizations.dart';
 
 class LoginPage extends ConsumerWidget {
-  LoginPage({super.key});
+ LoginPage({super.key});
 
   final emailController = TextEditingController();
   final passwordController = TextEditingController();

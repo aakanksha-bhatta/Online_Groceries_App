@@ -12,7 +12,6 @@ import 'package:online_groceries_app/features/auth/presentation/widget/custom_bu
 import 'package:online_groceries_app/features/auth/presentation/widget/input_text_form_widget.dart';
 import 'package:online_groceries_app/features/auth/presentation/widget/text_widget.dart';
 import 'package:online_groceries_app/l10n/app_localizations.dart';
-import 'package:online_groceries_app/l10n/app_localizations_de.dart';
 
 class SignupScreen extends ConsumerWidget {
   SignupScreen({super.key});
@@ -150,7 +149,7 @@ class SignupScreen extends ConsumerWidget {
 
                   ScaffoldMessenger.of(
                     context,
-                  ).showSnackBar(SnackBar(content: Text('User saved!')));
+                  ).showSnackBar(SnackBar(content: Text('Registration successfully !')));
                 },
               ),
               SizedBox(height: 25.h),

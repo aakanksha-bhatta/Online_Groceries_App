@@ -43,6 +43,7 @@ dependencies:
   flutter_localizations:
     sdk: flutter
   go_router: ^16.1.0
+  flutter_intl_phone_field: ^0.0.7
 
 dev_dependencies:
   flutter_test:
@@ -73,10 +74,12 @@ flutter:
   assets:
     - assets/icons/carrot.svg
     - assets/icons/nectar.svg
+    - assets/icons/google.svg
+    - assets/icons/facebook.svg
     - assets/images/onboarding.png
     - assets/images/mask_group.png
     - assets/icons/carrot_color.svg
-
+    - assets/images/signin_bg.png
 
   #   - images/a_dot_ham.jpeg
 

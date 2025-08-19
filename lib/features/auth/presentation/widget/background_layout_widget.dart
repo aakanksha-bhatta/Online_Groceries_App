@@ -4,8 +4,9 @@ import 'package:online_groceries_app/config/constants/app_color.dart';
 
 class BackgroundLayoutWidget extends StatelessWidget {
   final Widget dynamicWidget;
+  final Color? bgColor;
 
-  const BackgroundLayoutWidget({super.key, required this.dynamicWidget});
+  const BackgroundLayoutWidget({super.key, required this.dynamicWidget, this.bgColor});
 
   @override
   Widget build(BuildContext context) {
@@ -13,7 +14,7 @@ class BackgroundLayoutWidget extends StatelessWidget {
       children: [
         Container(
           decoration: BoxDecoration(
-            color: AppColor.white,
+            color:bgColor ?? AppColor.white,
             image: DecorationImage(
               image: AssetImage('assets/images/mask_group.png'),
               fit: BoxFit.fill,

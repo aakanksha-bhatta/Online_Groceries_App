@@ -71,7 +71,7 @@ class Onboarding extends StatelessWidget {
                     SizedBox(height: 40.88.h),
                     CustomButtonWidget(
                       buttonName: loc.getStarted,
-                      onPressed: () =>context.go(Path.login),
+                      onPressed: () => context.go(Path.signin),
                     ),
                   ],
                 ),

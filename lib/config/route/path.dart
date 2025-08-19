@@ -4,4 +4,6 @@ class Path {
   static const login = '/login';
   static const signup = '/signup';
   static const home = '/home';
+  static const signin = '/signin';
+  static const mobile = '/mobile';
 }
