@@ -1,3 +1,4 @@
+// import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -9,10 +10,12 @@ import 'package:online_groceries_app/core/services/language_provider.dart';
 import 'package:online_groceries_app/l10n/app_localizations.dart';
 
 void main() {
+  // WidgetsFlutterBinding.ensureInitialized();
+  // await Firebase.initializeApp();
   runApp(
     ScreenUtilInit(
       designSize: Size(414, 896),
-      minTextAdapt: true, 
+      minTextAdapt: true,
       splitScreenMode: true,
       ensureScreenSize: true,
       builder: (context, child) => const ProviderScope(child: MyApp()),
@@ -35,16 +38,12 @@ class MyApp extends StatelessWidget {
           debugShowCheckedModeBanner: false,
           routerConfig: router,
           locale: appLocale,
-          supportedLocales: const[
-            Locale('en'),
-            Locale('ne'),
-            Locale('de')
-          ],
-          localizationsDelegates: const[
+          supportedLocales: const [Locale('en'), Locale('ne'), Locale('de')],
+          localizationsDelegates: const [
             AppLocalizations.delegate,
             GlobalMaterialLocalizations.delegate,
             GlobalWidgetsLocalizations.delegate,
-            GlobalCupertinoLocalizations.delegate
+            GlobalCupertinoLocalizations.delegate,
           ],
         );
       },

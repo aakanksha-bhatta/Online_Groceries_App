@@ -2,7 +2,7 @@ import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:flutter_svg/flutter_svg.dart';
+import 'package:flutter_svg/svg.dart';
 import 'package:go_router/go_router.dart';
 import 'package:online_groceries_app/config/route/path.dart';
 import 'package:online_groceries_app/core/util/validation.dart';
@@ -14,8 +14,29 @@ import 'package:online_groceries_app/features/auth/presentation/widget/input_tex
 import 'package:online_groceries_app/features/auth/presentation/widget/text_widget.dart';
 import 'package:online_groceries_app/l10n/app_localizations.dart';
 
+// Stream<int> getNumberStream() {
+//   // Create a StreamController to manage the stream
+//   final StreamController<int> controller = StreamController<int>();
+
+//   int counter = 0;
+//   // Create a timer that fires every second
+//   Timer.periodic(Duration(milliseconds: 1), (Timer timer) {
+//     // Add the current counter value to the stream
+//     controller.add(counter);
+//     // Increment the counter for the next event
+//     counter++;
+//   });
+
+//   // Important: Close the controller when the stream is no longer needed
+//   // to free up resources. In a real app, you'd do this in a dispose method.
+//   // controller.close(); // You would call this later to stop the stream.
+
+//   // Return the stream that listeners can subscribe to
+//   return controller.stream;
+// }
+
 class LoginPage extends ConsumerWidget {
- LoginPage({super.key});
+  LoginPage({super.key});
 
   final emailController = TextEditingController();
   final passwordController = TextEditingController();
@@ -31,8 +52,20 @@ class LoginPage extends ConsumerWidget {
     ); //listen current state value
     final userList = ref.watch(userListProvider);
     final loc = AppLocalizations.of(context)!;
-        return Scaffold(
+    return Scaffold(
       resizeToAvoidBottomInset: true,
+
+      // body: Column(
+      //   children: [
+      //     SizedBox(height: 100),
+      //     StreamBuilder(
+      //       stream: getNumberStream(),
+      //       builder: (context, snapshot) {
+      //         return Text(snapshot.data.toString());
+      //       },
+      //     ),
+      //   ],
+      // ),
       body: BackgroundLayoutWidget(
         dynamicWidget: SingleChildScrollView(
           padding: EdgeInsets.symmetric(horizontal: 24.w),
@@ -50,7 +83,7 @@ class LoginPage extends ConsumerWidget {
               ),
               SizedBox(height: 100.21.h),
               TextWidget(
-                title:loc.loging,
+                title: loc.login,
                 fontSize: 26.sp,
                 fontWeight: FontWeight.w600,
                 color: const Color(0xFF181725),
@@ -80,10 +113,11 @@ class LoginPage extends ConsumerWidget {
 
                     SizedBox(height: 30.h),
                     InputTextFormWidget(
-                      labelText:loc.password,
+                      labelText: loc.password,
                       obscureText: !isVisible,
                       controller: passwordController,
-                      validator: (value) => Validation.validPassword(loc, value),
+                      validator: (value) =>
+                          Validation.validPassword(loc, value),
                       suffixIcon: IconButton(
                         onPressed: () {
                           // .notifier updating state
@@ -126,9 +160,9 @@ class LoginPage extends ConsumerWidget {
                         .loginUser(useremail, userpassword);
 
                     if (isValid) {
-                      ScaffoldMessenger.of(context).showSnackBar(
-                        SnackBar(content: Text(loc.loginSuccess)),
-                      );
+                      ScaffoldMessenger.of(
+                        context,
+                      ).showSnackBar(SnackBar(content: Text(loc.loginSuccess)));
                       context.go(Path.home);
                     } else {
                       ScaffoldMessenger.of(context).showSnackBar(
