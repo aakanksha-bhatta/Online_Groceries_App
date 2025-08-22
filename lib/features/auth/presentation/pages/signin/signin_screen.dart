@@ -3,6 +3,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:go_router/go_router.dart';
 import 'package:online_groceries_app/config/constants/app_color.dart';
 import 'package:online_groceries_app/config/route/path.dart';
+import 'package:online_groceries_app/core/services/auth_service.dart';
 import 'package:online_groceries_app/features/auth/presentation/widget/background_layout_widget.dart';
 import 'package:online_groceries_app/features/auth/presentation/widget/custom_button_widget.dart';
 import 'package:online_groceries_app/features/auth/presentation/widget/intl_phone_input_widget.dart';
@@ -66,7 +67,10 @@ class SigninScreen extends StatelessWidget {
                       buttonName: 'Continue with Google',
                       buttonColor: Color(0xFF5383EC),
                       splashColor: Color(0xFFB3C7F3),
-                      onPressed: () => context.go(Path.login),
+                      onPressed: () async {
+                        final result = await AuthService().signInWithGoogle();
+                      },
+
                       buttonIcon: 'assets/icons/google.svg',
                     ),
                     SizedBox(height: 20.h),

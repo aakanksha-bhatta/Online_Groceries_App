@@ -1,11 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:flutter_svg/svg.dart';
 import 'package:go_router/go_router.dart';
-import 'package:online_groceries_app/features/auth/presentation/widget/custom_button_widget.dart';
-import 'package:online_groceries_app/features/auth/presentation/widget/text_widget.dart';
-import 'package:online_groceries_app/l10n/app_localizations.dart';
 import 'package:online_groceries_app/config/route/path.dart';
+import 'package:online_groceries_app/features/auth/presentation/widget/custom_button_widget.dart';
+import 'package:online_groceries_app/l10n/app_localizations.dart';
 
 class Onboarding extends StatelessWidget {
   const Onboarding({super.key});
@@ -37,38 +35,36 @@ class Onboarding extends StatelessWidget {
               child: Padding(
                 padding: EdgeInsets.only(top: 31.2),
                 child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.center,
+                  mainAxisAlignment: MainAxisAlignment.center,
                   children: [
-                    SvgPicture.asset(
-                      'assets/icons/carrot.svg',
-                      height: 56.36.h,
-                      width: 48.47.w,
-                    ),
-                    SizedBox(height: 12.66.h),
-                    TextWidget(
-                      title: loc.welcome,
-                      fontSize: 48.sp,
-                      fontWeight: FontWeight.w600,
-                      color: theme.textTheme.displayMedium!.color!,
-                      letterSpacing: 0,
-                    ),
-                    TextWidget(
-                      title: loc.toOurStore,
-                      fontSize: 48.sp,
-                      fontWeight: FontWeight.w600,
-                      color: theme.textTheme.displayMedium!.color!,
-                      height: 0.6,
-                      letterSpacing: 0,
-                    ),
-                    TextWidget(
-                      title: loc.gerYourGroceriesInAsFastAsOneHour,
-                      fontSize: 16.sp,
-                      fontWeight: FontWeight.w400,
-                      color: theme.textTheme.displayMedium!.color!,
-                      letterSpacing: 0,
-                      height: 2.7,
-                    ),
-                    SizedBox(height: 40.88.h),
+                    // SvgPicture.asset(
+                    //   'assets/icons/carrot.svg',
+                    //   height: 56.36.h,
+                    //   width: 48.47.w,
+                    // ),
+                    // SizedBox(height: 12.66.h),
+                    // TextWidget(
+                    //   title: loc.welcome,
+                    //   fontSize: 48.sp,
+                    //   fontWeight: FontWeight.w600,
+                    //   color: theme.textTheme.displayMedium!.color!,
+                    //   letterSpacing: 0,
+                    // ),
+                    // TextWidget(
+                    //   title: loc.toOurStore,
+                    //   fontSize: 48.sp,
+                    //   fontWeight: FontWeight.w600,
+                    //   color: theme.textTheme.displayMedium!.color!,
+                    //   letterSpacing: 0,
+                    // ),
+                    // TextWidget(
+                    //   title: loc.gerYourGroceriesInAsFastAsOneHour,
+                    //   fontSize: 16.sp,
+                    //   fontWeight: FontWeight.w400,
+                    //   color: theme.textTheme.displayMedium!.color!,
+                    //   letterSpacing: 0,
+                    // ),
+                    // SizedBox(height: 40.88.h),
                     CustomButtonWidget(
                       buttonName: loc.getStarted,
                       onPressed: () => context.go(Path.signin),

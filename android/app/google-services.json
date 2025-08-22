@@ -1,26 +1,44 @@
 {
   "project_info": {
-    "project_number": "304851038895",
-    "project_id": "myproject-44616",
-    "storage_bucket": "myproject-44616.firebasestorage.app"
+    "project_number": "637816399789",
+    "project_id": "online-groceries-e01b3",
+    "storage_bucket": "online-groceries-e01b3.firebasestorage.app"
   },
   "client": [
     {
       "client_info": {
-        "mobilesdk_app_id": "1:304851038895:android:db3a1402710f3c2c1d5a5a",
+        "mobilesdk_app_id": "1:637816399789:android:e764d93657e6cd6c94a324",
         "android_client_info": {
           "package_name": "com.example.online_groceries_app"
         }
       },
-      "oauth_client": [],
+      "oauth_client": [
+        {
+          "client_id": "637816399789-prnjnv27n5k7e14k7c0ht2qildmd4g6t.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.example.online_groceries_app",
+            "certificate_hash": "7b94231ad323237eeb15c688af831e3d50825b60"
+          }
+        },
+        {
+          "client_id": "637816399789-opmk1j1evv8p143tk9n0e5g00c950t18.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
       "api_key": [
         {
-          "current_key": "AIzaSyAnzyFKIeOleKTMKOgymot6jds3aUJle8M"
+          "current_key": "AIzaSyDmC4C8XPNlof_DP4XFIZJ1eES_Ue0n0k4"
         }
       ],
       "services": {
         "appinvite_service": {
-          "other_platform_oauth_client": []
+          "other_platform_oauth_client": [
+            {
+              "client_id": "637816399789-g8d65ef19tugtkq06b18n5r2pmg5l2gd.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
         }
       }
     }

@@ -3,9 +3,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/svg.dart';
-import 'package:online_groceries_app/config/route/path.dart';
 import 'package:go_router/go_router.dart';
-import 'package:online_groceries_app/features/auth/data/model/user.dart';
+import 'package:online_groceries_app/config/route/path.dart';
+import 'package:online_groceries_app/core/services/auth_service.dart';
 import 'package:online_groceries_app/features/auth/presentation/provider/state_provider.dart';
 import 'package:online_groceries_app/features/auth/presentation/widget/background_layout_widget.dart';
 import 'package:online_groceries_app/features/auth/presentation/widget/custom_button_widget.dart';
@@ -19,6 +19,7 @@ class SignupScreen extends ConsumerWidget {
   final usernameController = TextEditingController();
   final emailController = TextEditingController();
   final passwordController = TextEditingController();
+  final auth = AuthService();
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -66,7 +67,7 @@ class SignupScreen extends ConsumerWidget {
               ),
               SizedBox(height: 30.h),
               InputTextFormWidget(
-                labelText:loc.email,
+                labelText: loc.email,
                 controller: emailController,
               ),
               SizedBox(height: 30.h),
@@ -135,21 +136,36 @@ class SignupScreen extends ConsumerWidget {
               SizedBox(height: 30.h),
               CustomButtonWidget(
                 buttonName: loc.signUp,
-                onPressed: () {
-                  final username = usernameController.text.trim();
-                  final useremail = emailController.text.trim();
-                  final userpassword = passwordController.text.trim();
+                onPressed: () async {
+                  final user = await auth.createUserWithEmailPassword(
+                    emailController.text.trim(),
+                    passwordController.text.trim(),
+                  );
 
-                  final user = User(
-                    username: username, 
-                    useremail: useremail,
-                    userpassword: userpassword
+                  if (user != null) {
+                    ScaffoldMessenger.of(context).showSnackBar(
+                      SnackBar(content: Text('Registration Successfully')),
                     );
-                  ref.read(userListProvider.notifier).saveUsers(user);
+                    context.go(Path.login);
+                  } else {
+                    ScaffoldMessenger.of(context).showSnackBar(
+                      SnackBar(content: Text('User registration failed')),
+                    );
+                  }
+                  // final username = usernameController.text.trim();
+                  // final useremail = emailController.text.trim();
+                  // final userpassword = passwordController.text.trim();
 
-                  ScaffoldMessenger.of(
-                    context,
-                  ).showSnackBar(SnackBar(content: Text('Registration successfully !')));
+                  // final user = User(
+                  //   username: username,
+                  //   useremail: useremail,
+                  //   userpassword: userpassword
+                  //   );
+                  // ref.read(userListProvider.notifier).saveUsers(user);
+
+                  // ScaffoldMessenger.of(
+                  //   context,
+                  // ).showSnackBar(SnackBar(content: Text('Registration successfully !')));
                 },
               ),
               SizedBox(height: 25.h),
@@ -158,7 +174,7 @@ class SignupScreen extends ConsumerWidget {
                 children: [
                   TextWidget(
                     onTap: () => SignupScreen(),
-                    title:loc.alreadyHaveAccount,
+                    title: loc.alreadyHaveAccount,
                     fontSize: 14.sp,
                     fontWeight: FontWeight.w600,
                     color: Colors.black,

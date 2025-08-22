@@ -22,7 +22,7 @@ class TextWidget extends StatelessWidget {
     required this.letterSpacing,
     this.height,
     this.spans,
-     this.onTap,
+    this.onTap,
   });
 
   @override
