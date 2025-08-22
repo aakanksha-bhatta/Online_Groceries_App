@@ -61,10 +61,11 @@ class AuthService {
     }
   }
 
-  //   Future<UserCredential?> signInWithPhone(r) async {
-  //     try {} catch (e) {
-  //       print('Error signing in with Phone: $e');
-  //       return null;
-  //     }
-  //   }
+  // Future<UserCredential?> signInWithFacebook() async {
+  // final LoginResult result = await FacebookAuth.instance.login();
+  // if(result.status == LoginStatus.success){
+  //   final OAuthCredential credential = FacebookAuthProvider.credential(result.accessToken!.tokenString);
+  //   return await FirebaseAuth.instance.signInWithCredential(credential);
+  // }
+  // return null;
 }
