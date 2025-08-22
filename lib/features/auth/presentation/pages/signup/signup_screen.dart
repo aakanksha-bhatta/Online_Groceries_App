@@ -6,6 +6,7 @@ import 'package:flutter_svg/svg.dart';
 import 'package:go_router/go_router.dart';
 import 'package:online_groceries_app/config/route/path.dart';
 import 'package:online_groceries_app/core/services/auth_service.dart';
+import 'package:online_groceries_app/core/util/validation.dart';
 import 'package:online_groceries_app/features/auth/presentation/provider/state_provider.dart';
 import 'package:online_groceries_app/features/auth/presentation/widget/background_layout_widget.dart';
 import 'package:online_groceries_app/features/auth/presentation/widget/custom_button_widget.dart';
@@ -19,7 +20,13 @@ class SignupScreen extends ConsumerWidget {
   final usernameController = TextEditingController();
   final emailController = TextEditingController();
   final passwordController = TextEditingController();
+
   final auth = AuthService();
+
+  final _formKey = GlobalKey<FormState>();
+  String? usernameError;
+  String? emailError;
+  String? passwordError;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -61,31 +68,45 @@ class SignupScreen extends ConsumerWidget {
                 letterSpacing: 0,
               ),
               SizedBox(height: 40.h),
-              InputTextFormWidget(
-                labelText: loc.username,
-                controller: usernameController,
-              ),
-              SizedBox(height: 30.h),
-              InputTextFormWidget(
-                labelText: loc.email,
-                controller: emailController,
-              ),
-              SizedBox(height: 30.h),
-              InputTextFormWidget(
-                labelText: loc.password,
-                controller: passwordController,
-                obscureText: !isVisible,
-                suffixIcon: IconButton(
-                  onPressed: () {
-                    // .notifier updating state
-                    ref.read(passwordVisibilityProvider.notifier).state =
-                        !isVisible;
-                  },
-                  icon: Icon(
-                    isVisible ? Icons.visibility : Icons.visibility_off,
-                  ),
+              Form(
+                key: _formKey,
+                autovalidateMode: AutovalidateMode.onUserInteraction,
+                child: Column(
+                  children: [
+                    InputTextFormWidget(
+                      labelText: loc.username,
+                      controller: usernameController,
+                      validator: (value) =>
+                          Validation.validUsername(loc, value),
+                    ),
+                    SizedBox(height: 30.h),
+                    InputTextFormWidget(
+                      labelText: loc.email,
+                      controller: emailController,
+                      validator: (value) => Validation.validEmail(loc, value),
+                    ),
+                    SizedBox(height: 30.h),
+                    InputTextFormWidget(
+                      labelText: loc.password,
+                      controller: passwordController,
+                      obscureText: !isVisible,
+                      validator: (value) =>
+                          Validation.validPassword(loc, value),
+                      suffixIcon: IconButton(
+                        onPressed: () {
+                          // .notifier updating state
+                          ref.read(passwordVisibilityProvider.notifier).state =
+                              !isVisible;
+                        },
+                        icon: Icon(
+                          isVisible ? Icons.visibility : Icons.visibility_off,
+                        ),
+                      ),
+                    ),
+                  ],
                 ),
               ),
+
               Padding(
                 padding: EdgeInsets.only(top: 20.h, right: 4.w),
                 child: Align(
@@ -137,21 +158,24 @@ class SignupScreen extends ConsumerWidget {
               CustomButtonWidget(
                 buttonName: loc.signUp,
                 onPressed: () async {
-                  final user = await auth.createUserWithEmailPassword(
-                    emailController.text.trim(),
-                    passwordController.text.trim(),
-                  );
+                  if (_formKey.currentState!.validate()) {
+                    final user = await auth.createUserWithEmailPassword(
+                      emailController.text.trim(),
+                      passwordController.text.trim(),
+                    );
 
-                  if (user != null) {
-                    ScaffoldMessenger.of(context).showSnackBar(
-                      SnackBar(content: Text('Registration Successfully')),
-                    );
-                    context.go(Path.login);
-                  } else {
-                    ScaffoldMessenger.of(context).showSnackBar(
-                      SnackBar(content: Text('User registration failed')),
-                    );
+                    if (user != null) {
+                      ScaffoldMessenger.of(context).showSnackBar(
+                        SnackBar(content: Text('Registration Successfully')),
+                      );
+                      context.go(Path.login);
+                    } else {
+                      ScaffoldMessenger.of(context).showSnackBar(
+                        SnackBar(content: Text('User registration failed')),
+                      );
+                    }
                   }
+
                   // final username = usernameController.text.trim();
                   // final useremail = emailController.text.trim();
                   // final userpassword = passwordController.text.trim();

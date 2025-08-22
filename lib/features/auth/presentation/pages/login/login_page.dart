@@ -5,6 +5,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:go_router/go_router.dart';
 import 'package:online_groceries_app/config/route/path.dart';
+import 'package:online_groceries_app/core/services/auth_service.dart';
 import 'package:online_groceries_app/core/util/validation.dart';
 // import 'package:online_groceries_app/features/auth/presentation/controller/user_notifier.dart';
 import 'package:online_groceries_app/features/auth/presentation/provider/state_provider.dart';
@@ -44,6 +45,7 @@ class LoginPage extends ConsumerWidget {
   final _formKey = GlobalKey<FormState>();
   String? phoneError;
   String? passwordError;
+  final auth = AuthService();
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -149,26 +151,42 @@ class LoginPage extends ConsumerWidget {
               SizedBox(height: 30.h),
               CustomButtonWidget(
                 buttonName: loc.login,
-                onPressed: () {
+                onPressed: () async {
                   if (_formKey.currentState!.validate()) {
-                    final useremail = emailController.text.trim();
-                    final userpassword = passwordController.text.trim();
+                    final user = await auth.signInWithEmailAndPassword(
+                      emailController.text.trim(),
+                      passwordController.text.trim(),
+                    );
 
-                    // Access the notifier, call login method
-                    final isValid = ref
-                        .read(userListProvider.notifier)
-                        .loginUser(useremail, userpassword);
-
-                    if (isValid) {
-                      ScaffoldMessenger.of(
-                        context,
-                      ).showSnackBar(SnackBar(content: Text(loc.loginSuccess)));
+                    if (user != null) {
+                      ScaffoldMessenger.of(context).showSnackBar(
+                        SnackBar(content: Text('Login Successfully')),
+                      );
                       context.go(Path.home);
                     } else {
                       ScaffoldMessenger.of(context).showSnackBar(
-                        SnackBar(content: Text(loc.invalidCredentials)),
+                        SnackBar(content: Text('User login failed')),
                       );
                     }
+
+                    // final useremail = emailController.text.trim();
+                    // final userpassword = passwordController.text.trim();
+
+                    // // Access the notifier, call login method
+                    // final isValid = ref
+                    //     .read(userListProvider.notifier)
+                    //     .loginUser(useremail, userpassword);
+
+                    // if (isValid) {
+                    //   ScaffoldMessenger.of(
+                    //     context,
+                    //   ).showSnackBar(SnackBar(content: Text(loc.loginSuccess)));
+                    //   context.go(Path.home);
+                    // } else {
+                    //   ScaffoldMessenger.of(context).showSnackBar(
+                    //     SnackBar(content: Text(loc.invalidCredentials)),
+                    //   );
+                    // }
                   }
                 },
               ),
