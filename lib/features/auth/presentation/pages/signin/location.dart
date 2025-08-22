@@ -8,12 +8,14 @@ import 'package:online_groceries_app/features/auth/presentation/widget/backgroun
 import 'package:online_groceries_app/features/auth/presentation/widget/custom_button_widget.dart';
 import 'package:online_groceries_app/features/auth/presentation/widget/input_text_form_widget.dart';
 import 'package:online_groceries_app/features/auth/presentation/widget/text_widget.dart';
+import 'package:online_groceries_app/l10n/app_localizations.dart';
 
 class Location extends StatelessWidget {
   const Location({super.key});
 
   @override
   Widget build(BuildContext context) {
+    final loc = AppLocalizations.of(context)!;
     return Scaffold(
       body: BackgroundLayoutWidget(
         dynamicWidget: SingleChildScrollView(
@@ -33,7 +35,7 @@ class Location extends StatelessWidget {
                     SvgPicture.asset('assets/images/location.svg'),
                     SizedBox(height: 40.5),
                     TextWidget(
-                      title: 'Select Your Location',
+                      title: loc.selectYourLocation,
                       fontSize: 26.sp,
                       fontWeight: FontWeight.w600,
                       color: Color(0xFF181725),
@@ -43,7 +45,7 @@ class Location extends StatelessWidget {
                     SizedBox(
                       width: 329.w,
                       child: TextWidget(
-                        title: 'Switch on your location to stay in tune with',
+                        title: loc.locationSubtitleLine1,
                         fontSize: 16.sp,
                         fontWeight: FontWeight.w400,
                         color: Color(0xFF7C7C7C),
@@ -51,7 +53,7 @@ class Location extends StatelessWidget {
                       ),
                     ),
                     TextWidget(
-                      title: 'what’s happening in your area',
+                      title: loc.locationSubtitleLine2,
                       fontSize: 16.sp,
                       fontWeight: FontWeight.w400,
                       color: Color(0xFF7C7C7C),
@@ -68,21 +70,21 @@ class Location extends StatelessWidget {
                 child: Column(
                   children: [
                     InputTextFormWidget(
-                      labelText: 'Your Zone',
-                      hintText: 'Enter your zone',
+                      labelText: loc.yourZone,
+                      hintText: loc.enterYourZone,
                       keyboardType: TextInputType.text,
                       onChanged: (value) {},
                     ),
                     SizedBox(height: 30.h),
                     InputTextFormWidget(
-                      labelText: 'Your Area',
-                      hintText: 'Enter your area',
+                      labelText: loc.yourZone,
+                      hintText: loc.enterYourZone,
                       keyboardType: TextInputType.text,
                       onChanged: (value) {},
                     ),
                     SizedBox(height: 40.35.h),
                     CustomButtonWidget(
-                      buttonName: 'Submit',
+                      buttonName: loc.submit,
                       onPressed: () {
                         context.go(Path.login);
                       },

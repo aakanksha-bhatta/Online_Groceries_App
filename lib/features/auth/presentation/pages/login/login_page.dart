@@ -16,23 +16,12 @@ import 'package:online_groceries_app/features/auth/presentation/widget/text_widg
 import 'package:online_groceries_app/l10n/app_localizations.dart';
 
 // Stream<int> getNumberStream() {
-//   // Create a StreamController to manage the stream
 //   final StreamController<int> controller = StreamController<int>();
-
 //   int counter = 0;
-//   // Create a timer that fires every second
 //   Timer.periodic(Duration(milliseconds: 1), (Timer timer) {
-//     // Add the current counter value to the stream
 //     controller.add(counter);
-//     // Increment the counter for the next event
 //     counter++;
 //   });
-
-//   // Important: Close the controller when the stream is no longer needed
-//   // to free up resources. In a real app, you'd do this in a dispose method.
-//   // controller.close(); // You would call this later to stop the stream.
-
-//   // Return the stream that listeners can subscribe to
 //   return controller.stream;
 // }
 
@@ -57,7 +46,7 @@ class LoginPage extends ConsumerWidget {
     return Scaffold(
       resizeToAvoidBottomInset: true,
 
-      // body: Column(
+      // body: Column( // SHOWING STREAM BUILDER
       //   children: [
       //     SizedBox(height: 100),
       //     StreamBuilder(

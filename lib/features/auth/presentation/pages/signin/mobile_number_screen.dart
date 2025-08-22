@@ -6,12 +6,14 @@ import 'package:online_groceries_app/features/auth/presentation/widget/app_bar_w
 import 'package:online_groceries_app/features/auth/presentation/widget/background_layout_widget.dart';
 import 'package:online_groceries_app/features/auth/presentation/widget/intl_phone_input_widget.dart';
 import 'package:online_groceries_app/features/auth/presentation/widget/text_widget.dart';
+import 'package:online_groceries_app/l10n/app_localizations.dart';
 
 class MobileNumberScreen extends StatelessWidget {
   const MobileNumberScreen({super.key});
 
   @override
   Widget build(BuildContext context) {
+    final loc = AppLocalizations.of(context)!;
     return Scaffold(
       body: BackgroundLayoutWidget(
         dynamicWidget: SingleChildScrollView(
@@ -33,14 +35,14 @@ class MobileNumberScreen extends StatelessWidget {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     TextWidget(
-                      title: 'Enter your mobile number',
+                      title: loc.enterYourMobileNumber,
                       fontSize: 26.sp,
                       fontWeight: FontWeight.w600,
                       color: Color(0xFF181725),
                       letterSpacing: 0,
                     ),
                     SizedBox(height: 27.h),
-                    IntlPhoneInputWidget(labelText: 'Mobile Number'),
+                    IntlPhoneInputWidget(labelText: loc.mobileNumber),
 
                     SizedBox(height: 450),
                     Align(

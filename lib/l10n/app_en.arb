@@ -21,5 +21,22 @@
   "byContinuingYouAgree": "By continuing you agree to our",
   "enterCredentialsToContinue": "Enter your credentials to continue",
   "username": "Username",
-  "and": "and"
+  "and": "and",
+  "enter4DigitCode": "Enter your 4-digit Code",
+  "code": "Code",
+  "resendCode": "Resend Code",
+  "enterYourMobileNumber": "Enter your mobile number",
+  "mobileNumber": "Mobile Number",
+  "selectYourLocation": "Select Your Location",
+  "locationSubtitleLine1": "Switch on your location to stay in tune with",
+  "locationSubtitleLine2": "what’s happening in your area",
+  "yourZone": "Your Zone",
+  "enterYourZone": "Enter your zone",
+  "yourArea": "Your Area",
+  "enterYourArea": "Enter your area",
+  "submit": "Submit",
+  "getGroceriesWithNectar": "Get your groceries with nectar",
+  "orConnectWithSocial": "Or connect with social media",
+  "continueWithGoogle": "Continue with Google",
+  "continueWithFacebook": "Continue with Facebook"
 }

@@ -76,4 +76,58 @@ class AppLocalizationsNe extends AppLocalizations {
 
   @override
   String get and => 'र';
+
+  @override
+  String get enter4DigitCode => 'तपाईंको ४-अङ्कको कोड प्रविष्ट गर्नुहोस्';
+
+  @override
+  String get code => 'कोड';
+
+  @override
+  String get resendCode => 'कोड पुन: पठाउनुहोस्';
+
+  @override
+  String get enterYourMobileNumber => 'आफ्नो मोबाइल नम्बर प्रविष्ट गर्नुहोस्';
+
+  @override
+  String get mobileNumber => 'मोबाइल नम्बर';
+
+  @override
+  String get selectYourLocation => 'आफ्नो स्थान छान्नुहोस्';
+
+  @override
+  String get locationSubtitleLine1 =>
+      'आफ्नो स्थान सक्रिय गर्नुहोस् नयाँ जानकारीको लागि';
+
+  @override
+  String get locationSubtitleLine2 =>
+      'तपाईंको क्षेत्रमा के भइरहेको छ भनेर थाहा पाउन';
+
+  @override
+  String get yourZone => 'तपाईंको क्षेत्र';
+
+  @override
+  String get enterYourZone => 'आफ्नो क्षेत्र प्रविष्ट गर्नुहोस्';
+
+  @override
+  String get yourArea => 'तपाईंको स्थान';
+
+  @override
+  String get enterYourArea => 'आफ्नो स्थान प्रविष्ट गर्नुहोस्';
+
+  @override
+  String get submit => 'पेश गर्नुहोस्';
+
+  @override
+  String get getGroceriesWithNectar =>
+      'नेकटरसँग आफ्नो किराना प्राप्त गर्नुहोस्';
+
+  @override
+  String get orConnectWithSocial => 'वा सामाजिक सञ्जालमार्फत जडान गर्नुहोस्';
+
+  @override
+  String get continueWithGoogle => 'Google मार्फत जारी राख्नुहोस्';
+
+  @override
+  String get continueWithFacebook => 'Facebook मार्फत जारी राख्नुहोस्';
 }

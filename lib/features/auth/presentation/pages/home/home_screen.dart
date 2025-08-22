@@ -1,5 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:online_groceries_app/core/services/auth_service.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
@@ -14,6 +15,7 @@ class _HomeScreenState extends State<HomeScreen> {
   );
 
   final TextEditingController _textController = TextEditingController();
+  final auth = AuthService();
 
   void _showItemDialog({String? docId, String? currentText}) {
     if (currentText != null) {
@@ -63,7 +65,15 @@ class _HomeScreenState extends State<HomeScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: const Text('Simple Firebase CRUD')),
+      appBar: AppBar(
+        title: const Text('Simple Firebase CRUD'),
+        leading: IconButton(
+          icon: const Icon(Icons.logout),
+          onPressed: () async {
+            await auth.signOut();
+          },
+        ),
+      ),
       body: StreamBuilder<QuerySnapshot>(
         stream: items.snapshots(),
         builder: (context, snapshot) {

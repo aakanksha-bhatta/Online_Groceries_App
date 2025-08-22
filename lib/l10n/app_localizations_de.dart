@@ -77,4 +77,56 @@ class AppLocalizationsDe extends AppLocalizations {
 
   @override
   String get and => 'und';
+
+  @override
+  String get enter4DigitCode => 'Gib deinen 4-stelligen Code ein';
+
+  @override
+  String get code => 'Code';
+
+  @override
+  String get resendCode => 'Code erneut senden';
+
+  @override
+  String get enterYourMobileNumber => 'Gib deine Handynummer ein';
+
+  @override
+  String get mobileNumber => 'Handynummer';
+
+  @override
+  String get selectYourLocation => 'Wähle deinen Standort';
+
+  @override
+  String get locationSubtitleLine1 =>
+      'Aktiviere deinen Standort, um informiert zu bleiben';
+
+  @override
+  String get locationSubtitleLine2 => 'was in deiner Umgebung passiert';
+
+  @override
+  String get yourZone => 'Deine Zone';
+
+  @override
+  String get enterYourZone => 'Gib deine Zone ein';
+
+  @override
+  String get yourArea => 'Dein Gebiet';
+
+  @override
+  String get enterYourArea => 'Gib dein Gebiet ein';
+
+  @override
+  String get submit => 'Absenden';
+
+  @override
+  String get getGroceriesWithNectar => 'Erhalte deine Lebensmittel mit Nectar';
+
+  @override
+  String get orConnectWithSocial => 'Oder verbinde dich mit sozialen Medien';
+
+  @override
+  String get continueWithGoogle => 'Mit Google fortfahren';
+
+  @override
+  String get continueWithFacebook => 'Mit Facebook fortfahren';
 }

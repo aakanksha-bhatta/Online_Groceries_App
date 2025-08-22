@@ -231,6 +231,108 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'and'**
   String get and;
+
+  /// No description provided for @enter4DigitCode.
+  ///
+  /// In en, this message translates to:
+  /// **'Enter your 4-digit Code'**
+  String get enter4DigitCode;
+
+  /// No description provided for @code.
+  ///
+  /// In en, this message translates to:
+  /// **'Code'**
+  String get code;
+
+  /// No description provided for @resendCode.
+  ///
+  /// In en, this message translates to:
+  /// **'Resend Code'**
+  String get resendCode;
+
+  /// No description provided for @enterYourMobileNumber.
+  ///
+  /// In en, this message translates to:
+  /// **'Enter your mobile number'**
+  String get enterYourMobileNumber;
+
+  /// No description provided for @mobileNumber.
+  ///
+  /// In en, this message translates to:
+  /// **'Mobile Number'**
+  String get mobileNumber;
+
+  /// No description provided for @selectYourLocation.
+  ///
+  /// In en, this message translates to:
+  /// **'Select Your Location'**
+  String get selectYourLocation;
+
+  /// No description provided for @locationSubtitleLine1.
+  ///
+  /// In en, this message translates to:
+  /// **'Switch on your location to stay in tune with'**
+  String get locationSubtitleLine1;
+
+  /// No description provided for @locationSubtitleLine2.
+  ///
+  /// In en, this message translates to:
+  /// **'what’s happening in your area'**
+  String get locationSubtitleLine2;
+
+  /// No description provided for @yourZone.
+  ///
+  /// In en, this message translates to:
+  /// **'Your Zone'**
+  String get yourZone;
+
+  /// No description provided for @enterYourZone.
+  ///
+  /// In en, this message translates to:
+  /// **'Enter your zone'**
+  String get enterYourZone;
+
+  /// No description provided for @yourArea.
+  ///
+  /// In en, this message translates to:
+  /// **'Your Area'**
+  String get yourArea;
+
+  /// No description provided for @enterYourArea.
+  ///
+  /// In en, this message translates to:
+  /// **'Enter your area'**
+  String get enterYourArea;
+
+  /// No description provided for @submit.
+  ///
+  /// In en, this message translates to:
+  /// **'Submit'**
+  String get submit;
+
+  /// No description provided for @getGroceriesWithNectar.
+  ///
+  /// In en, this message translates to:
+  /// **'Get your groceries with nectar'**
+  String get getGroceriesWithNectar;
+
+  /// No description provided for @orConnectWithSocial.
+  ///
+  /// In en, this message translates to:
+  /// **'Or connect with social media'**
+  String get orConnectWithSocial;
+
+  /// No description provided for @continueWithGoogle.
+  ///
+  /// In en, this message translates to:
+  /// **'Continue with Google'**
+  String get continueWithGoogle;
+
+  /// No description provided for @continueWithFacebook.
+  ///
+  /// In en, this message translates to:
+  /// **'Continue with Facebook'**
+  String get continueWithFacebook;
 }
 
 class _AppLocalizationsDelegate

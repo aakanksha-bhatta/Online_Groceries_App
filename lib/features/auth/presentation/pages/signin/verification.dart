@@ -8,6 +8,7 @@ import 'package:online_groceries_app/features/auth/presentation/widget/app_bar_w
 import 'package:online_groceries_app/features/auth/presentation/widget/background_layout_widget.dart';
 import 'package:online_groceries_app/features/auth/presentation/widget/input_text_form_widget.dart';
 import 'package:online_groceries_app/features/auth/presentation/widget/text_widget.dart';
+import 'package:online_groceries_app/l10n/app_localizations.dart';
 
 class Verification extends ConsumerWidget {
   Verification({super.key});
@@ -20,6 +21,7 @@ class Verification extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    final loc = AppLocalizations.of(context)!;
     return Scaffold(
       resizeToAvoidBottomInset: true,
       body: BackgroundLayoutWidget(
@@ -42,7 +44,7 @@ class Verification extends ConsumerWidget {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     TextWidget(
-                      title: 'Enter your 4-digit Code',
+                      title: loc.enter4DigitCode,
                       fontSize: 26.sp,
                       fontWeight: FontWeight.w600,
                       color: Color(0xFF181725),
@@ -52,7 +54,7 @@ class Verification extends ConsumerWidget {
                     InputTextFormWidget(
                       inputFormatters: [maskFormatter],
                       hintText: '- - - -',
-                      labelText: 'Code',
+                      labelText: loc.code,
                       onChanged: (value) {},
                       keyboardType: TextInputType.number,
                     ),
@@ -63,7 +65,7 @@ class Verification extends ConsumerWidget {
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
                           TextWidget(
-                            title: 'Resend Code',
+                            title: loc.resendCode,
                             fontSize: 18,
                             fontWeight: FontWeight.w400,
                             color: Color(0xff53b175),

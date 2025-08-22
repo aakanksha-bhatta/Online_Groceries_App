@@ -21,5 +21,22 @@
   "byContinuingYouAgree": "Indem Sie fortfahren, stimmen Sie unseren",
   "enterCredentialsToContinue": "Geben Sie Ihre Anmeldedaten ein, um fortzufahren",
   "username": "Benutzername",
-  "and": "und"
+  "and": "und",
+  "enter4DigitCode": "Gib deinen 4-stelligen Code ein",
+  "code": "Code",
+  "resendCode": "Code erneut senden",
+  "enterYourMobileNumber": "Gib deine Handynummer ein",
+  "mobileNumber": "Handynummer",
+  "selectYourLocation": "Wähle deinen Standort",
+  "locationSubtitleLine1": "Aktiviere deinen Standort, um informiert zu bleiben",
+  "locationSubtitleLine2": "was in deiner Umgebung passiert",
+  "yourZone": "Deine Zone",
+  "enterYourZone": "Gib deine Zone ein",
+  "yourArea": "Dein Gebiet",
+  "enterYourArea": "Gib dein Gebiet ein",
+  "submit": "Absenden",
+  "getGroceriesWithNectar": "Erhalte deine Lebensmittel mit Nectar",
+  "orConnectWithSocial": "Oder verbinde dich mit sozialen Medien",
+  "continueWithGoogle": "Mit Google fortfahren",
+  "continueWithFacebook": "Mit Facebook fortfahren"
 }

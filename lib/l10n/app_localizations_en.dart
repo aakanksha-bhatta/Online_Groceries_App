@@ -74,4 +74,56 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get and => 'and';
+
+  @override
+  String get enter4DigitCode => 'Enter your 4-digit Code';
+
+  @override
+  String get code => 'Code';
+
+  @override
+  String get resendCode => 'Resend Code';
+
+  @override
+  String get enterYourMobileNumber => 'Enter your mobile number';
+
+  @override
+  String get mobileNumber => 'Mobile Number';
+
+  @override
+  String get selectYourLocation => 'Select Your Location';
+
+  @override
+  String get locationSubtitleLine1 =>
+      'Switch on your location to stay in tune with';
+
+  @override
+  String get locationSubtitleLine2 => 'what’s happening in your area';
+
+  @override
+  String get yourZone => 'Your Zone';
+
+  @override
+  String get enterYourZone => 'Enter your zone';
+
+  @override
+  String get yourArea => 'Your Area';
+
+  @override
+  String get enterYourArea => 'Enter your area';
+
+  @override
+  String get submit => 'Submit';
+
+  @override
+  String get getGroceriesWithNectar => 'Get your groceries with nectar';
+
+  @override
+  String get orConnectWithSocial => 'Or connect with social media';
+
+  @override
+  String get continueWithGoogle => 'Continue with Google';
+
+  @override
+  String get continueWithFacebook => 'Continue with Facebook';
 }

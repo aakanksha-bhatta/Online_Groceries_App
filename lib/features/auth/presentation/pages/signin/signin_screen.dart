@@ -8,12 +8,14 @@ import 'package:online_groceries_app/features/auth/presentation/widget/backgroun
 import 'package:online_groceries_app/features/auth/presentation/widget/custom_button_widget.dart';
 import 'package:online_groceries_app/features/auth/presentation/widget/intl_phone_input_widget.dart';
 import 'package:online_groceries_app/features/auth/presentation/widget/text_widget.dart';
+import 'package:online_groceries_app/l10n/app_localizations.dart';
 
 class SigninScreen extends StatelessWidget {
   const SigninScreen({super.key});
 
   @override
   Widget build(BuildContext context) {
+    final loc = AppLocalizations.of(context)!;
     return Scaffold(
       resizeToAvoidBottomInset: true,
       body: BackgroundLayoutWidget(
@@ -39,7 +41,7 @@ class SigninScreen extends StatelessWidget {
                     SizedBox(
                       width: 230.w,
                       child: TextWidget(
-                        title: 'Get your groceries with nectar',
+                        title: loc.gerYourGroceriesInAsFastAsOneHour,
                         fontSize: 26.sp,
                         fontWeight: FontWeight.w600,
                         color: AppColor.textColor,
@@ -55,7 +57,7 @@ class SigninScreen extends StatelessWidget {
                     Padding(
                       padding: EdgeInsets.only(left: 88.w, top: 40.h),
                       child: TextWidget(
-                        title: 'Or connect with social media',
+                        title: loc.orConnectWithSocial,
                         fontSize: 14.sp,
                         fontWeight: FontWeight.w600,
                         color: AppColor.secondaryTextColor,
@@ -64,7 +66,7 @@ class SigninScreen extends StatelessWidget {
                     ),
                     SizedBox(height: 37.8.h),
                     CustomButtonWidget(
-                      buttonName: 'Continue with Google',
+                      buttonName: loc.continueWithGoogle,
                       buttonColor: Color(0xFF5383EC),
                       splashColor: Color(0xFFB3C7F3),
                       onPressed: () async {
@@ -75,7 +77,7 @@ class SigninScreen extends StatelessWidget {
                     ),
                     SizedBox(height: 20.h),
                     CustomButtonWidget(
-                      buttonName: 'Continue with Facebook',
+                      buttonName: loc.continueWithFacebook,
                       buttonColor: Color(0xFF4A66AC),
                       splashColor: Color(0xFF8095C7),
                       buttonIcon: 'assets/icons/facebook.svg',
