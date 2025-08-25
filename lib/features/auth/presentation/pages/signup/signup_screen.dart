@@ -1,3 +1,4 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -159,37 +160,36 @@ class SignupScreen extends ConsumerWidget {
                 buttonName: loc.signUp,
                 onPressed: () async {
                   if (_formKey.currentState!.validate()) {
-                    final user = await auth.createUserWithEmailPassword(
-                      emailController.text.trim(),
-                      passwordController.text.trim(),
-                    );
+                    final userCredential = await auth
+                        .createUserWithEmailPassword(
+                          emailController.text.trim(),
+                          passwordController.text.trim(),
+                        );
 
-                    if (user != null) {
-                      ScaffoldMessenger.of(context).showSnackBar(
-                        SnackBar(content: Text('Registration Successfully')),
-                      );
-                      context.go(Path.login);
+                    if (userCredential != null) {
+                      final user = userCredential.user;
+                      if (user != null) {
+                        // Save user data in Firestore
+                        await FirebaseFirestore.instance
+                            .collection('users')
+                            .doc(user.uid)
+                            .set({
+                              'uid': user.uid,
+                              'username': usernameController.text.trim(),
+                              'useremail': emailController.text.trim(),
+                            });
+
+                        ScaffoldMessenger.of(context).showSnackBar(
+                          SnackBar(content: Text('Registration Successfully')),
+                        );
+                        context.go(Path.login);
+                      }
                     } else {
                       ScaffoldMessenger.of(context).showSnackBar(
                         SnackBar(content: Text('User registration failed')),
                       );
                     }
                   }
-
-                  // final username = usernameController.text.trim();
-                  // final useremail = emailController.text.trim();
-                  // final userpassword = passwordController.text.trim();
-
-                  // final user = User(
-                  //   username: username,
-                  //   useremail: useremail,
-                  //   userpassword: userpassword
-                  //   );
-                  // ref.read(userListProvider.notifier).saveUsers(user);
-
-                  // ScaffoldMessenger.of(
-                  //   context,
-                  // ).showSnackBar(SnackBar(content: Text('Registration successfully !')));
                 },
               ),
               SizedBox(height: 25.h),

@@ -43,6 +43,11 @@ class AuthService {
     }
   }
 
+  Future<bool> isUserLoggedIn() async {
+    final user = FirebaseAuth.instance.currentUser;
+    return user != null;
+  }
+
   // for google sign in
   Future<UserCredential?> signInWithGoogle() async {
     try {
@@ -60,12 +65,4 @@ class AuthService {
       return null;
     }
   }
-
-  // Future<UserCredential?> signInWithFacebook() async {
-  // final LoginResult result = await FacebookAuth.instance.login();
-  // if(result.status == LoginStatus.success){
-  //   final OAuthCredential credential = FacebookAuthProvider.credential(result.accessToken!.tokenString);
-  //   return await FirebaseAuth.instance.signInWithCredential(credential);
-  // }
-  // return null;
 }

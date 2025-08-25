@@ -71,6 +71,20 @@ class SigninScreen extends StatelessWidget {
                       splashColor: Color(0xFFB3C7F3),
                       onPressed: () async {
                         final result = await AuthService().signInWithGoogle();
+
+                        // if (result != null) {
+                        //   // Navigate to Home Page
+                        //   Navigator.pushReplacement(
+                        //     context,
+                        //     MaterialPageRoute(
+                        //       builder: (context) => HomeScreen(),
+                        //     ), // or use GoRouter
+                        //   );
+                        // } else {
+                        //   ScaffoldMessenger.of(context).showSnackBar(
+                        //     SnackBar(content: Text("Google Sign-In failed")),
+                        //   );
+                        // }
                       },
 
                       buttonIcon: 'assets/icons/google.svg',

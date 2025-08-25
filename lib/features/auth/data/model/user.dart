@@ -3,8 +3,15 @@ class User {
   final String? useremail;
   final String? userpassword;
   final String? phoneNumber;
+  final List<String>? userChats;
 
-  User({this.username, this.useremail, this.userpassword, this.phoneNumber});
+  User({
+    this.username,
+    this.useremail,
+    this.userpassword,
+    this.phoneNumber,
+    this.userChats,
+  });
 
   factory User.fromJson(Map<String, dynamic> json) {
     return User(
@@ -12,6 +19,7 @@ class User {
       useremail: json['useremail'],
       userpassword: json['userpassword'],
       phoneNumber: json['phoneNumber'],
+      userChats: List<String>.from(json['userChats'] ?? []),
     );
   }
 
@@ -21,6 +29,7 @@ class User {
       'useremail': useremail,
       'userpassword': userpassword,
       'phoneNumber': phoneNumber,
+      'userChats': userChats,
     };
   }
 }
