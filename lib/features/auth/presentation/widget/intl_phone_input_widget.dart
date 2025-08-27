@@ -7,6 +7,7 @@ class IntlPhoneInputWidget extends StatelessWidget {
   final String? initialCountryCode;
   final String? labelText;
   final bool? isEnable;
+  final TextEditingController? controller;
 
   const IntlPhoneInputWidget({
     super.key,
@@ -14,6 +15,7 @@ class IntlPhoneInputWidget extends StatelessWidget {
     this.initialCountryCode = 'NP',
     this.labelText,
     this.isEnable,
+    this.controller,
   });
 
   @override
@@ -33,6 +35,7 @@ class IntlPhoneInputWidget extends StatelessWidget {
           SizedBox(height: 8.h),
         ],
         IntlPhoneField(
+          controller: controller,
           showDropdownIcon: false,
           disableLengthCheck: true,
           initialCountryCode: initialCountryCode,
@@ -47,7 +50,10 @@ class IntlPhoneInputWidget extends StatelessWidget {
               borderSide: BorderSide(color: Color(0xFFE2E2E2)),
             ),
           ),
-          onChanged: (phone) {},
+          onChanged: (phone) {
+            final fullPhoneNumber = phone.completeNumber;
+            onChanged?.call(fullPhoneNumber);
+          },
         ),
       ],
     );

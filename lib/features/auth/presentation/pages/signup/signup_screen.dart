@@ -11,6 +11,7 @@ import 'package:online_groceries_app/core/util/validation.dart';
 import 'package:online_groceries_app/features/auth/presentation/provider/state_provider.dart';
 import 'package:online_groceries_app/features/auth/presentation/widget/background_layout_widget.dart';
 import 'package:online_groceries_app/features/auth/presentation/widget/custom_button_widget.dart';
+import 'package:online_groceries_app/features/auth/presentation/widget/custom_snack_bar.dart';
 import 'package:online_groceries_app/features/auth/presentation/widget/input_text_form_widget.dart';
 import 'package:online_groceries_app/features/auth/presentation/widget/text_widget.dart';
 import 'package:online_groceries_app/l10n/app_localizations.dart';
@@ -179,15 +180,14 @@ class SignupScreen extends ConsumerWidget {
                               'useremail': emailController.text.trim(),
                             });
 
-                        ScaffoldMessenger.of(context).showSnackBar(
-                          SnackBar(content: Text('Registration Successfully')),
+                        CustomSnackBar.show(
+                          context,
+                          'Registration Successfully',
                         );
                         context.go(Path.login);
                       }
                     } else {
-                      ScaffoldMessenger.of(context).showSnackBar(
-                        SnackBar(content: Text('User registration failed')),
-                      );
+                      CustomSnackBar.show(context, 'User registration failed');
                     }
                   }
                 },

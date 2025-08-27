@@ -1,4 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:online_groceries_app/features/auth/presentation/pages/chat/chat_message.dart';
 import 'package:online_groceries_app/features/auth/presentation/widget/text_widget.dart';
@@ -13,8 +14,13 @@ class UserList extends StatefulWidget {
 class _UserListState extends State<UserList> {
   String searchText = "";
 
+  String getChatId(String uid1, String uid2) {
+    return uid1.compareTo(uid2) < 0 ? '${uid1}_$uid2' : '${uid2}_$uid1';
+  }
+
   @override
   Widget build(BuildContext context) {
+    final user = FirebaseAuth.instance.currentUser;
     return Container(
       decoration: BoxDecoration(color: Colors.white),
       child: Scaffold(
@@ -38,7 +44,6 @@ class _UserListState extends State<UserList> {
             children: [
               Padding(
                 padding: EdgeInsets.all(12),
-
                 child: TextField(
                   decoration: InputDecoration(
                     hintText: "Search...",
@@ -49,7 +54,7 @@ class _UserListState extends State<UserList> {
                   ),
                   onChanged: (value) {
                     setState(() {
-                      searchText = value.toLowerCase().trim();
+                      searchText = value.trim();
                     });
                   },
                 ),
@@ -110,8 +115,9 @@ class _UserListState extends State<UserList> {
 
                     final docs = snapshot.data!.docs;
 
-                    if (docs.isEmpty)
+                    if (docs.isEmpty) {
                       return Center(child: Text("No users found"));
+                    }
 
                     return ListView.builder(
                       itemCount: docs.length,
@@ -120,17 +126,59 @@ class _UserListState extends State<UserList> {
                         return ListTile(
                           leading: CircleAvatar(
                             radius: 25,
-                            backgroundImage: AssetImage(
-                              'assets/images/signin_bg.png',
-                            ),
+                            backgroundImage:
+                                (data['photoURL'] != null &&
+                                    data['photoURL'].toString().isNotEmpty)
+                                ? NetworkImage(data['photoURL'])
+                                      as ImageProvider
+                                : AssetImage('assets/images/signin_bg.png'),
                           ),
                           title: Text(data['username'] ?? ''),
-                          subtitle: Text(data['useremail'] ?? ''),
+                          subtitle: FutureBuilder<QuerySnapshot>(
+                            future: FirebaseFirestore.instance
+                                .collection('chats')
+                                .doc(
+                                  getChatId(
+                                    FirebaseAuth.instance.currentUser!.uid,
+                                    docs[index].id,
+                                  ),
+                                )
+                                .collection('messages')
+                                .orderBy('timestamp', descending: true)
+                                .limit(1)
+                                .get(),
+                            builder: (context, snapshot) {
+                              if (!snapshot.hasData) return Text("Loading...");
+                              if (snapshot.data!.docs.isEmpty) {
+                                return Text("Hey there! I am new User");
+                              }
+
+                              final messageData =
+                                  snapshot.data!.docs.first.data()
+                                      as Map<String, dynamic>;
+                              final currentUserId =
+                                  FirebaseAuth.instance.currentUser!.uid;
+                              final isIncoming =
+                                  messageData['senderId'] != currentUserId;
+
+                              return Text(
+                                messageData['text'] ?? '',
+                                style: TextStyle(
+                                  fontWeight: isIncoming
+                                      ? FontWeight.bold
+                                      : FontWeight.normal,
+                                ),
+                              );
+                            },
+                          ),
+
                           onTap: () {
                             Navigator.of(context).push(
                               MaterialPageRoute(
-                                builder: (context) =>
-                                    ChatScreen(userName: data['username']),
+                                builder: (context) => ChatScreen(
+                                  userName: data['username'],
+                                  userId: docs[index].id,
+                                ),
                               ),
                             );
                           },

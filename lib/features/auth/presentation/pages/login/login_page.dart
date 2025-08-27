@@ -7,10 +7,10 @@ import 'package:go_router/go_router.dart';
 import 'package:online_groceries_app/config/route/path.dart';
 import 'package:online_groceries_app/core/services/auth_service.dart';
 import 'package:online_groceries_app/core/util/validation.dart';
-// import 'package:online_groceries_app/features/auth/presentation/controller/user_notifier.dart';
 import 'package:online_groceries_app/features/auth/presentation/provider/state_provider.dart';
 import 'package:online_groceries_app/features/auth/presentation/widget/background_layout_widget.dart';
 import 'package:online_groceries_app/features/auth/presentation/widget/custom_button_widget.dart';
+import 'package:online_groceries_app/features/auth/presentation/widget/custom_snack_bar.dart';
 import 'package:online_groceries_app/features/auth/presentation/widget/input_text_form_widget.dart';
 import 'package:online_groceries_app/features/auth/presentation/widget/text_widget.dart';
 import 'package:online_groceries_app/l10n/app_localizations.dart';
@@ -148,14 +148,10 @@ class LoginPage extends ConsumerWidget {
                     );
 
                     if (user != null) {
-                      ScaffoldMessenger.of(context).showSnackBar(
-                        SnackBar(content: Text('Login Successfully')),
-                      );
+                      CustomSnackBar.show(context, 'Login Successfully');
                       context.go(Path.home);
                     } else {
-                      ScaffoldMessenger.of(context).showSnackBar(
-                        SnackBar(content: Text('User login failed')),
-                      );
+                      CustomSnackBar.show(context, 'User login failed');
                     }
 
                     // final useremail = emailController.text.trim();

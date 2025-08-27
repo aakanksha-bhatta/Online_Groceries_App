@@ -1,3 +1,4 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:go_router/go_router.dart';
@@ -6,6 +7,7 @@ import 'package:online_groceries_app/config/route/path.dart';
 import 'package:online_groceries_app/core/services/auth_service.dart';
 import 'package:online_groceries_app/features/auth/presentation/widget/background_layout_widget.dart';
 import 'package:online_groceries_app/features/auth/presentation/widget/custom_button_widget.dart';
+import 'package:online_groceries_app/features/auth/presentation/widget/custom_snack_bar.dart';
 import 'package:online_groceries_app/features/auth/presentation/widget/intl_phone_input_widget.dart';
 import 'package:online_groceries_app/features/auth/presentation/widget/text_widget.dart';
 import 'package:online_groceries_app/l10n/app_localizations.dart';
@@ -72,19 +74,47 @@ class SigninScreen extends StatelessWidget {
                       onPressed: () async {
                         final result = await AuthService().signInWithGoogle();
 
-                        // if (result != null) {
-                        //   // Navigate to Home Page
-                        //   Navigator.pushReplacement(
-                        //     context,
-                        //     MaterialPageRoute(
-                        //       builder: (context) => HomeScreen(),
-                        //     ), // or use GoRouter
-                        //   );
-                        // } else {
-                        //   ScaffoldMessenger.of(context).showSnackBar(
-                        //     SnackBar(content: Text("Google Sign-In failed")),
-                        //   );
-                        // }
+                        if (result != null) {
+                          final user = result.user;
+
+                          // final displayName = user?.displayName;
+                          // final email = user?.email;
+                          // final photoURL = user?.photoURL;
+                          // final uid = user?.uid;
+
+                          // print('Name: $displayName');
+                          // print('Email: $email');
+                          // print('Photo: $photoURL');
+
+                          if (user != null) {
+                            await FirebaseFirestore.instance
+                                .collection('users')
+                                .doc(user.uid)
+                                .set(
+                                  {
+                                    'username': user.displayName,
+                                    'email': user.email,
+                                    'photoURL': user.photoURL,
+                                    'uid': user.uid,
+                                    'createdAt': FieldValue.serverTimestamp(),
+                                  },
+                                  SetOptions(merge: true),
+                                ); // merge keeps existing fields
+                          }
+
+                          if (result != null) {
+                            context.go(Path.home);
+                            CustomSnackBar.show(
+                              context,
+                              "Google Sign-In successful",
+                            );
+                          } else {
+                            CustomSnackBar.show(
+                              context,
+                              "Google Sign-In failed",
+                            );
+                          }
+                        }
                       },
 
                       buttonIcon: 'assets/icons/google.svg',

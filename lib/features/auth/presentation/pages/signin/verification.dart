@@ -19,9 +19,16 @@ class Verification extends ConsumerWidget {
     initialText: '----',
   );
 
+  final TextEditingController otpController =
+      TextEditingController(); // <-- Add this
+
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final loc = AppLocalizations.of(context)!;
+    // final args = GoRouterState.of(context).extra as Map<String, dynamic>;
+    // final String verificationId = args['verificationId'];
+    // final String phoneNumber = args['phoneNumber'];
+
     return Scaffold(
       resizeToAvoidBottomInset: true,
       body: BackgroundLayoutWidget(
@@ -52,6 +59,7 @@ class Verification extends ConsumerWidget {
                     ),
                     SizedBox(height: 27.h),
                     InputTextFormWidget(
+                      controller: otpController,
                       inputFormatters: [maskFormatter],
                       hintText: '- - - -',
                       labelText: loc.code,
@@ -83,7 +91,30 @@ class Verification extends ConsumerWidget {
                               child: InkWell(
                                 borderRadius: BorderRadius.circular(50),
                                 splashColor: Color(0xFF7BC48B),
-                                onTap: () {
+                                onTap: () async {
+                                  final smsCode = otpController.text.trim();
+                                  if (smsCode.length < 4) {
+                                    ScaffoldMessenger.of(context).showSnackBar(
+                                      SnackBar(
+                                        content: Text(
+                                          'Please enter the 4-digit code',
+                                        ),
+                                      ),
+                                    );
+                                    return;
+                                  }
+
+                                  // final auth = AuthService();
+
+                                  // await auth.signInWithOtp(
+                                  //   context: context,
+                                  //   verificationId: verificationId,
+                                  //   smsCode: smsCode,
+                                  // );
+
+                                  // if (auth.getCurrentUser() != null) {
+                                  //   context.go(Path.location);
+                                  // }
                                   context.go(Path.location);
                                 },
                                 child: Icon(

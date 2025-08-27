@@ -1,4 +1,5 @@
 class Path {
+  static const loginStatus = '/loginStatus';
   static const splash = '/splash';
   static const onboarding = '/onboarding';
   static const login = '/login';
