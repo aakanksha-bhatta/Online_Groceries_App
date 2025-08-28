@@ -17,7 +17,7 @@ class CheckingLoginStatus extends StatelessWidget {
           );
         }
         if (snapshot.hasData && snapshot.data != null) {
-          return  HomeScreen();
+          return const HomeScreen();
         }
         return const SplashScreen();
       },
