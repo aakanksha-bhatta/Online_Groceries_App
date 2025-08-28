@@ -7,6 +7,7 @@ import 'package:go_router/go_router.dart';
 import 'package:online_groceries_app/config/route/path.dart';
 import 'package:online_groceries_app/core/services/auth_service.dart';
 import 'package:online_groceries_app/core/util/validation.dart';
+import 'package:online_groceries_app/features/auth/presentation/controller/auth_notifier.dart';
 import 'package:online_groceries_app/features/auth/presentation/provider/state_provider.dart';
 import 'package:online_groceries_app/features/auth/presentation/widget/background_layout_widget.dart';
 import 'package:online_groceries_app/features/auth/presentation/widget/custom_button_widget.dart';
@@ -41,7 +42,8 @@ class LoginPage extends ConsumerWidget {
     final isVisible = ref.watch(
       passwordVisibilityProvider,
     ); //listen current state value
-    final userList = ref.watch(userListProvider);
+    // final userList = ref.watch(userListProvider);
+    final loginState = ref.watch(authNotifierProvider);
     final loc = AppLocalizations.of(context)!;
     return Scaffold(
       resizeToAvoidBottomInset: true,
@@ -140,40 +142,39 @@ class LoginPage extends ConsumerWidget {
               SizedBox(height: 30.h),
               CustomButtonWidget(
                 buttonName: loc.login,
-                onPressed: () async {
-                  if (_formKey.currentState!.validate()) {
-                    final user = await auth.signInWithEmailAndPassword(
-                      emailController.text.trim(),
-                      passwordController.text.trim(),
-                    );
+                onPressed: loginState.isLoading
+                    ? null
+                    : () async {
+                        if (_formKey.currentState!.validate()) {
+                          final user = await ref
+                              .read(authNotifierProvider.notifier)
+                              .signInWithEmail(
+                                emailController.text.trim(),
+                                passwordController.text.trim(),
+                              );
 
-                    if (user != null) {
-                      CustomSnackBar.show(context, 'Login Successfully');
-                      context.go(Path.home);
-                    } else {
-                      CustomSnackBar.show(context, 'User login failed');
-                    }
-
-                    // final useremail = emailController.text.trim();
-                    // final userpassword = passwordController.text.trim();
-
-                    // // Access the notifier, call login method
-                    // final isValid = ref
-                    //     .read(userListProvider.notifier)
-                    //     .loginUser(useremail, userpassword);
-
-                    // if (isValid) {
-                    //   ScaffoldMessenger.of(
-                    //     context,
-                    //   ).showSnackBar(SnackBar(content: Text(loc.loginSuccess)));
-                    //   context.go(Path.home);
-                    // } else {
-                    //   ScaffoldMessenger.of(context).showSnackBar(
-                    //     SnackBar(content: Text(loc.invalidCredentials)),
-                    //   );
-                    // }
-                  }
-                },
+                          if (user != null) {
+                            CustomSnackBar.show(context, loc.loginSuccess);
+                            context.go(Path.home);
+                            print('Login Successful: ${user.email}');
+                          } else {
+                            CustomSnackBar.show(
+                              context,
+                              loc.invalidCredentials,
+                            );
+                          }
+                        }
+                      },
+                child: loginState.isLoading
+                    ? SizedBox(
+                        height: 24,
+                        width: 24,
+                        child: CircularProgressIndicator(
+                          color: Colors.white,
+                          strokeWidth: 2,
+                        ),
+                      )
+                    : null,
               ),
 
               SizedBox(height: 25.h),

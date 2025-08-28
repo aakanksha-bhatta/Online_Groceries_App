@@ -1,5 +1,8 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_intl_phone_field/flutter_intl_phone_field.dart';
+import 'package:flutter_intl_phone_field/phone_number.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 class IntlPhoneInputWidget extends StatelessWidget {
@@ -8,6 +11,7 @@ class IntlPhoneInputWidget extends StatelessWidget {
   final String? labelText;
   final bool? isEnable;
   final TextEditingController? controller;
+  final FutureOr<String?> Function(PhoneNumber?)? validator;
 
   const IntlPhoneInputWidget({
     super.key,
@@ -16,6 +20,7 @@ class IntlPhoneInputWidget extends StatelessWidget {
     this.labelText,
     this.isEnable,
     this.controller,
+    this.validator,
   });
 
   @override
@@ -36,6 +41,7 @@ class IntlPhoneInputWidget extends StatelessWidget {
         ],
         IntlPhoneField(
           controller: controller,
+          validator: validator,
           showDropdownIcon: false,
           disableLengthCheck: true,
           initialCountryCode: initialCountryCode,

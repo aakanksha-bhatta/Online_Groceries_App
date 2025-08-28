@@ -10,6 +10,7 @@ class CustomButtonWidget extends StatelessWidget {
   final Color? buttonColor;
   final Color? splashColor;
   final String? buttonIcon;
+  final Widget? child;
 
   const CustomButtonWidget({
     super.key,
@@ -18,6 +19,7 @@ class CustomButtonWidget extends StatelessWidget {
     this.buttonColor,
     this.splashColor,
     this.buttonIcon,
+    this.child,
   });
 
   @override
@@ -34,23 +36,26 @@ class CustomButtonWidget extends StatelessWidget {
           height: 67.h,
           width: 353.w,
           alignment: Alignment.center,
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              if (buttonIcon != null)
-                Padding(
-                  padding: EdgeInsets.only(right: 42.63.w),
-                  child: SvgPicture.asset(buttonIcon!),
+          child: child != null
+              ? child!
+              : Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    if (buttonIcon != null)
+                      Padding(
+                        padding: EdgeInsets.only(right: 42.63.w),
+                        child: SvgPicture.asset(buttonIcon!),
+                      ),
+                    TextWidget(
+                      title: buttonName,
+                      fontSize: 18.sp,
+                      fontWeight: FontWeight.w600,
+                      color:
+                          theme.textTheme.displayMedium?.color ?? Colors.white,
+                      letterSpacing: 0,
+                    ),
+                  ],
                 ),
-              TextWidget(
-                title: buttonName,
-                fontSize: 18.sp,
-                fontWeight: FontWeight.w600,
-                color: theme.textTheme.displayMedium?.color ?? Colors.white,
-                letterSpacing: 0,
-              ),
-            ],
-          ),
         ),
       ),
     );

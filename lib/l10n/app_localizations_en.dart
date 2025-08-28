@@ -76,7 +76,7 @@ class AppLocalizationsEn extends AppLocalizations {
   String get and => 'and';
 
   @override
-  String get enter4DigitCode => 'Enter your 4-digit Code';
+  String get enter4DigitCode => 'Please enter the 4-digit code';
 
   @override
   String get code => 'Code';

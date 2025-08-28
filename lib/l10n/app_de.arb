@@ -38,5 +38,7 @@
   "getGroceriesWithNectar": "Erhalte deine Lebensmittel mit Nectar",
   "orConnectWithSocial": "Oder verbinde dich mit sozialen Medien",
   "continueWithGoogle": "Mit Google fortfahren",
-  "continueWithFacebook": "Mit Facebook fortfahren"
+  "continueWithFacebook": "Mit Facebook fortfahren",
+  "enter4DigitCode": "Bitte geben Sie den 4-stelligen Code ein."
+
 }

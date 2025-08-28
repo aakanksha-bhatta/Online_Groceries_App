@@ -1,18 +1,17 @@
 import 'dart:convert';
-
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:online_groceries_app/features/auth/data/model/user.dart';
-import 'package:online_groceries_app/features/auth/presentation/controller/user_notifier.dart';
+// import 'package:online_groceries_app/features/auth/presentation/controller/auth_notifier.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 final passwordVisibilityProvider = StateProvider<bool>(
   (ref) => false,
 ); // holding value
 
-final userListProvider = StateNotifierProvider<UserNotifier, List<User>>((ref) {
-  return UserNotifier();
-});
+// final userListProvider = StateNotifierProvider<UserNotifier, List<User>>((ref) {
+//   return UserNotifier();
+// });
 
 // final userMobileNoProvider = ChangeNotifierProvider<UserChangeNotifier>((ref) {
 //   return UserChangeNotifier(ref);

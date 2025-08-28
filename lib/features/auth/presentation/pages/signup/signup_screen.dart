@@ -8,6 +8,7 @@ import 'package:go_router/go_router.dart';
 import 'package:online_groceries_app/config/route/path.dart';
 import 'package:online_groceries_app/core/services/auth_service.dart';
 import 'package:online_groceries_app/core/util/validation.dart';
+import 'package:online_groceries_app/features/auth/presentation/controller/auth_notifier.dart';
 import 'package:online_groceries_app/features/auth/presentation/provider/state_provider.dart';
 import 'package:online_groceries_app/features/auth/presentation/widget/background_layout_widget.dart';
 import 'package:online_groceries_app/features/auth/presentation/widget/custom_button_widget.dart';
@@ -34,6 +35,7 @@ class SignupScreen extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final isVisible = ref.watch(passwordVisibilityProvider);
     final loc = AppLocalizations.of(context)!;
+    final signupState = ref.watch(authNotifierProvider);
     return Scaffold(
       resizeToAvoidBottomInset: true,
       body: BackgroundLayoutWidget(
@@ -159,39 +161,52 @@ class SignupScreen extends ConsumerWidget {
               SizedBox(height: 30.h),
               CustomButtonWidget(
                 buttonName: loc.signUp,
-                onPressed: () async {
-                  if (_formKey.currentState!.validate()) {
-                    final userCredential = await auth
-                        .createUserWithEmailPassword(
-                          emailController.text.trim(),
-                          passwordController.text.trim(),
-                        );
+                onPressed: signupState.isLoading
+                    ? null
+                    : () async {
+                        if (_formKey.currentState!.validate()) {
+                          final user = await ref
+                              .read(authNotifierProvider.notifier)
+                              .createWithEmail(
+                                emailController.text.trim(),
+                                passwordController.text.trim(),
+                              );
 
-                    if (userCredential != null) {
-                      final user = userCredential.user;
-                      if (user != null) {
-                        // Save user data in Firestore
-                        await FirebaseFirestore.instance
-                            .collection('users')
-                            .doc(user.uid)
-                            .set({
-                              'uid': user.uid,
-                              'username': usernameController.text.trim(),
-                              'useremail': emailController.text.trim(),
-                            });
+                          if (user != null) {
+                            await FirebaseFirestore.instance
+                                .collection('users')
+                                .doc(user.uid)
+                                .set({
+                                  'uid': user.uid,
+                                  'username': usernameController.text.trim(),
+                                  'useremail': emailController.text.trim(),
+                                });
 
-                        CustomSnackBar.show(
-                          context,
-                          'Registration Successfully',
-                        );
-                        context.go(Path.login);
-                      }
-                    } else {
-                      CustomSnackBar.show(context, 'User registration failed');
-                    }
-                  }
-                },
+                            CustomSnackBar.show(
+                              context,
+                              'Registration Successfully',
+                            );
+                            context.go(Path.login);
+                          } else {
+                            CustomSnackBar.show(
+                              context,
+                              'User registration failed',
+                            );
+                          }
+                        }
+                      },
+                child: signupState.isLoading
+                    ? SizedBox(
+                        height: 24,
+                        width: 24,
+                        child: CircularProgressIndicator(
+                          color: Colors.white,
+                          strokeWidth: 2,
+                        ),
+                      )
+                    : null,
               ),
+
               SizedBox(height: 25.h),
               Row(
                 mainAxisAlignment: MainAxisAlignment.center,

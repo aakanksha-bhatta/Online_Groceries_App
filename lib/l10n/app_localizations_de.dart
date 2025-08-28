@@ -79,7 +79,7 @@ class AppLocalizationsDe extends AppLocalizations {
   String get and => 'und';
 
   @override
-  String get enter4DigitCode => 'Gib deinen 4-stelligen Code ein';
+  String get enter4DigitCode => 'Bitte geben Sie den 4-stelligen Code ein.';
 
   @override
   String get code => 'Code';

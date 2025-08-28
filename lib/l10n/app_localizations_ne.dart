@@ -78,7 +78,7 @@ class AppLocalizationsNe extends AppLocalizations {
   String get and => 'र';
 
   @override
-  String get enter4DigitCode => 'तपाईंको ४-अङ्कको कोड प्रविष्ट गर्नुहोस्';
+  String get enter4DigitCode => 'कृपया ४ अङ्कको कोड प्रविष्ट गर्नुहोस्।';
 
   @override
   String get code => 'कोड';

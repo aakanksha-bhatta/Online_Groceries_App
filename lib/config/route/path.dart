@@ -9,4 +9,5 @@ class Path {
   static const mobile = '/mobile';
   static const verification = '/verification';
   static const location = '/location';
+  static const setting = '/setting';
 }

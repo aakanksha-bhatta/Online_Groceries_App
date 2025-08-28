@@ -1,3 +1,4 @@
+import 'package:flutter_intl_phone_field/phone_number.dart';
 import 'package:online_groceries_app/l10n/app_localizations.dart';
 
 class Validation {
@@ -46,6 +47,29 @@ class Validation {
     }
     if (!RegExp(r'^[a-zA-Z0-9_]+$').hasMatch(value)) {
       return "Username can only contain letters, numbers, and underscores";
+    }
+    return null;
+  }
+
+  static String? validPhoneNumber(AppLocalizations loc, PhoneNumber? phone) {
+    if (phone == null || phone.completeNumber.trim().isEmpty) {
+      return "Phone number is Required";
+    }
+    if (phone.completeNumber.trim().length < 10) {
+      return "Phone number must be at least 10 characters long";
+    }
+    if (!RegExp(r'^[0-9]').hasMatch(phone.completeNumber)) {
+      return "Phone number can only contain numbers";
+    }
+    return null;
+  }
+
+  static String? validOtp(AppLocalizations loc, String? value) {
+    if (value == null || value.trim().isEmpty) {
+      return "OTP is Required";
+    }
+    if (value.trim().length < 4) {
+      return "OTP must be at least 4 characters long";
     }
     return null;
   }

@@ -88,6 +88,12 @@ flutter:
     - assets/icons/carrot_color.svg
     - assets/images/signin_bg.png
     - assets/images/location.svg
+    - assets/images/banana.png
+    - assets/icons/account.svg
+    - assets/icons/favorite.svg
+    - assets/icons/cart.svg
+    - assets/icons/explore.svg
+    - assets/icons/shop.svg
 
   #   - images/a_dot_ham.jpeg
 

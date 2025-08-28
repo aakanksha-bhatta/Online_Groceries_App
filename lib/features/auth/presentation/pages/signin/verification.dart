@@ -4,6 +4,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:go_router/go_router.dart';
 import 'package:mask_text_input_formatter/mask_text_input_formatter.dart';
 import 'package:online_groceries_app/config/route/path.dart';
+import 'package:online_groceries_app/core/util/validation.dart';
 import 'package:online_groceries_app/features/auth/presentation/widget/app_bar_widget.dart';
 import 'package:online_groceries_app/features/auth/presentation/widget/background_layout_widget.dart';
 import 'package:online_groceries_app/features/auth/presentation/widget/input_text_form_widget.dart';
@@ -60,6 +61,7 @@ class Verification extends ConsumerWidget {
                     SizedBox(height: 27.h),
                     InputTextFormWidget(
                       controller: otpController,
+                      validator: (value) => Validation.validOtp(loc, value),
                       inputFormatters: [maskFormatter],
                       hintText: '- - - -',
                       labelText: loc.code,
@@ -74,7 +76,7 @@ class Verification extends ConsumerWidget {
                         children: [
                           TextWidget(
                             title: loc.resendCode,
-                            fontSize: 18,
+                            fontSize: 18.sp,
                             fontWeight: FontWeight.w400,
                             color: Color(0xff53b175),
                             letterSpacing: 0,
@@ -96,9 +98,7 @@ class Verification extends ConsumerWidget {
                                   if (smsCode.length < 4) {
                                     ScaffoldMessenger.of(context).showSnackBar(
                                       SnackBar(
-                                        content: Text(
-                                          'Please enter the 4-digit code',
-                                        ),
+                                        content: Text(loc.enter4DigitCode),
                                       ),
                                     );
                                     return;

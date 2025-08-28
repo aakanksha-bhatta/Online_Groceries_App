@@ -1,11 +1,13 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:go_router/go_router.dart';
 import 'package:online_groceries_app/config/route/path.dart';
 import 'package:online_groceries_app/core/services/auth_service.dart';
+import 'package:online_groceries_app/core/util/validation.dart';
 import 'package:online_groceries_app/features/auth/presentation/widget/app_bar_widget.dart';
 import 'package:online_groceries_app/features/auth/presentation/widget/background_layout_widget.dart';
-import 'package:online_groceries_app/features/auth/presentation/widget/custom_snack_bar.dart';
 import 'package:online_groceries_app/features/auth/presentation/widget/intl_phone_input_widget.dart';
 import 'package:online_groceries_app/features/auth/presentation/widget/text_widget.dart';
 import 'package:online_groceries_app/l10n/app_localizations.dart';
@@ -55,6 +57,8 @@ class _MobileNumberScreenState extends State<MobileNumberScreen> {
                     SizedBox(height: 27.h),
                     IntlPhoneInputWidget(
                       labelText: loc.mobileNumber,
+                      validator: (phone) =>
+                          Validation.validPhoneNumber(loc, phone),
                       controller: phoneNumberController,
                       onChanged: (value) {
                         fullPhoneNumber = value;
@@ -78,13 +82,15 @@ class _MobileNumberScreenState extends State<MobileNumberScreen> {
                             splashColor: Color(0xFF7BC48B),
                             onTap: () async {
                               final phone = fullPhoneNumber?.trim();
-                              if (phone == null || phone.isEmpty) {
-                                CustomSnackBar.show(
-                                  context,
-                                  'Please enter your mobile number',
-                                );
-                                return;
+                              final uid =
+                                  FirebaseAuth.instance.currentUser?.uid;
+                              if (uid != null) {
+                                await FirebaseFirestore.instance
+                                    .collection('users')
+                                    .doc(uid)
+                                    .set({'phone': phone});
                               }
+
                               // auth.verifyPhoneNumber(
                               //   phoneNumber: phone,
                               //   codeSentCallback: (verificationId) {

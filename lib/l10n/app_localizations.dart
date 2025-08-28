@@ -235,7 +235,7 @@ abstract class AppLocalizations {
   /// No description provided for @enter4DigitCode.
   ///
   /// In en, this message translates to:
-  /// **'Enter your 4-digit Code'**
+  /// **'Please enter the 4-digit code'**
   String get enter4DigitCode;
 
   /// No description provided for @code.
