@@ -1,0 +1,58 @@
+[
+  {
+    "name": "Egg",
+    "price": 2.5,
+    "category": "Dairy & Eggs",
+    "quantity": 12,
+    "image": "assets/images/product/egg.svg"
+  },
+  {
+    "name": "Chicken",
+    "price": 7.99,
+    "category": "Meat & Fish",
+    "quantity": 1,
+    "image": "assets/images/product/chicken.svg"
+  },
+  {
+    "name": "White Egg",
+    "price": 2.8,
+    "category": "Dairy & Eggs",
+    "quantity": 12,
+    "image": "assets/images/product/white_egg.svg"
+  },
+  {
+    "name": "Coke",
+    "price": 1.5,
+    "category": "Beverages",
+    "quantity": 1,
+    "image": "assets/images/product/coke.svg"
+  },
+  {
+    "name": "Sprite",
+    "price": 1.5,
+    "category": "Beverages",
+    "quantity": 1,
+    "image": "assets/images/product/sprite.svg"
+  },
+  {
+    "name": "Beef",
+    "price": 9.5,
+    "category": "Meat & Fish",
+    "quantity": 1,
+    "image": "assets/images/product/beef.svg"
+  },
+  {
+    "name": "Chicken",
+    "price": 7.99,
+    "category": "Meat & Fish",
+    "quantity": 1,
+    "image": "assets/images/product/chicken.svg"
+  },
+  {
+    "name": "Apple",
+    "price": 0.75,
+    "category": "Fresh Fruit & Vegetables",
+    "quantity": 6,
+    "image": "assets/images/product/apple.svg"
+  }
+]
