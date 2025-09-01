@@ -1,5 +1,9 @@
+import 'dart:convert';
+
 import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:online_groceries_app/core/services/product_service.dart';
+import 'package:online_groceries_app/features/auth/data/model/product.dart';
 
 final passwordVisibilityProvider = StateProvider<bool>(
   (ref) => false,
@@ -22,33 +26,13 @@ final productDetailsVisibleProvider = StateProvider<bool>((ref) => false);
 final nutritionDetailsVisibleProvider = StateProvider<bool>((ref) => false);
 
 final deleteItemProvider = StateProvider<bool>((ref) => false);
-// final userListProvider = StateNotifierProvider<UserNotifier, List<User>>((ref) {
-//   return UserNotifier();
-// });
+// handling delete item visibility
 
-// final userMobileNoProvider = ChangeNotifierProvider<UserChangeNotifier>((ref) {
-//   return UserChangeNotifier(ref);
-//   // Notifier.loadUser();
-// });
+final productServiceProvider = Provider((ref) => ProductService());
+final productListProvider = FutureProvider<List<Product>>((ref) async {
+  final jsonString = await rootBundle.loadString('assets/json/product.json');
+  final List<dynamic> jsonList = jsonDecode(jsonString);
+  return jsonList.map((e) => Product.fromJson(e)).toList();
+});
 
-// class UserChangeNotifier extends ChangeNotifier {
-//   UserChangeNotifier({required this.ref});
-//   final Ref ref;
-//   List<User> usersData = [];
-//   bool isLoading = false;
-//   final String _usersKey = 'users';
-
-//   Future<void> loadUsers() async {
-//     final pref = await SharedPreferences.getInstance();
-//     final userListJson = pref.getStringList(_usersKey) ?? [];
-//     // print('%%% Loaded users from SharedPreferences: $userListJson');
-
-//     final users = userListJson.map((userJson) {
-//       final userMap = jsonDecode(userJson);
-//       return User.fromJson(userMap);
-//     }).toList();
-//     isLoading = true;
-//     usersData = users;
-//     notifyListeners();
-//   }
-// }
+final selectedQuantityProvider = StateProvider<int>((ref) => 1);

@@ -1,3 +1,5 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -19,95 +21,117 @@ class _FavoritePageState extends ConsumerState<FavoritePage> {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Colors.white,
-      body: Column(
-        children: [
-          Padding(
-            padding: const EdgeInsets.only(top: 55.82, bottom: 20),
-            child: Center(
-              child: TextWidget(
-                title: 'Favorites',
-                fontSize: 20.sp,
-                fontWeight: FontWeight.w400,
-                color: Color(0xff181725),
-                letterSpacing: 0,
+      body: StreamBuilder<QuerySnapshot>(
+        stream: FirebaseFirestore.instance
+            .collection('users')
+            .doc(FirebaseAuth.instance.currentUser!.uid)
+            .collection('favorites')
+            .snapshots(),
+        builder: (context, snapshot) {
+          if (snapshot.connectionState == ConnectionState.waiting) {
+            return Center(child: CircularProgressIndicator());
+          }
+          if (snapshot.hasError) {
+            return Center(child: Text('Error: ${snapshot.error}'));
+          }
+          if (!snapshot.hasData || snapshot.data!.docs.isEmpty) {
+            return Center(child: Text('No favorites found.'));
+          }
+
+          final favoriteDocs = snapshot.data!.docs;
+
+          return Column(
+            children: [
+              Padding(
+                padding: const EdgeInsets.only(top: 55.82, bottom: 20),
+                child: Center(
+                  child: TextWidget(
+                    title: 'Favorites',
+                    fontSize: 20.sp,
+                    fontWeight: FontWeight.w400,
+                    color: Color(0xff181725),
+                    letterSpacing: 0,
+                  ),
+                ),
               ),
-            ),
-          ),
-          Divider(color: Color(0xffE2E2E2), thickness: 1, height: 0),
-          Expanded(
-            child: Padding(
-              padding: const EdgeInsets.only(left: 25.27, right: 25.27),
-              child: ListView.separated(
-                padding: EdgeInsets.only(top: 15, bottom: 25),
-                itemCount: 1,
-                itemBuilder: (context, index) {
-                  return  ListTile(
-                    contentPadding: EdgeInsets.zero,
-                    leading: Image.asset(
-                      'assets/images/banana.png',
-                      alignment: Alignment.topCenter,
-                      height: 60.h,
-                      width: 60.w,
-                    ),
-                    title: TextWidget(
-                      title: 'Original Banana',
-                      fontSize: 16.sp,
-                      fontWeight: FontWeight.w400,
-                      color: Color(0xff181725),
-                      letterSpacing: 0,
-                    ),
-                    subtitle: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        TextWidget(
-                          title: '1kg, Price',
+              Divider(color: Color(0xffE2E2E2), thickness: 1, height: 0),
+              Expanded(
+                child: Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 25.27),
+                  child: ListView.separated(
+                    padding: EdgeInsets.only(top: 15, bottom: 25),
+                    itemCount: favoriteDocs.length,
+                    itemBuilder: (context, index) {
+                      final data =
+                          favoriteDocs[index].data() as Map<String, dynamic>;
+                      final productName = data['productName'];
+                      final productImage = data['productImage'];
+                      final productQuantity =
+                          data['productQuantity']?.toString() ?? '';
+
+                      final productPrice = data['productPrice']?.toString();
+
+                      return ListTile(
+                        contentPadding: EdgeInsets.zero,
+                        leading: Image.asset(
+                          productImage,
+                          alignment: Alignment.topCenter,
+                          height: 60.h,
+                          width: 60.w,
+                        ),
+
+                        title: TextWidget(
+                          title: productName,
+                          fontSize: 16.sp,
+                          fontWeight: FontWeight.w400,
+                          color: Color(0xff181725),
+                          letterSpacing: 0,
+                        ),
+                        subtitle: TextWidget(
+                          title: '$productQuantity kg, price',
                           fontSize: 14.sp,
                           fontWeight: FontWeight.w400,
                           color: Color(0xff7C7C7C),
                           letterSpacing: 0,
                         ),
-                      ],
-                    ),
-                    trailing: SizedBox(
-                      width: 62.39990234375.w,
-                      child: Row(
-                        crossAxisAlignment: CrossAxisAlignment.end,
-                        children: [
-                          TextWidget(
-                            title: '\$4.99',
-                            fontSize: 18.sp,
-                            fontWeight: FontWeight.w600,
-                            color: Color(0xff181725),
-                            letterSpacing: 0.1,
+                        trailing: SizedBox(
+                          width: 62.w,
+                          child: Row(
+                            crossAxisAlignment: CrossAxisAlignment.end,
+                            children: [
+                              TextWidget(
+                                title: '\$$productPrice',
+                                fontSize: 18.sp,
+                                fontWeight: FontWeight.w600,
+                                color: Color(0xff181725),
+                                letterSpacing: 0.1,
+                              ),
+                              SizedBox(width: 8.w),
+                              Icon(
+                                Icons.arrow_forward_ios,
+                                color: Color(0xff7C7C7C),
+                                size: 16.sp,
+                              ),
+                            ],
                           ),
-                          SizedBox(width: 8.w),
-                          Icon(
-                            Icons.arrow_forward_ios,
-                            color: Color(0xff7C7C7C),
-                            size: 16.sp,
-                          ),
-                        ],
-                      ),
-                    ),
-                  );
-                },
-                separatorBuilder: (BuildContext context, int index) {
-                  return Divider(color: Color(0xffE2E2E2), thickness: 1);
-                },
+                        ),
+                      );
+                    },
+                    separatorBuilder: (context, index) {
+                      return Divider(color: Color(0xffE2E2E2), thickness: 1);
+                    },
+                  ),
+                ),
               ),
-            ),
-          ),
-
-          Padding(
-            padding: const EdgeInsets.only(
-              left: 24.39,
-              right: 25.27,
-              bottom: 21.25,
-              top: 5.23,
-            ),
-            child: CustomButtonWidget(buttonName: 'Add All to Cart'),
-          ),
-        ],
+              Padding(
+                padding: const EdgeInsets.symmetric(
+                  horizontal: 25.27,
+                ).copyWith(bottom: 21.25, top: 5.23),
+                child: CustomButtonWidget(buttonName: 'Add All to Cart'),
+              ),
+            ],
+          );
+        },
       ),
       bottomNavigationBar: CustomNavigationBar(),
     );

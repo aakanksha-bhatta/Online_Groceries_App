@@ -79,35 +79,8 @@ flutter:
 
   # To add assets to your application, add an assets section, like this:
   assets:
-    - assets/icons/carrot.svg
-    - assets/icons/nectar.svg
-    - assets/icons/google.svg
-    - assets/icons/facebook.svg
-    - assets/images/onboarding.png
-    - assets/images/mask_group.png
-    - assets/icons/carrot_color.svg
-    - assets/images/signin_bg.png
-    - assets/images/location.svg
-    - assets/images/banana.png
-    - assets/icons/account.svg
-    - assets/icons/favorite.svg
-    - assets/icons/cart.svg
-    - assets/icons/explore.svg
-    - assets/icons/shop.svg
-    - assets/images/fresh_fruit_vegetable.svg
-    - assets/images/cooking_oil_ghee.svg
-    - assets/images/meat_fish.svg
-    - assets/images/bakery_snack.svg
-    - assets/images/dairy_egg.svg
-    - assets/images/beverages.svg
-    - assets/images/product/egg.svg
-    - assets/images/product/chicken.svg
-    - assets/images/product/white_egg.svg
-    - assets/images/product/coke.svg
-    - assets/images/product/sprite.svg
-    - assets/images/product/beef.svg
-    - assets/images/product/chicken.svg
-    - assets/images/product/apple.svg
+    - assets/images/
+    - assets/icons/
     - assets/json/product.json
 
   #   - images/a_dot_ham.jpeg

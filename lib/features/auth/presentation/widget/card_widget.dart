@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:flutter_svg/svg.dart';
 import 'package:go_router/go_router.dart';
 import 'package:online_groceries_app/config/route/path.dart';
 import 'package:online_groceries_app/features/auth/presentation/widget/add_button_widget.dart';
@@ -51,11 +52,18 @@ class CardWidget extends StatelessWidget {
                   child: Container(
                     height: 79.43.h,
                     width: 99.89.w,
-                    decoration: BoxDecoration(
-                      image: DecorationImage(
-                        image: AssetImage(productImage),
-                        fit: BoxFit.contain,
-                      ),
+                    // color: Colors.red,
+                    // decoration: BoxDecoration(
+                    //   image: DecorationImage(
+                    //     image: AssetImage(productImage),
+                    //     fit: BoxFit.contain,
+                    //   ),
+                    // ),
+                    child: SvgPicture.asset(
+                      'assets/images/product/chicken.svg',
+                      fit: BoxFit.contain,
+                      height: 79.43.h,
+                      width: 99.89.w,
                     ),
                   ),
                 ),

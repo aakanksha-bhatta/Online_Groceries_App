@@ -3,9 +3,12 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:go_router/go_router.dart';
 import 'package:online_groceries_app/config/route/path.dart';
+import 'package:online_groceries_app/core/services/cart_service.dart';
+import 'package:online_groceries_app/core/services/favorite_service.dart';
 import 'package:online_groceries_app/features/auth/presentation/provider/state_provider.dart';
 import 'package:online_groceries_app/features/auth/presentation/widget/add_minus_button_widget.dart';
 import 'package:online_groceries_app/features/auth/presentation/widget/custom_button_widget.dart';
+import 'package:online_groceries_app/features/auth/presentation/widget/custom_snack_bar.dart';
 import 'package:online_groceries_app/features/auth/presentation/widget/text_widget.dart';
 
 class ProductDetailsPage extends ConsumerWidget {
@@ -54,6 +57,11 @@ class ProductDetailsPage extends ConsumerWidget {
                     height: 199.18.h,
                     fit: BoxFit.contain,
                   ),
+                  // child: SvgPicture.asset(
+                  //   productImage,
+                  //   height: 199.18.h,
+                  //   fit: BoxFit.contain,
+                  // ),
                 ),
               ),
 
@@ -99,12 +107,32 @@ class ProductDetailsPage extends ConsumerWidget {
                           letterSpacing: 0.1,
                         ),
                         InkWell(
-                          onTap: () {
-                            ref.read(selectedFavoriteProvider.notifier).state =
-                                ref.watch(selectedFavoriteProvider) ==
-                                    Colors.red.value
-                                ? Color(0xFF7C7C7C).value
-                                : Colors.red.value;
+                          onTap: () async {
+                            final isFavorite =
+                                ref.read(selectedFavoriteProvider) ==
+                                Colors.red.value;
+
+                            if (isFavorite) {
+                              await FavoritesService().removeFromFavorites(
+                                productId,
+                              );
+                              ref
+                                      .read(selectedFavoriteProvider.notifier)
+                                      .state =
+                                  0xFF7C7C7C; // grey
+                            } else {
+                              await FavoritesService().addToFavorites(
+                                productId: productId,
+                                productName: productName,
+                                productImage: productImage,
+                                productQuantity: productQuantity,
+                                productPrice: productPrice,
+                              );
+                              ref
+                                      .read(selectedFavoriteProvider.notifier)
+                                      .state =
+                                  Colors.red.value;
+                            }
                           },
                           child: Icon(
                             ref.watch(selectedFavoriteProvider) ==
@@ -118,7 +146,7 @@ class ProductDetailsPage extends ConsumerWidget {
                       ],
                     ),
                     TextWidget(
-                      title: '${productQuantity.toString()}kg, price',
+                      title: '${productQuantity}kg, price',
                       fontSize: 16.sp,
                       fontWeight: FontWeight.w600,
                       color: Color(0xff7C7C7C),
@@ -258,17 +286,32 @@ class ProductDetailsPage extends ConsumerWidget {
                     SizedBox(height: 20.14.h),
                     CustomButtonWidget(
                       buttonName: 'Add to Basket',
-                      onPressed: () {
-                        // context.push(
-                        //   Path.cart,
-                        //   extra: {
-                        //     'productId': productId,
-                        //     'productName': productName,
-                        //     'productImage': productImage,
-                        //     'productPrice': productPrice,
-                        //     'productQuantity': productQuantity,
-                        //   },
-                        // );
+                      onPressed: () async {
+                        final selectedQuantity = ref.watch(
+                          selectedQuantityProvider,
+                        );
+
+                        try {
+                          await CartService().addToCart(
+                            productId: productId,
+                            productName: productName,
+                            productImage: productImage,
+                            productPrice: productPrice,
+                            productQuantity: productQuantity,
+                            selectedQuantity: selectedQuantity,
+                          );
+                          CustomSnackBar.show(
+                            context,
+                            '$productName added to basket',
+                          );
+
+                          context.go(Path.cart);
+                        } catch (e) {
+                          CustomSnackBar.show(
+                            context,
+                            'Failed to add $productName to basket',
+                          );
+                        }
                       },
                     ),
                   ],
