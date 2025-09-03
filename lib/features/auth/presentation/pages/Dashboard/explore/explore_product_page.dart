@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_svg/svg.dart';
 import 'package:online_groceries_app/features/auth/data/enum/product_enum.dart';
+import 'package:online_groceries_app/features/auth/presentation/pages/Dashboard/explore/category.dart';
 import 'package:online_groceries_app/features/auth/presentation/widget/custom_navigation_bar.dart';
 import 'package:online_groceries_app/features/auth/presentation/widget/search_bar_widget.dart';
 import 'package:online_groceries_app/features/auth/presentation/widget/text_widget.dart';
@@ -18,15 +18,29 @@ class ExploreProductPage extends StatelessWidget {
             children: [
               Padding(
                 padding: const EdgeInsets.only(top: 56.93, bottom: 10),
-                child: Align(
-                  alignment: Alignment.center,
-                  child: TextWidget(
-                    title: 'Find Products',
-                    fontSize: 20,
-                    fontWeight: FontWeight.w400,
-                    color: Colors.black,
-                    letterSpacing: 0.5,
-                  ),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Align(
+                      alignment: Alignment.center,
+                      child: TextWidget(
+                        title: 'Find Products',
+                        fontSize: 20,
+                        fontWeight: FontWeight.w400,
+                        color: Colors.black,
+                        letterSpacing: 0.5,
+                      ),
+                    ),
+                    InkWell(
+                      child: Icon(Icons.search, color: Colors.black, size: 24),
+                      onTap: () {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(builder: (context) => Category()),
+                        );
+                      },
+                    ),
+                  ],
                 ),
               ),
               SearchBarWidget(),
@@ -64,10 +78,16 @@ class ExploreProductPage extends StatelessWidget {
                         child: Column(
                           mainAxisAlignment: MainAxisAlignment.center,
                           children: [
-                            SizedBox(
+                            Container(
                               height: 74.90,
                               width: 111.37,
-                              child: SvgPicture.asset(product.svgAssetPath),
+                              decoration: BoxDecoration(
+                                image: DecorationImage(
+                                  fit: BoxFit.contain,
+                                  image: AssetImage(product.pngAssetPath),
+                                ),
+                              ),
+                              // child: Image.asset(product.pngAssetPath),
                             ),
                             SizedBox(height: 10),
                             Align(

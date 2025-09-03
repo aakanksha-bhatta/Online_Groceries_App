@@ -1,11 +1,11 @@
 [
   {
     "productId": "1",
-    "productName": "Egg",
+    "productName": "Red Egg",
     "productPrice": 2.5,
     "category": "Dairy & Eggs",
     "productQuantity": 12,
-    "productImage": "assets/images/product/egg.svg"
+    "productImage": "assets/images/item/red_egg.png"
   },
   {
     "productId": "2",
@@ -13,7 +13,7 @@
     "productPrice": 2.8,
     "category": "Dairy & Eggs",
     "productQuantity": 12,
-    "productImage": "assets/images/product/white_egg.svg"
+    "productImage": "assets/images/item/white_egg.png"
   },
   {
     "productId": "3",
@@ -21,7 +21,7 @@
     "productPrice": 7.99,
     "category": "Meat & Fish",
     "productQuantity": 1,
-    "productImage": "assets/images/product/chicken.svg"
+    "productImage": "assets/images/item/chicken.png"
   },
   {
     "productId": "4",
@@ -29,7 +29,7 @@
     "productPrice": 9.5,
     "category": "Meat & Fish",
     "productQuantity": 1,
-    "productImage": "assets/images/product/beef.svg"
+    "productImage": "assets/images/item/beef.png"
   },
   {
     "productId": "5",
@@ -37,7 +37,7 @@
     "productPrice": 1.5,
     "category": "Beverages",
     "productQuantity": 1,
-    "productImage": "assets/images/product/coke.svg"
+    "productImage": "assets/images/item/coke.png"
   },
   {
     "productId": "6",
@@ -45,7 +45,7 @@
     "productPrice": 1.5,
     "category": "Beverages",
     "productQuantity": 1,
-    "productImage": "assets/images/product/sprite.svg"
+    "productImage": "assets/images/item/sprite.png"
   },
   {
     "productId": "7",
@@ -53,7 +53,7 @@
     "productPrice": 0.75,
     "category": "Fresh Fruit & Vegetables",
     "productQuantity": 6,
-    "productImage": "assets/images/product/apple.svg"
+    "productImage": "assets/images/item/apple.png"
   },
   {
   "productId": "8",
@@ -61,7 +61,70 @@
   "productPrice": 4.99,
   "category": "Fresh Fruit & Vegetables",
   "productQuantity": 7,
-  "productImage": "assets/images/banana.png"
-}
-
+  "productImage": "assets/images/item/banana.png"
+},
+{
+  "productId": "9",
+  "productName": "Apple & Grape Juice",
+  "productPrice": 15.99,
+  "category": "Beverages",
+  "productQuantity": 7,
+  "productImage": "assets/images/item/apple_grape_juice.png"
+},
+{
+    "productId": "10",
+    "productName": "Bell Pepper Red",
+    "productPrice": 10.99,
+    "category": "Fresh Fruit & Vegetables",
+    "productQuantity": 5,
+    "productImage": "assets/images/item/bell_pepper.png"
+  },
+  {
+    "productId": "11",
+    "productName": "Diet Coke",
+    "productPrice": 1.5,
+    "category": "Beverages",
+    "productQuantity": 1,
+    "productImage": "assets/images/item/diet_coke.png"
+  },
+  {
+    "productId": "12",
+    "productName": "Ginger",
+    "productPrice": 5.99,
+    "category": "Fresh Fruit & Vegetables",
+    "productQuantity": 1,
+    "productImage": "assets/images/item/ginger.png"
+  },
+   {
+    "productId": "13",
+    "productName": "Mayonnaise",
+    "productPrice": 9.09,
+    "category": "Bakery and Snacks",
+    "productQuantity": 1,
+    "productImage": "assets/images/item/mayonnaise.png"
+  },
+   {
+    "productId": "14",
+    "productName": "Orange Juice",
+    "productPrice": 12.99,
+    "category": "Fresh Fruit & Vegetables",
+    "productQuantity": 1,
+    "productImage": "assets/images/item/orange_juice.png"
+  },
+     {
+    "productId": "15",
+    "productName": "Pasta",
+    "productPrice": 2.99,
+    "category": "Bakery and Snacks",
+    "productQuantity": 1,
+    "productImage": "assets/images/item/pasta.png"
+  },
+    {
+    "productId": "16",
+    "productName": "Sprite",
+    "productPrice": 1.50,
+    "category": "Fresh Fruit & Vegetables",
+    "productQuantity": 1,
+    "productImage": "assets/images/item/sprite.png"
+  }
 ]

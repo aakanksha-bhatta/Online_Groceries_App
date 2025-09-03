@@ -44,20 +44,20 @@ extension ProductEnumExtension on ProductEnum {
     }
   }
 
-  String get svgAssetPath {
+  String get pngAssetPath {
     switch (this) {
       case ProductEnum.freshfruitvegetable:
-        return 'assets/images/fresh_fruit_vegetable.svg';
+        return 'assets/images/product/fruit_vegetable.png';
       case ProductEnum.cookingoilghee:
-        return 'assets/images/cooking_oil_ghee.svg';
+        return 'assets/images/product/cookingoil_ghee.png';
       case ProductEnum.meatfish:
-        return 'assets/images/meat_fish.svg';
+        return 'assets/images/product/meat_fish.png';
       case ProductEnum.bakerysnack:
-        return 'assets/images/bakery_snack.svg';
+        return 'assets/images/product/bakery_snack.png';
       case ProductEnum.dairyegg:
-        return 'assets/images/dairy_egg.svg';
+        return 'assets/images/product/dairy_milk.png';
       case ProductEnum.beverages:
-        return 'assets/images/beverages.svg';
+        return 'assets/images/product/beverages.png';
     }
   }
 }
