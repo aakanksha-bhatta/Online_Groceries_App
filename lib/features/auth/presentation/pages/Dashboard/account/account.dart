@@ -23,6 +23,7 @@ class Account extends ConsumerWidget {
       {'icon': Icons.notifications_none, 'title': 'Notifications'},
       {'icon': Icons.help_outline, 'title': 'Help'},
       {'icon': Icons.info_outline, 'title': 'About'},
+      // {'icon': Icons.chat, 'title': 'Chat', 'ontap': context.go(Path.chat)},
     ];
     final state = ref.watch(authNotifierProvider);
     return Scaffold(

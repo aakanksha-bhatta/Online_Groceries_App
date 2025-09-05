@@ -1,34 +1,36 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:online_groceries_app/features/auth/presentation/widget/text_widget.dart';
 
 class RowHelperTextWidget extends StatelessWidget {
   final String title;
-  const RowHelperTextWidget({super.key, required this.title});
+  final VoidCallback? onTap;
+
+  const RowHelperTextWidget({super.key, required this.title, this.onTap});
 
   @override
   Widget build(BuildContext context) {
-    return Padding(
-      padding: const EdgeInsets.symmetric(vertical: 20.0),
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-        children: [
-          TextWidget(
-            title: title,
-            fontSize: 24.sp,
-            fontWeight: FontWeight.w600,
-            color: Color(0xff181725),
-            letterSpacing: 0,
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+      children: [
+        TextWidget(
+          title: title,
+          fontSize: 24,
+          fontWeight: FontWeight.bold,
+          color: Colors.black,
+          letterSpacing: 0,
+        ),
+        Material(
+          color: Colors.transparent,
+          child: InkWell(
+            splashColor: const Color.fromARGB(255, 231, 230, 230),
+            onTap: onTap,
+            child: Text(
+              'See All',
+              style: TextStyle(fontSize: 16, color: Colors.green),
+            ),
           ),
-          TextWidget(
-            title: 'See all',
-            fontSize: 16.sp,
-            fontWeight: FontWeight.w600,
-            color: Color(0xff53B175),
-            letterSpacing: 0,
-          ),
-        ],
-      ),
+        ),
+      ],
     );
   }
 }

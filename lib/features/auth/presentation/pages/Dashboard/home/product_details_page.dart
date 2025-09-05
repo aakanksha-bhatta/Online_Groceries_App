@@ -39,8 +39,6 @@ class ProductDetailsPage extends ConsumerWidget {
     final favoriteMap = ref.watch(favoriteStatusProvider);
     final isFavorite = favoriteMap[productId] ?? false;
     final favoriteNotifier = ref.read(favoriteStatusProvider.notifier);
-
-    // Check on build
     favoriteNotifier.checkFavorite(productId);
 
     return Scaffold(
@@ -148,7 +146,7 @@ class ProductDetailsPage extends ConsumerWidget {
                     Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
-                        const AddMinusButtonWidget(),
+                        AddMinusButtonWidget(productId: productId),
                         SizedBox(width: 10.w),
                         TextWidget(
                           title: '\$${productPrice.toStringAsFixed(2)}',
@@ -228,7 +226,7 @@ class ProductDetailsPage extends ConsumerWidget {
                       padding: const EdgeInsets.only(left: 110),
                       onPressed: () async {
                         final selectedQuantity = ref.watch(
-                          selectedQuantityProvider,
+                          quantityProvider.select((map) => map[productId] ?? 1),
                         );
                         try {
                           await CartService().addToCart(

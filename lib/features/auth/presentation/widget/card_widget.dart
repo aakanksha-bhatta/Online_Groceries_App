@@ -111,7 +111,9 @@ class CardWidget extends ConsumerWidget {
                       child: AddButtonWidget(
                         onTap: () async {
                           final selectedQuantity = ref.watch(
-                            selectedQuantityProvider,
+                            quantityProvider.select(
+                              (map) => map[productId] ?? 1,
+                            ),
                           );
                           try {
                             await CartService().addToCart(
@@ -126,7 +128,6 @@ class CardWidget extends ConsumerWidget {
                               context,
                               '$productName added to basket',
                             );
-                            context.go(Path.cart);
                           } catch (e) {
                             CustomSnackBar.show(
                               context,

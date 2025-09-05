@@ -58,8 +58,7 @@ class _CartPageState extends ConsumerState<CartPage> {
 
           double totalCost = products.fold(
             0,
-            (sum, item) =>
-                sum + (item.productPrice * (item.productQuantity ?? 1)),
+            (sum, item) => sum + (item.productPrice * (item.productQuantity)),
           );
 
           checkoutOptions[3]['value'] = '\$${totalCost.toStringAsFixed(2)}';
@@ -107,13 +106,13 @@ class _CartPageState extends ConsumerState<CartPage> {
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
                             TextWidget(
-                              title: '${product.productQuantity}kg, Price',
+                              title: '${totalCost}kg, Price',
                               fontSize: 14.sp,
                               fontWeight: FontWeight.w400,
                               letterSpacing: 0,
                               color: const Color(0xff7C7C7C),
                             ),
-                            const AddMinusButtonWidget(),
+                            AddMinusButtonWidget(productId: product.productId),
                           ],
                         ),
                         trailing: Column(

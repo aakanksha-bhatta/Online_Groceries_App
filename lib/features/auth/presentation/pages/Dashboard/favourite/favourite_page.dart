@@ -3,9 +3,10 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:go_router/go_router.dart';
+import 'package:online_groceries_app/config/route/path.dart';
 import 'package:online_groceries_app/core/services/cart_service.dart';
 import 'package:online_groceries_app/features/auth/presentation/controller/auth_notifier.dart';
-import 'package:online_groceries_app/features/auth/presentation/provider/state_provider.dart';
 import 'package:online_groceries_app/features/auth/presentation/widget/custom_button_widget.dart';
 import 'package:online_groceries_app/features/auth/presentation/widget/custom_navigation_bar.dart';
 import 'package:online_groceries_app/features/auth/presentation/widget/custom_snack_bar.dart';
@@ -136,9 +137,7 @@ class _FavoritePageState extends ConsumerState<FavoritePage> {
                   onPressed: cartState.isLoading
                       ? null
                       : () async {
-                          final selectedQuantity = ref.watch(
-                            selectedQuantityProvider,
-                          );
+                          final selectedQuantity = 1;
                           final favoriteDocs = snapshot.data!.docs;
 
                           try {
@@ -166,7 +165,7 @@ class _FavoritePageState extends ConsumerState<FavoritePage> {
                               context,
                               'All items added to basket',
                             );
-                            // context.go(Path.cart);
+                            context.go(Path.cart);
                           } catch (e) {
                             CustomSnackBar.show(
                               context,

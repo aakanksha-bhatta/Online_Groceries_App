@@ -101,7 +101,10 @@ class HomeScreen extends ConsumerWidget {
                         SizedBox(height: 20.h),
 
                         // Exclusive Offer Section
-                        RowHelperTextWidget(title: "Exclusive Offer"),
+                        RowHelperTextWidget(
+                          title: "Exclusive Offer",
+                          onTap: () {},
+                        ),
                         SizedBox(height: 12.h),
                         SizedBox(
                           height: 250.h,

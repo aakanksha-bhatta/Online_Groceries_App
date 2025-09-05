@@ -131,6 +131,7 @@ class _ExploreProductPageState extends State<ExploreProductPage> {
                               alignment: Alignment.center,
                               child: TextWidget(
                                 title: product.name,
+                                overflow: TextOverflow.clip,
                                 fontSize: 16,
                                 fontWeight: FontWeight.w400,
                                 color: Color(0xff181725),

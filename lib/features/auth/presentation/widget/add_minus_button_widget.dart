@@ -4,18 +4,20 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:online_groceries_app/features/auth/presentation/provider/state_provider.dart';
 
 class AddMinusButtonWidget extends ConsumerWidget {
-  const AddMinusButtonWidget({super.key});
+  final String productId;
+
+  const AddMinusButtonWidget({super.key, required this.productId});
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final quantity = ref.watch(quantityProvider);
+    // Get the quantity for the specific product
+    final quantity = ref.watch(quantityProvider.select((state) => state[productId] ?? 1));
+
     return Row(
       children: [
         IconButton(
           onPressed: () {
-            if (quantity > 1) {
-              ref.read(quantityProvider.notifier).state = quantity - 1;
-            }
+            ref.read(quantityProvider.notifier).decreaseQuantity(productId);
           },
           icon: Icon(Icons.remove),
         ),
@@ -40,7 +42,7 @@ class AddMinusButtonWidget extends ConsumerWidget {
         ),
         IconButton(
           onPressed: () {
-            ref.read(quantityProvider.notifier).state = quantity + 1;
+            ref.read(quantityProvider.notifier).increaseQuantity(productId);
           },
           icon: Icon(Icons.add, color: Colors.green),
         ),
