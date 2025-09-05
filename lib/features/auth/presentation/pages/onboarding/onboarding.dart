@@ -69,6 +69,7 @@ class Onboarding extends StatelessWidget {
                     SizedBox(height: 40.88.h),
                     CustomButtonWidget(
                       buttonName: loc.getStarted,
+                      padding: EdgeInsets.symmetric(horizontal: 120.96),
                       onPressed: () => context.go(Path.signin),
                     ),
                   ],

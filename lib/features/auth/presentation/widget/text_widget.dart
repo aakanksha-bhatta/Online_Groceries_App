@@ -49,6 +49,7 @@ class TextWidget extends StatelessWidget {
         fontSize: fontSize,
         fontWeight: fontWeight,
         color: color,
+        overflow: TextOverflow.ellipsis,
         fontFamily: fontFamily ?? 'OpenSans',
         letterSpacing: letterSpacing,
         height: height,

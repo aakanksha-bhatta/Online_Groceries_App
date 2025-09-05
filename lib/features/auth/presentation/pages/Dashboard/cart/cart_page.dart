@@ -154,7 +154,10 @@ class _CartPageState extends ConsumerState<CartPage> {
               bottom: 21.25,
               top: 5.23,
             ),
-            child: CustomButtonWidget(buttonName: 'Go to Checkout'),
+            child: CustomButtonWidget(
+              padding: EdgeInsets.only(left: 115.96),
+              buttonName: 'Go to Checkout',
+            ),
           ),
         ],
       ),

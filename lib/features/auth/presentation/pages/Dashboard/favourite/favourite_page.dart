@@ -127,7 +127,10 @@ class _FavoritePageState extends ConsumerState<FavoritePage> {
                 padding: const EdgeInsets.symmetric(
                   horizontal: 25.27,
                 ).copyWith(bottom: 21.25, top: 5.23),
-                child: CustomButtonWidget(buttonName: 'Add All to Cart'),
+                child: CustomButtonWidget(
+                  buttonName: 'Add All to Cart',
+                  padding: EdgeInsets.only(left: 115.96),
+                ),
               ),
             ],
           );

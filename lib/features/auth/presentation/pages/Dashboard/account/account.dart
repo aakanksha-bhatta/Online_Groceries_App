@@ -1,8 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:go_router/go_router.dart';
+import 'package:online_groceries_app/config/route/path.dart';
+import 'package:online_groceries_app/features/auth/presentation/controller/auth_notifier.dart';
 import 'package:online_groceries_app/features/auth/presentation/widget/custom_button_widget.dart';
 import 'package:online_groceries_app/features/auth/presentation/widget/custom_navigation_bar.dart';
+import 'package:online_groceries_app/features/auth/presentation/widget/custom_snack_bar.dart';
 import 'package:online_groceries_app/features/auth/presentation/widget/text_widget.dart';
 
 class Account extends ConsumerWidget {
@@ -20,7 +24,7 @@ class Account extends ConsumerWidget {
       {'icon': Icons.help_outline, 'title': 'Help'},
       {'icon': Icons.info_outline, 'title': 'About'},
     ];
-
+    final state = ref.watch(authNotifierProvider);
     return Scaffold(
       backgroundColor: Colors.white,
       body: Column(
@@ -100,14 +104,38 @@ class Account extends ConsumerWidget {
             padding: const EdgeInsets.symmetric(vertical: 24.51),
             child: CustomButtonWidget(
               buttonName: 'Log Out',
-
+              textColor: Color(0xff53B175),
+              buttonColor: Color(0xffF2F3F2),
               buttonIcon: 'assets/icons/logout.svg',
-              onPressed: () {},
+              padding: EdgeInsets.only(left: 25.17.w, right: 104.52.w),
+
+              splashColor: Color(0xffF2F3F2),
+              onPressed: state.isLoading
+                  ? null
+                  : () async {
+                      try {
+                        await ref.read(authNotifierProvider.notifier).signOut();
+                        context.go(Path.login);
+                        CustomSnackBar.show(context, "Log Out successful");
+                      } catch (e) {
+                        CustomSnackBar.show(context, "Log Out failed");
+                      }
+                    },
+              child: state.isLoading
+                  ? SizedBox(
+                      height: 24,
+                      width: 24,
+                      child: CircularProgressIndicator(
+                        color: Colors.white,
+                        strokeWidth: 2,
+                      ),
+                    )
+                  : null,
             ),
           ),
         ],
       ),
-      bottomNavigationBar: const CustomNavigationBar(),
+      bottomNavigationBar: CustomNavigationBar(),
     );
   }
 }
