@@ -15,4 +15,5 @@ class Path {
   static const cart = '/cart';
   static const favorite = '/favorite';
   static const account = '/account';
+  static const order = '/order';
 }

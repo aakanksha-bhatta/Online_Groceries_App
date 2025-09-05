@@ -34,6 +34,15 @@ class ProductDetailsPage extends ConsumerWidget {
       nutritionDetailsVisibleProvider,
     );
     final isProductDetailsVisible = ref.watch(productDetailsVisibleProvider);
+
+    // Watch favorite status
+    final favoriteMap = ref.watch(favoriteStatusProvider);
+    final isFavorite = favoriteMap[productId] ?? false;
+    final favoriteNotifier = ref.read(favoriteStatusProvider.notifier);
+
+    // Check on build
+    favoriteNotifier.checkFavorite(productId);
+
     return Scaffold(
       backgroundColor: Colors.white,
       body: Column(
@@ -57,14 +66,8 @@ class ProductDetailsPage extends ConsumerWidget {
                     height: 199.18.h,
                     fit: BoxFit.contain,
                   ),
-                  // child: SvgPicture.asset(
-                  //   productImage,
-                  //   height: 199.18.h,
-                  //   fit: BoxFit.contain,
-                  // ),
                 ),
               ),
-
               Padding(
                 padding: EdgeInsets.only(
                   top: 56.93.h,
@@ -78,11 +81,11 @@ class ProductDetailsPage extends ConsumerWidget {
                       onTap: () {
                         context.go(Path.home);
                       },
-                      child: Icon(Icons.arrow_back_ios),
+                      child: const Icon(Icons.arrow_back_ios),
                     ),
                     InkWell(
                       onTap: () {},
-                      child: Icon(Icons.file_upload_outlined),
+                      child: const Icon(Icons.file_upload_outlined),
                     ),
                   ],
                 ),
@@ -103,23 +106,16 @@ class ProductDetailsPage extends ConsumerWidget {
                           title: productName,
                           fontSize: 24.sp,
                           fontWeight: FontWeight.w600,
-                          color: Color(0xff181725),
+                          color: const Color(0xff181725),
                           letterSpacing: 0.1,
                         ),
                         InkWell(
                           onTap: () async {
-                            final isFavorite =
-                                ref.read(selectedFavoriteProvider) ==
-                                Colors.red.value;
-
                             if (isFavorite) {
                               await FavoritesService().removeFromFavorites(
                                 productId,
                               );
-                              ref
-                                      .read(selectedFavoriteProvider.notifier)
-                                      .state =
-                                  0xFF7C7C7C; // grey
+                              favoriteNotifier.setFavorite(productId, false);
                             } else {
                               await FavoritesService().addToFavorites(
                                 productId: productId,
@@ -128,18 +124,14 @@ class ProductDetailsPage extends ConsumerWidget {
                                 productQuantity: productQuantity,
                                 productPrice: productPrice,
                               );
-                              ref
-                                      .read(selectedFavoriteProvider.notifier)
-                                      .state =
-                                  Colors.red.value;
+                              favoriteNotifier.setFavorite(productId, true);
                             }
                           },
                           child: Icon(
-                            ref.watch(selectedFavoriteProvider) ==
-                                    Colors.red.value
-                                ? Icons.favorite
-                                : Icons.favorite_border,
-                            color: Color(ref.watch(selectedFavoriteProvider)),
+                            isFavorite ? Icons.favorite : Icons.favorite_border,
+                            color: isFavorite
+                                ? Colors.red
+                                : const Color(0xFF7C7C7C),
                             size: 24.sp,
                           ),
                         ),
@@ -149,109 +141,57 @@ class ProductDetailsPage extends ConsumerWidget {
                       title: '${productQuantity}kg, price',
                       fontSize: 16.sp,
                       fontWeight: FontWeight.w600,
-                      color: Color(0xff7C7C7C),
+                      color: const Color(0xff7C7C7C),
                       letterSpacing: 0.1,
                     ),
                     SizedBox(height: 30.14.h),
                     Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
-                        AddMinusButtonWidget(),
+                        const AddMinusButtonWidget(),
                         SizedBox(width: 10.w),
                         TextWidget(
                           title: '\$${productPrice.toStringAsFixed(2)}',
                           fontSize: 24.sp,
                           fontWeight: FontWeight.w400,
-                          color: Color(0xff181725),
+                          color: const Color(0xff181725),
                           letterSpacing: 0.1,
                           height: 1.8,
                         ),
                       ],
                     ),
                     Divider(
-                      color: Color(0xffE2E2E2),
+                      color: const Color(0xffE2E2E2),
                       thickness: 1,
                       height: 50.h,
                     ),
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        TextWidget(
-                          title: 'Product Details ',
-                          fontSize: 16.sp,
-                          fontWeight: FontWeight.w600,
-                          color: Color(0xff181725),
-                          letterSpacing: 0.1,
-                        ),
-                        InkWell(
-                          onTap: () {
-                            ref
-                                    .read(
-                                      productDetailsVisibleProvider.notifier,
-                                    )
-                                    .state =
-                                !isProductDetailsVisible;
-                          },
-                          child: Icon(
-                            isProductDetailsVisible
-                                ? Icons.keyboard_arrow_down_outlined
-                                : Icons.keyboard_arrow_right,
-                            color: Color(0xff181725),
-                          ),
-                        ),
-                      ],
+                    _buildToggleSection(
+                      title: 'Product Details',
+                      isVisible: isProductDetailsVisible,
+                      onToggle: () {
+                        ref.read(productDetailsVisibleProvider.notifier).state =
+                            !isProductDetailsVisible;
+                      },
+                      content: 'Product details go here...',
                     ),
-                    if (isProductDetailsVisible)
-                      TextWidget(
-                        title: 'product..details',
-                        fontSize: 14.sp,
-                        fontWeight: FontWeight.w400,
-                        color: Color(0xff7C7C7C),
-                        letterSpacing: 0.1,
-                      ),
                     Divider(
-                      color: Color(0xffE2E2E2),
+                      color: const Color(0xffE2E2E2),
                       thickness: 1,
                       height: 50.h,
                     ),
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        TextWidget(
-                          title: 'Nutrition',
-                          fontSize: 16.sp,
-                          fontWeight: FontWeight.w600,
-                          color: Color(0xff181725),
-                          letterSpacing: 0.1,
-                        ),
-                        InkWell(
-                          onTap: () {
-                            ref
-                                    .read(
-                                      nutritionDetailsVisibleProvider.notifier,
-                                    )
-                                    .state =
-                                !isNutritionDetailsVisible;
-                          },
-                          child: Icon(
-                            isNutritionDetailsVisible
-                                ? Icons.keyboard_arrow_down_outlined
-                                : Icons.keyboard_arrow_right,
-                            color: Color(0xff181725),
-                          ),
-                        ),
-                      ],
+                    _buildToggleSection(
+                      title: 'Nutrition',
+                      isVisible: isNutritionDetailsVisible,
+                      onToggle: () {
+                        ref
+                                .read(nutritionDetailsVisibleProvider.notifier)
+                                .state =
+                            !isNutritionDetailsVisible;
+                      },
+                      content: 'Nutrition details go here...',
                     ),
-                    if (isNutritionDetailsVisible)
-                      TextWidget(
-                        title: 'Nutrition details...',
-                        fontSize: 14.sp,
-                        fontWeight: FontWeight.w400,
-                        color: Color(0xff7C7C7C),
-                        letterSpacing: 0.1,
-                      ),
                     Divider(
-                      color: Color(0xffE2E2E2),
+                      color: const Color(0xffE2E2E2),
                       thickness: 1,
                       height: 50.h,
                     ),
@@ -262,7 +202,7 @@ class ProductDetailsPage extends ConsumerWidget {
                           title: 'Review',
                           fontSize: 16.sp,
                           fontWeight: FontWeight.w600,
-                          color: Color(0xff181725),
+                          color: const Color(0xff181725),
                           letterSpacing: 0.1,
                         ),
                         Row(
@@ -274,7 +214,7 @@ class ProductDetailsPage extends ConsumerWidget {
                               },
                               child: Icon(
                                 index < rating ? Icons.star : Icons.star_border,
-                                color: Color(0xffF3603F),
+                                color: const Color(0xffF3603F),
                                 size: 18,
                               ),
                             );
@@ -282,15 +222,14 @@ class ProductDetailsPage extends ConsumerWidget {
                         ),
                       ],
                     ),
-
                     SizedBox(height: 20.14.h),
                     CustomButtonWidget(
                       buttonName: 'Add to Basket',
+                      padding: const EdgeInsets.only(left: 110),
                       onPressed: () async {
                         final selectedQuantity = ref.watch(
                           selectedQuantityProvider,
                         );
-
                         try {
                           await CartService().addToCart(
                             productId: productId,
@@ -304,7 +243,6 @@ class ProductDetailsPage extends ConsumerWidget {
                             context,
                             '$productName added to basket',
                           );
-
                           context.go(Path.cart);
                         } catch (e) {
                           CustomSnackBar.show(
@@ -321,6 +259,51 @@ class ProductDetailsPage extends ConsumerWidget {
           ),
         ],
       ),
+    );
+  }
+
+  Widget _buildToggleSection({
+    required String title,
+    required bool isVisible,
+    required VoidCallback onToggle,
+    required String content,
+  }) {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: [
+            TextWidget(
+              title: title,
+              fontSize: 16.sp,
+              fontWeight: FontWeight.w600,
+              color: const Color(0xff181725),
+              letterSpacing: 0.1,
+            ),
+            InkWell(
+              onTap: onToggle,
+              child: Icon(
+                isVisible
+                    ? Icons.keyboard_arrow_down_outlined
+                    : Icons.keyboard_arrow_right,
+                color: const Color(0xff181725),
+              ),
+            ),
+          ],
+        ),
+        if (isVisible)
+          Padding(
+            padding: const EdgeInsets.only(top: 8.0),
+            child: TextWidget(
+              title: content,
+              fontSize: 14.sp,
+              fontWeight: FontWeight.w400,
+              color: const Color(0xff7C7C7C),
+              letterSpacing: 0.1,
+            ),
+          ),
+      ],
     );
   }
 }

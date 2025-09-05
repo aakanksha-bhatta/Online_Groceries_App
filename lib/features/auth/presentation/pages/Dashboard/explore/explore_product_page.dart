@@ -1,58 +1,96 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_svg/svg.dart';
 import 'package:online_groceries_app/features/auth/data/enum/product_enum.dart';
 import 'package:online_groceries_app/features/auth/presentation/pages/Dashboard/explore/category.dart';
 import 'package:online_groceries_app/features/auth/presentation/widget/custom_navigation_bar.dart';
 import 'package:online_groceries_app/features/auth/presentation/widget/search_bar_widget.dart';
 import 'package:online_groceries_app/features/auth/presentation/widget/text_widget.dart';
 
-class ExploreProductPage extends StatelessWidget {
+class ExploreProductPage extends StatefulWidget {
   const ExploreProductPage({super.key});
 
   @override
+  State<ExploreProductPage> createState() => _ExploreProductPageState();
+}
+
+class _ExploreProductPageState extends State<ExploreProductPage> {
+  String _searchQuery = '';
+
+  @override
   Widget build(BuildContext context) {
+    // Filter product list
+    final filteredProducts = ProductEnum.values.where((product) {
+      return product.name.toLowerCase().contains(_searchQuery.toLowerCase());
+    }).toList();
+
     return Scaffold(
       backgroundColor: Colors.white,
       body: Column(
         children: [
+          // Header with search bar
           Column(
             children: [
               Padding(
-                padding: const EdgeInsets.only(top: 56.93, bottom: 10),
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    Align(
-                      alignment: Alignment.center,
-                      child: TextWidget(
-                        title: 'Find Products',
-                        fontSize: 20,
-                        fontWeight: FontWeight.w400,
-                        color: Colors.black,
-                        letterSpacing: 0.5,
+                padding: const EdgeInsets.only(
+                  top: 56.93,
+                  bottom: 10,
+                  left: 16,
+                  right: 16,
+                ),
+                child: SizedBox(
+                  height: 40,
+                  child: Stack(
+                    alignment: Alignment.center,
+                    children: [
+                      Center(
+                        child: TextWidget(
+                          title: 'Find Products',
+                          fontSize: 20,
+                          fontWeight: FontWeight.w400,
+                          color: Colors.black,
+                          letterSpacing: 0.5,
+                        ),
                       ),
-                    ),
-                    InkWell(
-                      child: Icon(Icons.search, color: Colors.black, size: 24),
-                      onTap: () {
-                        Navigator.push(
-                          context,
-                          MaterialPageRoute(builder: (context) => Category()),
-                        );
-                      },
-                    ),
-                  ],
+                      Positioned(
+                        right: 0,
+                        child: InkWell(
+                          child: SvgPicture.asset(
+                            'assets/icons/category.svg',
+                            color: Colors.black,
+                          ),
+                          onTap: () {
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                builder: (context) => Category(),
+                              ),
+                            );
+                          },
+                        ),
+                      ),
+                    ],
+                  ),
                 ),
               ),
-              SearchBarWidget(),
+
+              // 🔍 Search bar
+              SearchBarWidget(
+                // onChanged: (value) {
+                //   setState(() {
+                //     _searchQuery = value;
+                //   });
+                // },
+              ),
             ],
           ),
 
+          // Products Grid
           Expanded(
             child: SingleChildScrollView(
               child: Padding(
                 padding: const EdgeInsets.only(top: 20.0),
                 child: GridView.builder(
-                  itemCount: ProductEnum.values.length,
+                  itemCount: filteredProducts.length,
                   shrinkWrap: true,
                   physics: NeverScrollableScrollPhysics(),
                   padding: EdgeInsets.symmetric(horizontal: 16),
@@ -63,7 +101,7 @@ class ExploreProductPage extends StatelessWidget {
                     childAspectRatio: 0.9,
                   ),
                   itemBuilder: (context, index) {
-                    final product = ProductEnum.values[index];
+                    final product = filteredProducts[index];
                     return InkWell(
                       onTap: () {},
                       child: Container(
@@ -87,7 +125,6 @@ class ExploreProductPage extends StatelessWidget {
                                   image: AssetImage(product.pngAssetPath),
                                 ),
                               ),
-                              // child: Image.asset(product.pngAssetPath),
                             ),
                             SizedBox(height: 10),
                             Align(

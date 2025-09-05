@@ -3,6 +3,7 @@ import 'package:online_groceries_app/config/route/path.dart';
 import 'package:online_groceries_app/core/services/checking_login_status.dart';
 import 'package:online_groceries_app/features/auth/presentation/pages/Dashboard/account/account.dart';
 import 'package:online_groceries_app/features/auth/presentation/pages/Dashboard/cart/cart_page.dart';
+import 'package:online_groceries_app/features/auth/presentation/pages/Dashboard/cart/order_accepted.dart';
 import 'package:online_groceries_app/features/auth/presentation/pages/Dashboard/explore/explore_product_page.dart';
 import 'package:online_groceries_app/features/auth/presentation/pages/Dashboard/favourite/favourite_page.dart';
 import 'package:online_groceries_app/features/auth/presentation/pages/Dashboard/home/home_screen.dart';
@@ -61,5 +62,6 @@ final GoRouter router = GoRouter(
     GoRoute(path: Path.cart, builder: (context, state) => CartPage()),
     GoRoute(path: Path.favorite, builder: (context, state) => FavoritePage()),
     GoRoute(path: Path.account, builder: (context, state) => Account()),
+    GoRoute(path: Path.order, builder: (context, state) => OrderAccepted()),
   ],
 );

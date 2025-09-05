@@ -3,8 +3,12 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:online_groceries_app/core/services/cart_service.dart';
+import 'package:online_groceries_app/features/auth/presentation/controller/auth_notifier.dart';
+import 'package:online_groceries_app/features/auth/presentation/provider/state_provider.dart';
 import 'package:online_groceries_app/features/auth/presentation/widget/custom_button_widget.dart';
 import 'package:online_groceries_app/features/auth/presentation/widget/custom_navigation_bar.dart';
+import 'package:online_groceries_app/features/auth/presentation/widget/custom_snack_bar.dart';
 import 'package:online_groceries_app/features/auth/presentation/widget/text_widget.dart';
 
 class FavoritePage extends ConsumerStatefulWidget {
@@ -19,6 +23,7 @@ class FavoritePage extends ConsumerStatefulWidget {
 class _FavoritePageState extends ConsumerState<FavoritePage> {
   @override
   Widget build(BuildContext context) {
+    final cartState = ref.watch(authNotifierProvider);
     return Scaffold(
       backgroundColor: Colors.white,
       body: StreamBuilder<QuerySnapshot>(
@@ -94,26 +99,24 @@ class _FavoritePageState extends ConsumerState<FavoritePage> {
                           color: Color(0xff7C7C7C),
                           letterSpacing: 0,
                         ),
-                        trailing: SizedBox(
-                          width: 62.w,
-                          child: Row(
-                            crossAxisAlignment: CrossAxisAlignment.end,
-                            children: [
-                              TextWidget(
-                                title: '\$$productPrice',
-                                fontSize: 18.sp,
-                                fontWeight: FontWeight.w600,
-                                color: Color(0xff181725),
-                                letterSpacing: 0.1,
-                              ),
-                              SizedBox(width: 8.w),
-                              Icon(
-                                Icons.arrow_forward_ios,
-                                color: Color(0xff7C7C7C),
-                                size: 16.sp,
-                              ),
-                            ],
-                          ),
+                        trailing: Row(
+                          mainAxisSize: MainAxisSize.min,
+                          crossAxisAlignment: CrossAxisAlignment.end,
+                          children: [
+                            TextWidget(
+                              title: '\$$productPrice',
+                              fontSize: 18.sp,
+                              fontWeight: FontWeight.w600,
+                              color: Color(0xff181725),
+                              letterSpacing: 0.1,
+                            ),
+                            SizedBox(width: 8.w),
+                            Icon(
+                              Icons.arrow_forward_ios,
+                              color: Color(0xff7C7C7C),
+                              size: 16.sp,
+                            ),
+                          ],
                         ),
                       );
                     },
@@ -130,6 +133,57 @@ class _FavoritePageState extends ConsumerState<FavoritePage> {
                 child: CustomButtonWidget(
                   buttonName: 'Add All to Cart',
                   padding: EdgeInsets.only(left: 115.96),
+                  onPressed: cartState.isLoading
+                      ? null
+                      : () async {
+                          final selectedQuantity = ref.watch(
+                            selectedQuantityProvider,
+                          );
+                          final favoriteDocs = snapshot.data!.docs;
+
+                          try {
+                            for (var doc in favoriteDocs) {
+                              final data = doc.data() as Map<String, dynamic>;
+
+                              await CartService().addToCart(
+                                productId: doc.id,
+                                productName: data['productName'],
+                                productImage: data['productImage'],
+                                productPrice: data['productPrice'],
+                                productQuantity: data['productQuantity'],
+                                selectedQuantity: selectedQuantity,
+                              );
+                              // to remove favorite after storing in cart
+                              await FirebaseFirestore.instance
+                                  .collection('users')
+                                  .doc(FirebaseAuth.instance.currentUser!.uid)
+                                  .collection('favorites')
+                                  .doc(doc.id)
+                                  .delete();
+                            }
+
+                            CustomSnackBar.show(
+                              context,
+                              'All items added to basket',
+                            );
+                            // context.go(Path.cart);
+                          } catch (e) {
+                            CustomSnackBar.show(
+                              context,
+                              'Failed to add items to basket',
+                            );
+                          }
+                        },
+                  child: cartState.isLoading
+                      ? SizedBox(
+                          height: 24,
+                          width: 24,
+                          child: CircularProgressIndicator(
+                            color: Colors.white,
+                            strokeWidth: 2,
+                          ),
+                        )
+                      : null,
                 ),
               ),
             ],

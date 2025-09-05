@@ -8,33 +8,33 @@ class Category extends StatelessWidget {
   const Category({super.key});
 
   @override
+  @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: Colors.white,
       body: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           AppBarWidget(
             title: 'Filters',
-            
             onTap: () {
               Navigator.pop(context);
             },
             icon: const Icon(Icons.close),
           ),
           SizedBox(height: 10.h),
-          Container(
-            width: double.infinity,
-            height: 791.h,
-            decoration: BoxDecoration(
-              color: const Color(0xFFF2F3F2),
-              borderRadius: BorderRadius.only(
-                topLeft: Radius.circular(30.r),
-                topRight: Radius.circular(30.r),
+          Expanded(
+            child: Container(
+              width: double.infinity,
+              decoration: BoxDecoration(
+                color: const Color(0xFFF2F3F2),
+                borderRadius: BorderRadius.only(
+                  topLeft: Radius.circular(30.r),
+                  topRight: Radius.circular(30.r),
+                ),
               ),
-            ),
-            child: Column(
-              children: [
-                Padding(
+              child: SingleChildScrollView(
+                child: Padding(
                   padding: const EdgeInsets.all(30.0),
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
@@ -55,16 +55,18 @@ class Category extends StatelessWidget {
                       CheckBox(categoryName: 'Bakery & Snack'),
                       CheckBox(categoryName: 'Dairy & Egg'),
                       CheckBox(categoryName: 'Beverages'),
-
                       SizedBox(height: 250),
                       Align(
                         alignment: Alignment.bottomCenter,
-                        child: CustomButtonWidget(buttonName: 'Apply Filter'),
+                        child: CustomButtonWidget(
+                          buttonName: 'Apply Filter',
+                          padding: EdgeInsets.only(left: 120),
+                        ),
                       ),
                     ],
                   ),
                 ),
-              ],
+              ),
             ),
           ),
         ],

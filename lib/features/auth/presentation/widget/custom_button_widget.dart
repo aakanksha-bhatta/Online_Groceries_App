@@ -54,7 +54,7 @@ class CustomButtonWidget extends StatelessWidget {
                         child: SvgPicture.asset(buttonIcon!),
                       ),
                     Padding(
-                      padding: padding ?? EdgeInsets.all(0),
+                      padding: padding ?? const EdgeInsets.all(0),
                       child: Align(
                         alignment: Alignment.center,
                         child: TextWidget(

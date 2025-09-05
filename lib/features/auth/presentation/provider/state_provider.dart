@@ -2,6 +2,7 @@ import 'dart:convert';
 
 import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:online_groceries_app/core/services/favorite_service.dart';
 import 'package:online_groceries_app/core/services/product_service.dart';
 import 'package:online_groceries_app/features/auth/data/model/product.dart';
 
@@ -13,9 +14,29 @@ final selectedIndexProvider = StateProvider<int>(
   (ref) => 0,
 ); // holding  value for navigation bar
 
-final selectedFavoriteProvider = StateProvider<int>(
-  (ref) => Color(0xFF7C7C7C).value,
-); // handling favorite selection
+// handling favorite selection for single product
+
+class FavoriteNotifier extends StateNotifier<Map<String, bool>> {
+  FavoriteNotifier() : super({});
+
+  Future<void> checkFavorite(String productId) async {
+    final isFav = await FavoritesService().isFavorite(productId);
+    state = {...state, productId: isFav};
+  }
+
+  void setFavorite(String productId, bool isFavorite) {
+    state = {...state, productId: isFavorite};
+  }
+
+  bool isFavorite(String productId) {
+    return state[productId] ?? false;
+  }
+}
+
+final favoriteStatusProvider =
+    StateNotifierProvider<FavoriteNotifier, Map<String, bool>>(
+      (ref) => FavoriteNotifier(),
+    );
 
 final currentRatingProvider = StateProvider<int>((ref) => 0); // handling rating
 

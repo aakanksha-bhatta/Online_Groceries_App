@@ -9,6 +9,7 @@ class TextWidget extends StatelessWidget {
   final String? fontFamily;
   final double letterSpacing;
   final double? height;
+  final TextOverflow? overflow;
   final void Function()? onTap;
   final List<InlineSpan>? spans;
 
@@ -23,6 +24,7 @@ class TextWidget extends StatelessWidget {
     this.height,
     this.spans,
     this.onTap,
+    this.overflow,
   });
 
   @override
@@ -49,7 +51,7 @@ class TextWidget extends StatelessWidget {
         fontSize: fontSize,
         fontWeight: fontWeight,
         color: color,
-        overflow: TextOverflow.ellipsis,
+        overflow: overflow ?? TextOverflow.ellipsis,
         fontFamily: fontFamily ?? 'OpenSans',
         letterSpacing: letterSpacing,
         height: height,

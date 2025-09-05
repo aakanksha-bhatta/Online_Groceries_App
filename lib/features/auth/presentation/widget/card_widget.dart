@@ -1,11 +1,15 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:go_router/go_router.dart';
 import 'package:online_groceries_app/config/route/path.dart';
+import 'package:online_groceries_app/core/services/cart_service.dart';
+import 'package:online_groceries_app/features/auth/presentation/provider/state_provider.dart';
 import 'package:online_groceries_app/features/auth/presentation/widget/add_button_widget.dart';
+import 'package:online_groceries_app/features/auth/presentation/widget/custom_snack_bar.dart';
 import 'package:online_groceries_app/features/auth/presentation/widget/text_widget.dart';
 
-class CardWidget extends StatelessWidget {
+class CardWidget extends ConsumerWidget {
   final String productId;
   final String productName;
   final String productImage;
@@ -22,7 +26,7 @@ class CardWidget extends StatelessWidget {
   });
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
     return Container(
       height: 248.51.h,
       width: 173.32.w,
@@ -34,7 +38,18 @@ class CardWidget extends StatelessWidget {
       child: Material(
         color: Colors.transparent,
         child: InkWell(
-          onTap: () {},
+          onTap: () {
+            context.push(
+              Path.productDetails,
+              extra: {
+                'productId': productId,
+                'productName': productName,
+                'productImage': productImage,
+                'productPrice': productPrice,
+                'productQuantity': productQuantity,
+              },
+            );
+          },
 
           splashColor: Colors.grey.withOpacity(0.1),
           borderRadius: BorderRadius.circular(25.r),
@@ -94,17 +109,30 @@ class CardWidget extends StatelessWidget {
                     Align(
                       alignment: Alignment.bottomRight,
                       child: AddButtonWidget(
-                        onTap: () {
-                          context.push(
-                            Path.productDetails,
-                            extra: {
-                              'productId': productId,
-                              'productName': productName,
-                              'productImage': productImage,
-                              'productPrice': productPrice,
-                              'productQuantity': productQuantity,
-                            },
+                        onTap: () async {
+                          final selectedQuantity = ref.watch(
+                            selectedQuantityProvider,
                           );
+                          try {
+                            await CartService().addToCart(
+                              productId: productId,
+                              productName: productName,
+                              productImage: productImage,
+                              productPrice: productPrice,
+                              productQuantity: productQuantity,
+                              selectedQuantity: selectedQuantity,
+                            );
+                            CustomSnackBar.show(
+                              context,
+                              '$productName added to basket',
+                            );
+                            context.go(Path.cart);
+                          } catch (e) {
+                            CustomSnackBar.show(
+                              context,
+                              'Failed to add $productName to basket',
+                            );
+                          }
                         },
                       ),
                     ),
