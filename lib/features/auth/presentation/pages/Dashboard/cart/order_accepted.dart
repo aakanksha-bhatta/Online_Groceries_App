@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
+import 'package:go_router/go_router.dart';
+import 'package:online_groceries_app/config/route/path.dart';
 import 'package:online_groceries_app/features/auth/presentation/pages/Dashboard/cart/error_order.dart';
 import 'package:online_groceries_app/features/auth/presentation/widget/background_layout_widget.dart';
 import 'package:online_groceries_app/features/auth/presentation/widget/custom_button_widget.dart';
@@ -80,10 +82,13 @@ class OrderAccepted extends StatelessWidget {
                     textColor: Colors.black,
                     padding: EdgeInsets.only(left: 120),
                     onPressed: () {
-                      showDialog(
-                        context: context,
-                        builder: (context) => const ErrorOrder(),
-                      );
+                      context.go(Path.cart);
+                      Future.delayed(Duration(milliseconds: 100), () {
+                        showDialog(
+                          context: context,
+                          builder: (context) => const ErrorOrder(),
+                        );
+                      });
                     },
                   ),
                 ],
