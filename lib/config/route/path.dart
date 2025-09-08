@@ -17,4 +17,6 @@ class Path {
   static const account = '/account';
   static const order = '/order';
   static const chat = '/chat';
+  static const item = '/item';
+    static const category = '/category';
 }

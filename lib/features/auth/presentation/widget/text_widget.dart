@@ -12,6 +12,7 @@ class TextWidget extends StatelessWidget {
   final TextOverflow? overflow;
   final void Function()? onTap;
   final List<InlineSpan>? spans;
+  final TextAlign? textAlign;
 
   const TextWidget({
     super.key,
@@ -25,6 +26,7 @@ class TextWidget extends StatelessWidget {
     this.spans,
     this.onTap,
     this.overflow,
+    this.textAlign,
   });
 
   @override
@@ -33,6 +35,7 @@ class TextWidget extends StatelessWidget {
       return RichText(
         text: TextSpan(
           text: title,
+
           style: TextStyle(
             fontSize: fontSize,
             fontWeight: fontWeight,
@@ -47,6 +50,8 @@ class TextWidget extends StatelessWidget {
     }
     return Text(
       title,
+      
+      textAlign: textAlign,
       style: TextStyle(
         fontSize: fontSize,
         fontWeight: fontWeight,

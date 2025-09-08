@@ -27,6 +27,25 @@ extension ProductEnumExtension on ProductEnum {
     }
   }
 
+  ProductEnum? getCategoryEnum(String category) {
+    switch (category) {
+      case 'Fresh Fruit & Vegetables':
+        return ProductEnum.freshfruitvegetable;
+      case 'Cooking Oil & Ghee':
+        return ProductEnum.cookingoilghee;
+      case 'Meat & Fish':
+        return ProductEnum.meatfish;
+      case 'Bakery & Snacks':
+        return ProductEnum.bakerysnack;
+      case 'Dairy & Eggs':
+        return ProductEnum.dairyegg;
+      case 'Beverages':
+        return ProductEnum.beverages;
+      default:
+        return null;
+    }
+  }
+
   Color get color {
     switch (this) {
       case ProductEnum.freshfruitvegetable:

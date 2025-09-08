@@ -5,6 +5,8 @@ class Product {
   final double productPrice;
   final int productQuantity;
   final String category;
+  final int selectedQuantity;
+  final double totalPrice;
 
   Product({
     required this.productId,
@@ -13,6 +15,8 @@ class Product {
     required this.productPrice,
     required this.productQuantity,
     required this.category,
+    required this.selectedQuantity,
+    required this.totalPrice,
   });
 
   factory Product.fromJson(Map<String, dynamic> json) {
@@ -23,6 +27,18 @@ class Product {
       productPrice: (json['productPrice'] as num?)?.toDouble() ?? 0.0,
       productQuantity: (json['productQuantity'] ?? 0) as int,
       category: json['category'] ?? '',
+      selectedQuantity: (json['selectedQuantity'] ?? 0) as int,
+      totalPrice: (json['totalPrice'] as num?)?.toDouble() ?? 0.0,
     );
   }
+
+  Map<String, dynamic> toJson() => {
+    'productId': productId,
+    'productName': productName,
+    'productImage': productImage,
+    'productPrice': productPrice,
+    'productQuantity': productQuantity,
+    'selectedQuantity': selectedQuantity,
+    'totalPrice': totalPrice,
+  };
 }

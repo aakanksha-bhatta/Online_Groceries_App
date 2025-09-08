@@ -1,17 +1,20 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:go_router/go_router.dart';
 import 'package:online_groceries_app/config/route/path.dart';
+import 'package:online_groceries_app/core/services/cart_service.dart';
 import 'package:online_groceries_app/features/auth/presentation/pages/Dashboard/cart/error_order.dart';
 import 'package:online_groceries_app/features/auth/presentation/widget/background_layout_widget.dart';
 import 'package:online_groceries_app/features/auth/presentation/widget/custom_button_widget.dart';
+import 'package:online_groceries_app/features/auth/presentation/widget/custom_snack_bar.dart';
 import 'package:online_groceries_app/features/auth/presentation/widget/text_widget.dart';
 
-class OrderAccepted extends StatelessWidget {
+class OrderAccepted extends ConsumerWidget {
   const OrderAccepted({super.key});
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
     return Scaffold(
       body: BackgroundLayoutWidget(
         dynamicWidget: Stack(
@@ -75,6 +78,18 @@ class OrderAccepted extends StatelessWidget {
                   CustomButtonWidget(
                     buttonName: 'Track Order',
                     padding: EdgeInsets.only(left: 132),
+                    onPressed: () async {
+                      try {
+                        await CartService().placeOrder();
+
+                        context.go(Path.cart);
+                      } catch (e) {
+                        CustomSnackBar.show(
+                          context,
+                          'Failed to place order: $e',
+                        );
+                      }
+                    },
                   ),
                   CustomButtonWidget(
                     buttonName: 'Back to Home',

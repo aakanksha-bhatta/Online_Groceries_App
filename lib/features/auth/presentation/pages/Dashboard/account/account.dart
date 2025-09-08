@@ -108,7 +108,7 @@ class Account extends ConsumerWidget {
               textColor: Color(0xff53B175),
               buttonColor: Color(0xffF2F3F2),
               buttonIcon: 'assets/icons/logout.svg',
-              padding: EdgeInsets.only(left: 25.17.w, right: 104.52.w),
+              padding: EdgeInsets.only(left: 25.17.w, right: 77.52.w),
 
               splashColor: Color(0xffF2F3F2),
               onPressed: state.isLoading

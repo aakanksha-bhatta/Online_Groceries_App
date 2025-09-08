@@ -6,7 +6,26 @@ class AppBarWidget extends StatelessWidget {
   final String? title;
   final void Function()? onTap;
   final Widget? icon;
-  const AppBarWidget({super.key, this.title, this.onTap, this.icon});
+  final TextAlign? textAlign;
+  final Widget? trailingIcon;
+  final void Function()? onTapTrailing;
+  final EdgeInsetsGeometry? padding;
+  final FontWeight? fontWeight;
+  final double? fontSize;
+  final double? size;
+  const AppBarWidget({
+    super.key,
+    this.title,
+    this.onTap,
+    this.icon,
+    this.textAlign,
+    this.trailingIcon,
+    this.onTapTrailing,
+    this.padding,
+    this.fontWeight,
+    this.fontSize,
+    this.size,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -19,16 +38,26 @@ class AppBarWidget extends StatelessWidget {
             child: InkWell(
               splashColor: Color(0xFF828282),
               onTap: onTap,
-              child: icon ?? Icon(Icons.arrow_back_ios),
+              child: icon ?? Icon(Icons.arrow_back_ios, size: size),
             ),
           ),
           SizedBox(width: 20.w),
           TextWidget(
             title: title ?? '',
-            fontSize: 28,
-            fontWeight: FontWeight.w600,
+            fontSize: fontSize ?? 28,
+            fontWeight: fontWeight ?? FontWeight.w600,
             color: Colors.black,
             letterSpacing: 0,
+            textAlign: textAlign,
+          ),
+          Padding(
+            padding:
+                //padding ??
+                EdgeInsetsGeometry.all(0), //EdgeInsetsGeometry.only(left: 265),
+            child: InkWell(
+              onTap: onTapTrailing,
+              child: trailingIcon ?? SizedBox(),
+            ),
           ),
         ],
       ),

@@ -25,6 +25,7 @@ class _FavoritePageState extends ConsumerState<FavoritePage> {
   @override
   Widget build(BuildContext context) {
     final cartState = ref.watch(authNotifierProvider);
+
     return Scaffold(
       backgroundColor: Colors.white,
       body: StreamBuilder<QuerySnapshot>(

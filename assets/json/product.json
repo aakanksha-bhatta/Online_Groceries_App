@@ -107,7 +107,7 @@
     "productId": "14",
     "productName": "Orange Juice",
     "productPrice": 12.99,
-    "category": "Fresh Fruit & Vegetables",
+    "category": "Beverages",
     "productQuantity": 1,
     "productImage": "assets/images/item/orange_juice.png"
   },
@@ -118,13 +118,6 @@
     "category": "Bakery and Snacks",
     "productQuantity": 1,
     "productImage": "assets/images/item/pasta.png"
-  },
-    {
-    "productId": "16",
-    "productName": "Sprite",
-    "productPrice": 1.50,
-    "category": "Fresh Fruit & Vegetables",
-    "productQuantity": 1,
-    "productImage": "assets/images/item/sprite.png"
   }
+
 ]

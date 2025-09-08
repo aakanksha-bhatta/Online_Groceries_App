@@ -1,14 +1,16 @@
 import 'package:go_router/go_router.dart';
 import 'package:online_groceries_app/config/route/path.dart';
 import 'package:online_groceries_app/core/services/checking_login_status.dart';
+import 'package:online_groceries_app/features/auth/data/enum/product_enum.dart';
 import 'package:online_groceries_app/features/auth/presentation/pages/Dashboard/account/account.dart';
 import 'package:online_groceries_app/features/auth/presentation/pages/Dashboard/cart/cart_page.dart';
 import 'package:online_groceries_app/features/auth/presentation/pages/Dashboard/cart/order_accepted.dart';
+import 'package:online_groceries_app/features/auth/presentation/pages/Dashboard/explore/category.dart';
 import 'package:online_groceries_app/features/auth/presentation/pages/Dashboard/explore/explore_product_page.dart';
+import 'package:online_groceries_app/features/auth/presentation/pages/Dashboard/explore/product_item.dart';
 import 'package:online_groceries_app/features/auth/presentation/pages/Dashboard/favourite/favourite_page.dart';
 import 'package:online_groceries_app/features/auth/presentation/pages/Dashboard/home/home_screen.dart';
 import 'package:online_groceries_app/features/auth/presentation/pages/Dashboard/home/product_details_page.dart';
-import 'package:online_groceries_app/features/auth/presentation/pages/chat/chat_message.dart';
 import 'package:online_groceries_app/features/auth/presentation/pages/login/login_page.dart';
 import 'package:online_groceries_app/features/auth/presentation/pages/onboarding/onboarding.dart';
 import 'package:online_groceries_app/features/auth/presentation/pages/setting/setting_screen.dart';
@@ -64,10 +66,20 @@ final GoRouter router = GoRouter(
     GoRoute(path: Path.favorite, builder: (context, state) => FavoritePage()),
     GoRoute(path: Path.account, builder: (context, state) => Account()),
     GoRoute(path: Path.order, builder: (context, state) => OrderAccepted()),
-    // GoRoute(
-    //   path: Path.chat,
-    //   builder: (context, state) =>
-    //       ChatScreen(userName: 'username', userId: 'userid'),
-    // ),
+    GoRoute(
+      path: Path.item,
+      builder: (context, state) {
+        final categoryName = state.uri.queryParameters['category'];
+
+        final categoryEnum = ProductEnum.values.firstWhere(
+          (e) => e.name == categoryName,
+          orElse: () => ProductEnum.freshfruitvegetable,
+        );
+
+        return ProductListPage(category: categoryEnum);
+      },
+    ),
+
+    GoRoute(path: Path.category, builder: (context, state) => Category()),
   ],
 );

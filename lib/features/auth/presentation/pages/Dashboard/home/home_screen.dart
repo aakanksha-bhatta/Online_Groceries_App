@@ -25,11 +25,8 @@ class HomeScreen extends ConsumerWidget {
             child: Column(
               children: [
                 SvgPicture.asset(
-                  'assets/icons/carrot.svg',
-                  colorFilter: ColorFilter.mode(
-                    const Color.fromARGB(255, 201, 65, 55),
-                    BlendMode.srcIn,
-                  ),
+                  'assets/icons/carrot_color.svg',
+
                   width: 37.72.w,
                   height: 36.97.h,
                 ),

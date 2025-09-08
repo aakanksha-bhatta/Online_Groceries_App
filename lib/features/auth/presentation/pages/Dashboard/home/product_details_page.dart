@@ -29,7 +29,12 @@ class ProductDetailsPage extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final rating = ref.watch(currentRatingProvider);
+    // final rating = ref.watch(currentRatingProvider);
+    // final ratingNotifier = ref.read(currentRatingProvider.notifier);
+    // final ratingNoti = ratingNotifier.checkRating(productId);
+    final ratingMap = ref.watch(currentRatingProvider);
+    final currentRating = ratingMap[productId] ?? 0;
+
     final isNutritionDetailsVisible = ref.watch(
       nutritionDetailsVisibleProvider,
     );
@@ -207,12 +212,17 @@ class ProductDetailsPage extends ConsumerWidget {
                           children: List.generate(5, (index) {
                             return InkWell(
                               onTap: () {
-                                ref.read(currentRatingProvider.notifier).state =
-                                    index + 1;
+                                ref
+                                    .read(currentRatingProvider.notifier)
+                                    .setRating(productId, index + 1);
                               },
                               child: Icon(
-                                index < rating ? Icons.star : Icons.star_border,
-                                color: const Color(0xffF3603F),
+                                index < currentRating
+                                    ? Icons.star
+                                    : Icons.star_border,
+                                color: index < currentRating
+                                    ? Color(0xffF3603F)
+                                    : Colors.grey[300],
                                 size: 18,
                               ),
                             );
@@ -226,8 +236,9 @@ class ProductDetailsPage extends ConsumerWidget {
                       padding: const EdgeInsets.only(left: 110),
                       onPressed: () async {
                         final selectedQuantity = ref.watch(
-                          quantityProvider.select((map) => map[productId] ?? 1),
+                          selectedQuantityProvider,
                         );
+
                         try {
                           await CartService().addToCart(
                             productId: productId,

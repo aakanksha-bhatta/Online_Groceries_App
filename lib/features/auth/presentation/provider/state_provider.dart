@@ -4,6 +4,7 @@ import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:online_groceries_app/core/services/favorite_service.dart';
 import 'package:online_groceries_app/core/services/product_service.dart';
+import 'package:online_groceries_app/core/services/rating_service.dart';
 import 'package:online_groceries_app/features/auth/data/model/product.dart';
 
 final passwordVisibilityProvider = StateProvider<bool>(
@@ -38,8 +39,34 @@ final favoriteStatusProvider =
       (ref) => FavoriteNotifier(),
     );
 
-// handling rating
-final currentRatingProvider = StateProvider<int>((ref) => 0);
+//Rating Provider
+
+class RatingNotifier extends StateNotifier<Map<String, int>> {
+  RatingNotifier() : super({});
+
+  final _ratingService = RatingService();
+
+  Future<void> checkRating(String productId) async {
+    final rating = await _ratingService.getRating(productId);
+    state = {...state, productId: rating};
+  }
+
+  void setRating(String productId, int rating) {
+    _ratingService.saveRating(productId, rating);
+    state = {...state, productId: rating};
+  }
+
+  int getRating(String productId) {
+    return state[productId] ?? 0;
+  }
+}
+
+final currentRatingProvider =
+    StateNotifierProvider<RatingNotifier, Map<String, int>>(
+      (ref) => RatingNotifier(),
+    );
+
+// final currentRatingProviders = StateProvider<int>((ref) => 0);
 
 // final quantityProvider = StateProvider<int>((ref) => 1); // handling quantity
 
@@ -59,32 +86,34 @@ final productListProvider = FutureProvider<List<Product>>((ref) async {
 
 final selectedQuantityProvider = StateProvider<int>((ref) => 1);
 
-final quantityProvider =
-    StateNotifierProvider<QuantityNotifier, Map<String, int>>(
-      (ref) => QuantityNotifier(),
-    );
+final totalPriceProvider = Provider.family<double, double>((ref, productPrice) {
+  final quantity = ref.watch(selectedQuantityProvider);
+  return productPrice * quantity;
+});
 
-class QuantityNotifier extends StateNotifier<Map<String, int>> {
-  QuantityNotifier() : super({});
+// final quantityProvider =
+//     StateNotifierProvider<QuantityNotifier, Map<String, int>>(
+//       (ref) => QuantityNotifier(),
+//     );
 
-  void setQuantity(String productId, int quantity) {
-    if (quantity < 1) return;
-    state = {...state, productId: quantity};
-  }
+// class QuantityNotifier extends StateNotifier<Map<String, int>> {
+//   QuantityNotifier() : super({});
 
-  void increaseQuantity(String productId) {
-    final current = state[productId] ?? 1;
-    state = {...state, productId: current + 1};
-  }
+//   void increase(String productId) {
+//     state = {...state, productId: (state[productId] ?? 1) + 1};
+//   }
 
-  void decreaseQuantity(String productId) {
-    final current = state[productId] ?? 1;
-    if (current > 1) {
-      state = {...state, productId: current - 1};
-    }
-  }
+//   void decrease(String productId) {
+//     final current = state[productId] ?? 1;
+//     if (current > 1) {
+//       state = {...state, productId: current - 1};
+//     }
+//   }
 
-  int getQuantity(String productId) {
-    return state[productId] ?? 1;
-  }
-}
+//   void setQuantity(String productId, int quantity) {
+//     if (quantity < 1) return;
+//     state = {...state, productId: quantity};
+//   }
+
+//   int getQuantity(String productId) => state[productId] ?? 1;
+// }
