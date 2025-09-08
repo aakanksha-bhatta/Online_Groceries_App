@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:go_router/go_router.dart';
+import 'package:online_groceries_app/config/route/path.dart';
 import 'package:online_groceries_app/features/auth/presentation/provider/state_notifier.dart';
 import 'package:online_groceries_app/features/auth/presentation/provider/state_provider.dart';
 import 'package:online_groceries_app/features/auth/presentation/widget/card_widget.dart';
@@ -100,7 +102,9 @@ class HomeScreen extends ConsumerWidget {
                         // Exclusive Offer Section
                         RowHelperTextWidget(
                           title: "Exclusive Offer",
-                          onTap: () {},
+                          onTap: () {
+                            context.go(Path.see);
+                          },
                         ),
                         SizedBox(height: 12.h),
                         SizedBox(

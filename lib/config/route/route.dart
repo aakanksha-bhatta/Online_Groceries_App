@@ -11,6 +11,7 @@ import 'package:online_groceries_app/features/auth/presentation/pages/Dashboard/
 import 'package:online_groceries_app/features/auth/presentation/pages/Dashboard/favourite/favourite_page.dart';
 import 'package:online_groceries_app/features/auth/presentation/pages/Dashboard/home/home_screen.dart';
 import 'package:online_groceries_app/features/auth/presentation/pages/Dashboard/home/product_details_page.dart';
+import 'package:online_groceries_app/features/auth/presentation/pages/Dashboard/home/search_see_all_page.dart';
 import 'package:online_groceries_app/features/auth/presentation/pages/login/login_page.dart';
 import 'package:online_groceries_app/features/auth/presentation/pages/onboarding/onboarding.dart';
 import 'package:online_groceries_app/features/auth/presentation/pages/setting/setting_screen.dart';
@@ -81,5 +82,6 @@ final GoRouter router = GoRouter(
     ),
 
     GoRoute(path: Path.category, builder: (context, state) => Category()),
+    GoRoute(path: Path.see, builder: (context, state) => SearchSeeAllPage()),
   ],
 );

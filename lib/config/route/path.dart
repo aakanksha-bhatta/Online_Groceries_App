@@ -18,5 +18,6 @@ class Path {
   static const order = '/order';
   static const chat = '/chat';
   static const item = '/item';
-    static const category = '/category';
+  static const category = '/category';
+  static const see = '/see';
 }
