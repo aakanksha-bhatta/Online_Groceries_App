@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-<<<<<<< HEAD
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/flutter_svg.dart';
@@ -13,16 +12,6 @@ class CustomNavigationBar extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final selectedIndex = ref.watch(selectedIndexProvider);
-=======
-import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:flutter_svg/flutter_svg.dart';
-
-class CustomNavigationBar extends StatelessWidget {
-  const CustomNavigationBar({super.key});
-
-  @override
-  Widget build(BuildContext context) {
->>>>>>> master
     return Container(
       decoration: BoxDecoration(
         borderRadius: BorderRadius.vertical(top: Radius.circular(15.r)),
@@ -40,7 +29,6 @@ class CustomNavigationBar extends StatelessWidget {
         child: NavigationBar(
           backgroundColor: Colors.white,
           height: 92.h,
-<<<<<<< HEAD
           selectedIndex: selectedIndex,
           onDestinationSelected: (int index) {
             ref.read(selectedIndexProvider.notifier).state = index;
@@ -64,10 +52,6 @@ class CustomNavigationBar extends StatelessWidget {
             }
           },
 
-=======
-          selectedIndex: 0,
-          onDestinationSelected: (int index) {},
->>>>>>> master
           indicatorColor: Colors.transparent,
           labelTextStyle: WidgetStateTextStyle.resolveWith((states) {
             final isSelected = states.contains(WidgetState.selected);

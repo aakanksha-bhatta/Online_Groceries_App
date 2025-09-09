@@ -7,18 +7,12 @@ import 'package:online_groceries_app/features/auth/presentation/widget/text_widg
 class CustomButtonWidget extends StatelessWidget {
   final void Function()? onPressed;
   final String buttonName;
-<<<<<<< HEAD
   final Color? textColor;
-=======
->>>>>>> master
   final Color? buttonColor;
   final Color? splashColor;
   final String? buttonIcon;
   final Widget? child;
-<<<<<<< HEAD
   final EdgeInsetsGeometry? padding;
-=======
->>>>>>> master
 
   const CustomButtonWidget({
     super.key,
@@ -28,16 +22,14 @@ class CustomButtonWidget extends StatelessWidget {
     this.splashColor,
     this.buttonIcon,
     this.child,
-<<<<<<< HEAD
     this.textColor,
     this.padding,
-=======
->>>>>>> master
   });
 
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
+
     return Material(
       color: buttonColor ?? theme.primaryColor,
       borderRadius: BorderRadius.circular(19.r),
@@ -52,48 +44,30 @@ class CustomButtonWidget extends StatelessWidget {
           child: child != null
               ? child!
               : Row(
-<<<<<<< HEAD
-                  mainAxisAlignment: MainAxisAlignment.start,
-
+                  mainAxisAlignment: buttonIcon != null
+                      ? MainAxisAlignment.start
+                      : MainAxisAlignment.center,
                   children: [
                     if (buttonIcon != null)
                       Padding(
-                        padding:
-                            padding ??
-                            EdgeInsets.only(left: 35.39, right: 40.22.w),
+                        padding: padding ??
+                            EdgeInsets.only(left: 35.39.w, right: 40.22.w),
                         child: SvgPicture.asset(buttonIcon!),
                       ),
                     Padding(
-                      padding: padding ?? const EdgeInsets.all(0),
+                      padding: padding ?? EdgeInsets.zero,
                       child: Align(
                         alignment: Alignment.center,
                         child: TextWidget(
                           title: buttonName,
                           fontSize: 18.sp,
                           fontWeight: FontWeight.w600,
-                          color:
-                              textColor ??
+                          color: textColor ??
                               theme.textTheme.displayMedium?.color ??
                               Colors.white,
                           letterSpacing: 0,
                         ),
                       ),
-=======
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    if (buttonIcon != null)
-                      Padding(
-                        padding: EdgeInsets.only(right: 42.63.w),
-                        child: SvgPicture.asset(buttonIcon!),
-                      ),
-                    TextWidget(
-                      title: buttonName,
-                      fontSize: 18.sp,
-                      fontWeight: FontWeight.w600,
-                      color:
-                          theme.textTheme.displayMedium?.color ?? Colors.white,
-                      letterSpacing: 0,
->>>>>>> master
                     ),
                   ],
                 ),

@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-<<<<<<< HEAD
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:online_groceries_app/features/auth/presentation/provider/state_notifier.dart';
@@ -9,20 +8,10 @@ class SearchBarWidget extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-=======
-import 'package:flutter_screenutil/flutter_screenutil.dart';
-
-class SearchBarWidget extends StatelessWidget {
-  const SearchBarWidget({super.key});
-
-  @override
-  Widget build(BuildContext context) {
->>>>>>> master
     return Padding(
       padding: EdgeInsets.symmetric(horizontal: 24.71.w, vertical: 20.h),
       child: Container(
         decoration: BoxDecoration(
-<<<<<<< HEAD
           color: const Color(0xffF2F3F2),
           borderRadius: BorderRadius.circular(15.r),
         ),
@@ -36,19 +25,6 @@ class SearchBarWidget extends StatelessWidget {
             contentPadding: EdgeInsets.symmetric(vertical: 14),
             hintStyle: TextStyle(
               color: const Color(0xff7C7C7C),
-=======
-          color: Color(0xffF2F3F2),
-          borderRadius: BorderRadius.circular(15.r),
-        ),
-        child: TextField(
-          decoration: InputDecoration(
-            border: InputBorder.none,
-            hintText: 'Search Store',
-            prefixIcon: Icon(Icons.search),
-            contentPadding: EdgeInsets.symmetric(vertical: 14),
-            hintStyle: TextStyle(
-              color: Color(0xff7C7C7C),
->>>>>>> master
               fontSize: 18.sp,
               fontWeight: FontWeight.w500,
               height: 1.0,

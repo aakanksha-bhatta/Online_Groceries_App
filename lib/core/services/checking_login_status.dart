@@ -1,10 +1,6 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-<<<<<<< HEAD
 import 'package:online_groceries_app/features/auth/presentation/pages/Dashboard/home/home_screen.dart';
-=======
-import 'package:online_groceries_app/features/auth/presentation/pages/home/home_screen.dart';
->>>>>>> master
 import 'package:online_groceries_app/features/auth/presentation/pages/splash/splash_screen.dart';
 
 class CheckingLoginStatus extends StatelessWidget {

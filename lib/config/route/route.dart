@@ -1,7 +1,6 @@
 import 'package:go_router/go_router.dart';
 import 'package:online_groceries_app/config/route/path.dart';
 import 'package:online_groceries_app/core/services/checking_login_status.dart';
-<<<<<<< HEAD
 import 'package:online_groceries_app/features/auth/data/enum/product_enum.dart';
 import 'package:online_groceries_app/features/auth/presentation/pages/Dashboard/account/account.dart';
 import 'package:online_groceries_app/features/auth/presentation/pages/Dashboard/cart/cart_page.dart';
@@ -13,9 +12,6 @@ import 'package:online_groceries_app/features/auth/presentation/pages/Dashboard/
 import 'package:online_groceries_app/features/auth/presentation/pages/Dashboard/home/home_screen.dart';
 import 'package:online_groceries_app/features/auth/presentation/pages/Dashboard/home/product_details_page.dart';
 import 'package:online_groceries_app/features/auth/presentation/pages/Dashboard/home/search_see_all_page.dart';
-=======
-import 'package:online_groceries_app/features/auth/presentation/pages/home/home_screen.dart';
->>>>>>> master
 import 'package:online_groceries_app/features/auth/presentation/pages/login/login_page.dart';
 import 'package:online_groceries_app/features/auth/presentation/pages/onboarding/onboarding.dart';
 import 'package:online_groceries_app/features/auth/presentation/pages/setting/setting_screen.dart';
@@ -49,7 +45,6 @@ final GoRouter router = GoRouter(
     ),
     GoRoute(path: Path.location, builder: (context, state) => Location()),
     GoRoute(path: Path.setting, builder: (context, state) => SettingScreen()),
-<<<<<<< HEAD
     GoRoute(
       path: Path.productDetails,
       builder: (context, state) {
@@ -88,7 +83,5 @@ final GoRouter router = GoRouter(
 
     GoRoute(path: Path.category, builder: (context, state) => Category()),
     GoRoute(path: Path.see, builder: (context, state) => SearchSeeAllPage()),
-=======
->>>>>>> master
   ],
 );
