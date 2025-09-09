@@ -5,6 +5,7 @@ import 'package:online_groceries_app/features/auth/presentation/widget/text_widg
 class AppBarWidget extends StatelessWidget {
   final String? title;
   final void Function()? onTap;
+<<<<<<< HEAD
   final Widget? icon;
   final TextAlign? textAlign;
   final Widget? trailingIcon;
@@ -26,6 +27,9 @@ class AppBarWidget extends StatelessWidget {
     this.fontSize,
     this.size,
   });
+=======
+  const AppBarWidget({super.key, this.title, this.onTap});
+>>>>>>> master
 
   @override
   Widget build(BuildContext context) {
@@ -38,12 +42,17 @@ class AppBarWidget extends StatelessWidget {
             child: InkWell(
               splashColor: Color(0xFF828282),
               onTap: onTap,
+<<<<<<< HEAD
               child: icon ?? Icon(Icons.arrow_back_ios, size: size),
+=======
+              child: Icon(Icons.arrow_back_ios),
+>>>>>>> master
             ),
           ),
           SizedBox(width: 20.w),
           TextWidget(
             title: title ?? '',
+<<<<<<< HEAD
             fontSize: fontSize ?? 28,
             fontWeight: fontWeight ?? FontWeight.w600,
             color: Colors.black,
@@ -58,6 +67,12 @@ class AppBarWidget extends StatelessWidget {
               onTap: onTapTrailing,
               child: trailingIcon ?? SizedBox(),
             ),
+=======
+            fontSize: 28,
+            fontWeight: FontWeight.w600,
+            color: Colors.black,
+            letterSpacing: 0,
+>>>>>>> master
           ),
         ],
       ),

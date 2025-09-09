@@ -9,10 +9,15 @@ class TextWidget extends StatelessWidget {
   final String? fontFamily;
   final double letterSpacing;
   final double? height;
+<<<<<<< HEAD
   final TextOverflow? overflow;
   final void Function()? onTap;
   final List<InlineSpan>? spans;
   final TextAlign? textAlign;
+=======
+  final void Function()? onTap;
+  final List<InlineSpan>? spans;
+>>>>>>> master
 
   const TextWidget({
     super.key,
@@ -25,8 +30,11 @@ class TextWidget extends StatelessWidget {
     this.height,
     this.spans,
     this.onTap,
+<<<<<<< HEAD
     this.overflow,
     this.textAlign,
+=======
+>>>>>>> master
   });
 
   @override
@@ -35,7 +43,10 @@ class TextWidget extends StatelessWidget {
       return RichText(
         text: TextSpan(
           text: title,
+<<<<<<< HEAD
 
+=======
+>>>>>>> master
           style: TextStyle(
             fontSize: fontSize,
             fontWeight: fontWeight,
@@ -50,13 +61,19 @@ class TextWidget extends StatelessWidget {
     }
     return Text(
       title,
+<<<<<<< HEAD
       
       textAlign: textAlign,
+=======
+>>>>>>> master
       style: TextStyle(
         fontSize: fontSize,
         fontWeight: fontWeight,
         color: color,
+<<<<<<< HEAD
         overflow: overflow ?? TextOverflow.ellipsis,
+=======
+>>>>>>> master
         fontFamily: fontFamily ?? 'OpenSans',
         letterSpacing: letterSpacing,
         height: height,

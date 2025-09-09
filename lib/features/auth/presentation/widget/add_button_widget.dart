@@ -3,8 +3,12 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:online_groceries_app/config/constants/app_color.dart';
 
 class AddButtonWidget extends StatelessWidget {
+<<<<<<< HEAD
   final void Function()? onTap;
   const AddButtonWidget({super.key, this.onTap});
+=======
+  const AddButtonWidget({super.key});
+>>>>>>> master
 
   @override
   Widget build(BuildContext context) {
@@ -18,7 +22,11 @@ class AddButtonWidget extends StatelessWidget {
       child: Material(
         color: Colors.transparent,
         child: InkWell(
+<<<<<<< HEAD
           onTap: onTap,
+=======
+          onTap: () {},
+>>>>>>> master
           splashColor: AppColor.splashColor,
           borderRadius: BorderRadius.circular(17.r),
           child: Icon(Icons.add, color: Colors.white, size: 28.sp),

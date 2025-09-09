@@ -10,6 +10,7 @@ class Path {
   static const verification = '/verification';
   static const location = '/location';
   static const setting = '/setting';
+<<<<<<< HEAD
   static const productDetails = '/productDetails';
   static const explore = '/explore';
   static const cart = '/cart';
@@ -20,4 +21,6 @@ class Path {
   static const item = '/item';
   static const category = '/category';
   static const see = '/see';
+=======
+>>>>>>> master
 }

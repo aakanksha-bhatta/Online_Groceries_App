@@ -161,7 +161,10 @@ class SignupScreen extends ConsumerWidget {
               SizedBox(height: 30.h),
               CustomButtonWidget(
                 buttonName: loc.signUp,
+<<<<<<< HEAD
                 padding: EdgeInsets.symmetric(horizontal: 139.96),
+=======
+>>>>>>> master
                 onPressed: signupState.isLoading
                     ? null
                     : () async {
