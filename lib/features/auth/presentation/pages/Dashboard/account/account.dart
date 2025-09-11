@@ -14,6 +14,8 @@ class Account extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    final state = ref.watch(authNotifierProvider);
+
     final List<Map<String, dynamic>> accountItems = [
       {'icon': Icons.shopping_bag_outlined, 'title': 'Orders'},
       {'icon': Icons.person_outline, 'title': 'My Details'},
@@ -23,14 +25,13 @@ class Account extends ConsumerWidget {
       {'icon': Icons.notifications_none, 'title': 'Notifications'},
       {'icon': Icons.help_outline, 'title': 'Help'},
       {'icon': Icons.info_outline, 'title': 'About'},
-      // {'icon': Icons.chat, 'title': 'Chat', 'ontap': context.go(Path.chat)},
+      {'icon': Icons.chat, 'title': 'Chat', 'route': Path.user},
     ];
-    final state = ref.watch(authNotifierProvider);
+
     return Scaffold(
       backgroundColor: Colors.white,
       body: Column(
         children: [
-          // Profile Section
           Padding(
             padding: EdgeInsets.only(top: 69.82.h, left: 25.w, right: 25.w),
             child: Row(
@@ -62,7 +63,7 @@ class Account extends ConsumerWidget {
                       title: 'akanksha@gmail.com',
                       fontSize: 16,
                       fontWeight: FontWeight.w400,
-                      color: Color(0xFF7C7C7C),
+                      color: const Color(0xFF7C7C7C),
                       letterSpacing: 0,
                     ),
                   ],
@@ -71,46 +72,52 @@ class Account extends ConsumerWidget {
             ),
           ),
 
-          Divider(thickness: 1, color: Color(0xffE2E2E2)),
+          Divider(thickness: 1, color: const Color(0xffE2E2E2)),
 
           Expanded(
             child: ListView.separated(
-              padding: EdgeInsets.symmetric(horizontal: 25.w, vertical: 0),
+              padding: EdgeInsets.symmetric(horizontal: 25.w),
               itemCount: accountItems.length,
               itemBuilder: (context, index) {
                 final item = accountItems[index];
                 return ListTile(
                   contentPadding: EdgeInsets.zero,
-                  leading: Icon(item['icon'], color: Color(0xff181725)),
+                  leading: Icon(item['icon'], color: const Color(0xff181725)),
                   title: TextWidget(
                     title: item['title'],
                     fontSize: 18,
                     fontWeight: FontWeight.w600,
-                    color: Color(0xff181725),
+                    color: const Color(0xff181725),
                     letterSpacing: 0,
                   ),
-                  trailing: Icon(
+                  trailing: const Icon(
                     Icons.arrow_forward_ios,
                     size: 15,
                     color: Color(0xff181725),
                   ),
-                  onTap: () {},
+                  onTap: () {
+                    if (item.containsKey('route')) {
+                      context.go(item['route']);
+                    } else {
+                      CustomSnackBar.show(context, 'Coming soon');
+                    }
+                  },
                 );
               },
               separatorBuilder: (context, index) =>
                   Divider(color: Colors.grey.shade300, thickness: 1, height: 0),
             ),
           ),
+
           Padding(
             padding: const EdgeInsets.symmetric(vertical: 24.51),
             child: CustomButtonWidget(
               buttonName: 'Log Out',
-              textColor: Color(0xff53B175),
-              buttonColor: Color(0xffF2F3F2),
+              textColor: const Color(0xff53B175),
+              buttonColor: const Color(0xffF2F3F2),
               buttonIcon: 'assets/icons/logout.svg',
+              splashColor: const Color(0xffF2F3F2),
               padding: EdgeInsets.only(left: 25.17.w, right: 77.52.w),
-
-              splashColor: Color(0xffF2F3F2),
               onPressed: state.isLoading
                   ? null
                   : () async {
@@ -123,7 +130,7 @@ class Account extends ConsumerWidget {
                       }
                     },
               child: state.isLoading
-                  ? SizedBox(
+                  ? const SizedBox(
                       height: 24,
                       width: 24,
                       child: CircularProgressIndicator(
@@ -136,7 +143,7 @@ class Account extends ConsumerWidget {
           ),
         ],
       ),
-      bottomNavigationBar: CustomNavigationBar(),
+      bottomNavigationBar: const CustomNavigationBar(),
     );
   }
 }

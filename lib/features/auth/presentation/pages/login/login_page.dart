@@ -142,7 +142,7 @@ class LoginPage extends ConsumerWidget {
               SizedBox(height: 30.h),
               CustomButtonWidget(
                 buttonName: loc.login,
-                padding: EdgeInsets.symmetric(horizontal: 139.96),
+                // padding: EdgeInsets.symmetric(horizontal: 139.96),
                 onPressed: loginState.isLoading
                     ? null
                     : () async {

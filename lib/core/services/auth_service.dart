@@ -117,4 +117,6 @@ class AuthService {
       CustomSnackBar.show(context, 'Invalid OTP. Please try again.');
     }
   }
+
+  
 }

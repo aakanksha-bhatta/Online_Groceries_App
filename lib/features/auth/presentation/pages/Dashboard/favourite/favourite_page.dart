@@ -6,7 +6,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:go_router/go_router.dart';
 import 'package:online_groceries_app/config/route/path.dart';
 import 'package:online_groceries_app/core/services/cart_service.dart';
-import 'package:online_groceries_app/features/auth/presentation/controller/auth_notifier.dart';
+import 'package:online_groceries_app/features/auth/presentation/provider/change_notifier.dart';
 import 'package:online_groceries_app/features/auth/presentation/widget/custom_button_widget.dart';
 import 'package:online_groceries_app/features/auth/presentation/widget/custom_navigation_bar.dart';
 import 'package:online_groceries_app/features/auth/presentation/widget/custom_snack_bar.dart';
@@ -24,7 +24,8 @@ class FavoritePage extends ConsumerStatefulWidget {
 class _FavoritePageState extends ConsumerState<FavoritePage> {
   @override
   Widget build(BuildContext context) {
-    final cartState = ref.watch(authNotifierProvider);
+    final loadingNotifier = ref.watch(loadingProvider);
+    final isLoading = loadingNotifier.isLoading;
 
     return Scaffold(
       backgroundColor: Colors.white,
@@ -36,13 +37,13 @@ class _FavoritePageState extends ConsumerState<FavoritePage> {
             .snapshots(),
         builder: (context, snapshot) {
           if (snapshot.connectionState == ConnectionState.waiting) {
-            return Center(child: CircularProgressIndicator());
+            return const Center(child: CircularProgressIndicator());
           }
           if (snapshot.hasError) {
             return Center(child: Text('Error: ${snapshot.error}'));
           }
           if (!snapshot.hasData || snapshot.data!.docs.isEmpty) {
-            return Center(child: Text('No favorites found.'));
+            return const Center(child: Text('No favorites found.'));
           }
 
           final favoriteDocs = snapshot.data!.docs;
@@ -56,17 +57,17 @@ class _FavoritePageState extends ConsumerState<FavoritePage> {
                     title: 'Favorites',
                     fontSize: 20.sp,
                     fontWeight: FontWeight.w400,
-                    color: Color(0xff181725),
+                    color: const Color(0xff181725),
                     letterSpacing: 0,
                   ),
                 ),
               ),
-              Divider(color: Color(0xffE2E2E2), thickness: 1, height: 0),
+              const Divider(color: Color(0xffE2E2E2), thickness: 1, height: 0),
               Expanded(
                 child: Padding(
                   padding: const EdgeInsets.symmetric(horizontal: 25.27),
                   child: ListView.separated(
-                    padding: EdgeInsets.only(top: 15, bottom: 25),
+                    padding: const EdgeInsets.only(top: 15, bottom: 25),
                     itemCount: favoriteDocs.length,
                     itemBuilder: (context, index) {
                       final data =
@@ -75,7 +76,6 @@ class _FavoritePageState extends ConsumerState<FavoritePage> {
                       final productImage = data['productImage'];
                       final productQuantity =
                           data['productQuantity']?.toString() ?? '';
-
                       final productPrice = data['productPrice']?.toString();
 
                       return ListTile(
@@ -86,19 +86,18 @@ class _FavoritePageState extends ConsumerState<FavoritePage> {
                           height: 60.h,
                           width: 60.w,
                         ),
-
                         title: TextWidget(
                           title: productName,
                           fontSize: 16.sp,
                           fontWeight: FontWeight.w400,
-                          color: Color(0xff181725),
+                          color: const Color(0xff181725),
                           letterSpacing: 0,
                         ),
                         subtitle: TextWidget(
                           title: '$productQuantity kg, price',
                           fontSize: 14.sp,
                           fontWeight: FontWeight.w400,
-                          color: Color(0xff7C7C7C),
+                          color: const Color(0xff7C7C7C),
                           letterSpacing: 0,
                         ),
                         trailing: Row(
@@ -109,22 +108,21 @@ class _FavoritePageState extends ConsumerState<FavoritePage> {
                               title: '\$$productPrice',
                               fontSize: 18.sp,
                               fontWeight: FontWeight.w600,
-                              color: Color(0xff181725),
+                              color: const Color(0xff181725),
                               letterSpacing: 0.1,
                             ),
                             SizedBox(width: 8.w),
                             Icon(
                               Icons.arrow_forward_ios,
-                              color: Color(0xff7C7C7C),
+                              color: const Color(0xff7C7C7C),
                               size: 16.sp,
                             ),
                           ],
                         ),
                       );
                     },
-                    separatorBuilder: (context, index) {
-                      return Divider(color: Color(0xffE2E2E2), thickness: 1);
-                    },
+                    separatorBuilder: (_, __) =>
+                        const Divider(color: Color(0xffE2E2E2), thickness: 1),
                   ),
                 ),
               ),
@@ -134,14 +132,15 @@ class _FavoritePageState extends ConsumerState<FavoritePage> {
                 ).copyWith(bottom: 21.25, top: 5.23),
                 child: CustomButtonWidget(
                   buttonName: 'Add All to Cart',
-                  padding: EdgeInsets.only(left: 115.96),
-                  onPressed: cartState.isLoading
+                  onPressed: isLoading
                       ? null
                       : () async {
-                          final selectedQuantity = 1;
-                          final favoriteDocs = snapshot.data!.docs;
+                          ref.read(loadingProvider).setLoading(true);
 
                           try {
+                            final selectedQuantity = 1;
+                            final favoriteDocs = snapshot.data!.docs;
+
                             for (var doc in favoriteDocs) {
                               final data = doc.data() as Map<String, dynamic>;
 
@@ -153,7 +152,8 @@ class _FavoritePageState extends ConsumerState<FavoritePage> {
                                 productQuantity: data['productQuantity'],
                                 selectedQuantity: selectedQuantity,
                               );
-                              // to remove favorite after storing in cart
+
+                              // Remove from favorites
                               await FirebaseFirestore.instance
                                   .collection('users')
                                   .doc(FirebaseAuth.instance.currentUser!.uid)
@@ -164,18 +164,21 @@ class _FavoritePageState extends ConsumerState<FavoritePage> {
 
                             CustomSnackBar.show(
                               context,
-                              'All items added to basket',
+                              'All items added to cart',
                             );
+
                             context.go(Path.cart);
                           } catch (e) {
                             CustomSnackBar.show(
                               context,
-                              'Failed to add items to basket',
+                              'Failed to add items to cart',
                             );
+                          } finally {
+                            ref.read(loadingProvider).setLoading(false);
                           }
                         },
-                  child: cartState.isLoading
-                      ? SizedBox(
+                  child: isLoading
+                      ? const SizedBox(
                           height: 24,
                           width: 24,
                           child: CircularProgressIndicator(
@@ -190,7 +193,7 @@ class _FavoritePageState extends ConsumerState<FavoritePage> {
           );
         },
       ),
-      bottomNavigationBar: CustomNavigationBar(),
+      bottomNavigationBar: const CustomNavigationBar(),
     );
   }
 }

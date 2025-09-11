@@ -1,11 +1,27 @@
 import 'dart:convert';
 
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:online_groceries_app/core/services/favorite_service.dart';
 import 'package:online_groceries_app/core/services/product_service.dart';
 import 'package:online_groceries_app/core/services/rating_service.dart';
 import 'package:online_groceries_app/features/auth/data/model/product.dart';
+
+// user provider to call name and email in account
+final userDataProvider = FutureProvider<Map<String, dynamic>>((ref) async {
+  final uid = FirebaseAuth.instance.currentUser?.uid;
+  if (uid == null) throw Exception('User not logged in');
+
+  final doc = await FirebaseFirestore.instance
+      .collection('users')
+      .doc(uid)
+      .get();
+  if (!doc.exists) throw Exception('User document not found');
+
+  return doc.data()!;
+});
 
 final passwordVisibilityProvider = StateProvider<bool>(
   (ref) => false,

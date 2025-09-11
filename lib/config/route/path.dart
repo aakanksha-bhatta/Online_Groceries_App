@@ -20,4 +20,5 @@ class Path {
   static const item = '/item';
   static const category = '/category';
   static const see = '/see';
+  static const user = '/user';
 }

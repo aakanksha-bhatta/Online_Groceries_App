@@ -60,7 +60,7 @@ class Category extends StatelessWidget {
                         alignment: Alignment.bottomCenter,
                         child: CustomButtonWidget(
                           buttonName: 'Apply Filter',
-                          padding: EdgeInsets.only(left: 120),
+                          // padding: EdgeInsets.only(left: 120),
                         ),
                       ),
                     ],

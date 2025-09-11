@@ -127,7 +127,12 @@ class HomeScreen extends ConsumerWidget {
                         ),
 
                         // Best Sellers Section
-                        RowHelperTextWidget(title: "Best Sellers"),
+                        RowHelperTextWidget(
+                          title: "Best Sellers",
+                          onTap: () {
+                            context.go(Path.see);
+                          },
+                        ),
                         SizedBox(height: 12.h),
                         SizedBox(
                           height: 250.h,
@@ -149,7 +154,12 @@ class HomeScreen extends ConsumerWidget {
                         ),
 
                         // Grocery Section
-                        RowHelperTextWidget(title: "Grocery"),
+                        RowHelperTextWidget(
+                          title: "Grocery",
+                          onTap: () {
+                            context.go(Path.see);
+                          },
+                        ),
                         SizedBox(height: 12.h),
                         SizedBox(
                           height: 250.h,

@@ -85,7 +85,7 @@ class Location extends StatelessWidget {
                     SizedBox(height: 40.35.h),
                     CustomButtonWidget(
                       buttonName: loc.submit,
-                      padding: EdgeInsets.symmetric(horizontal: 139.96),
+                      // padding: EdgeInsets.symmetric(horizontal: 110.96),
                       onPressed: () {
                         context.go(Path.login);
                       },

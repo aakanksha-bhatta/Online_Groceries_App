@@ -8,6 +8,7 @@ import 'package:go_router/go_router.dart';
 import 'package:online_groceries_app/config/route/path.dart';
 import 'package:online_groceries_app/core/services/cart_service.dart';
 import 'package:online_groceries_app/features/auth/data/model/product.dart';
+import 'package:online_groceries_app/features/auth/presentation/provider/change_notifier.dart';
 import 'package:online_groceries_app/features/auth/presentation/widget/add_minus_button_widget.dart';
 import 'package:online_groceries_app/features/auth/presentation/widget/custom_button_widget.dart';
 import 'package:online_groceries_app/features/auth/presentation/widget/custom_navigation_bar.dart';
@@ -31,6 +32,9 @@ class _CartPageState extends ConsumerState<CartPage> {
 
   @override
   Widget build(BuildContext context) {
+    final loadingNotifier = ref.watch(loadingProvider);
+    final isLoading = loadingNotifier.isLoading;
+
     return Scaffold(
       backgroundColor: Colors.white,
       body: StreamBuilder<QuerySnapshot>(
@@ -77,9 +81,7 @@ class _CartPageState extends ConsumerState<CartPage> {
                   ),
                 ),
               ),
-
               const Divider(color: Color(0xffE2E2E2), thickness: 1),
-
               Expanded(
                 child: Padding(
                   padding: const EdgeInsets.symmetric(horizontal: 25),
@@ -157,129 +159,176 @@ class _CartPageState extends ConsumerState<CartPage> {
                 padding: const EdgeInsets.only(bottom: 20.5),
                 child: CustomButtonWidget(
                   buttonName: 'Go to Checkout',
-                  padding: EdgeInsets.only(left: 112),
-                  onPressed: () {
-                    showModalBottomSheet(
-                      isScrollControlled: true,
-                      context: context,
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.vertical(
-                          top: Radius.circular(30.r),
-                        ),
-                      ),
-                      builder: (context) {
-                        return DraggableScrollableSheet(
-                          expand: false,
-                          builder: (context, scrollController) {
-                            return Container(
-                              padding: const EdgeInsets.all(20),
-                              decoration: const BoxDecoration(
-                                color: Colors.white,
-                                borderRadius: BorderRadius.vertical(
-                                  top: Radius.circular(30),
-                                ),
-                              ),
-                              child: Column(
-                                children: [
-                                  Row(
-                                    mainAxisAlignment:
-                                        MainAxisAlignment.spaceBetween,
-                                    children: [
-                                      TextWidget(
-                                        title: 'Checkout',
-                                        fontSize: 24,
-                                        fontWeight: FontWeight.w600,
-                                        color: const Color(0xff181725),
-                                        letterSpacing: 0,
-                                      ),
-                                      GestureDetector(
-                                        onTap: () => Navigator.pop(context),
-                                        child: const Icon(Icons.close),
-                                      ),
-                                    ],
-                                  ),
-                                  const Divider(thickness: 1),
-                                  Expanded(
-                                    child: ListView.separated(
-                                      controller: scrollController,
-                                      itemCount: checkoutOptions.length,
-                                      itemBuilder: (context, index) {
-                                        final item = checkoutOptions[index];
-                                        return ListTile(
-                                          title: TextWidget(
-                                            title: item['title'],
-                                            fontSize: 18,
-                                            fontWeight: FontWeight.w600,
-                                            color: const Color(0xff7C7C7C),
-                                            letterSpacing: 0,
-                                          ),
-                                          trailing: Row(
-                                            mainAxisSize: MainAxisSize.min,
-                                            children: [
-                                              TextWidget(
-                                                title: item['value'],
-                                                fontSize: 16,
-                                                fontWeight: FontWeight.w600,
-                                                color: const Color(0xff181725),
-                                                letterSpacing: 0,
-                                              ),
-                                              const Icon(
-                                                Icons.arrow_forward_ios,
-                                                size: 16,
-                                              ),
-                                            ],
-                                          ),
-                                        );
-                                      },
-                                      separatorBuilder: (_, __) =>
-                                          const Divider(),
-                                    ),
-                                  ),
-                                  TextWidget(
-                                    title:
-                                        'By placing an order you agree to our ',
-                                    fontSize: 14,
-                                    fontWeight: FontWeight.w600,
-                                    color: Colors.black,
-                                    spans: [
-                                      TextSpan(
-                                        text: 'Terms and Conditions',
-                                        style: const TextStyle(
-                                          color: Colors.green,
-                                          decoration: TextDecoration.underline,
-                                        ),
-                                        recognizer: TapGestureRecognizer()
-                                          ..onTap = () {
-                                            // Handle T&C click
-                                            debugPrint(
-                                              'Terms and Conditions tapped',
-                                            );
-                                          },
-                                      ),
-                                    ],
-                                    letterSpacing: 0,
-                                  ),
+                  onPressed: isLoading
+                      ? null
+                      : () async {
+                          ref.read(loadingProvider).setLoading(true);
+                          await Future.delayed(Duration(milliseconds: 300));
 
-                                  Padding(
-                                    padding: const EdgeInsets.symmetric(
-                                      vertical: 25.0,
-                                    ),
-                                    child: CustomButtonWidget(
-                                      buttonName: 'Place Order',
-                                      padding: EdgeInsets.only(left: 120),
-                                      onPressed: () {
-                                        context.go(Path.order);
-                                      },
-                                    ),
-                                  ),
-                                ],
+                          if (!mounted) return;
+                          showModalBottomSheet(
+                            isScrollControlled: true,
+                            context: context,
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.vertical(
+                                top: Radius.circular(30.r),
                               ),
-                            );
-                          },
-                        );
-                      },
-                    );
-                  },
+                            ),
+                            builder: (context) {
+                              return DraggableScrollableSheet(
+                                expand: false,
+                                builder: (context, scrollController) {
+                                  return Container(
+                                    padding: const EdgeInsets.all(20),
+                                    decoration: const BoxDecoration(
+                                      color: Colors.white,
+                                      borderRadius: BorderRadius.vertical(
+                                        top: Radius.circular(30),
+                                      ),
+                                    ),
+                                    child: Column(
+                                      children: [
+                                        Row(
+                                          mainAxisAlignment:
+                                              MainAxisAlignment.spaceBetween,
+                                          children: [
+                                            TextWidget(
+                                              title: 'Checkout',
+                                              fontSize: 24,
+                                              fontWeight: FontWeight.w600,
+                                              color: const Color(0xff181725),
+                                              letterSpacing: 0,
+                                            ),
+                                            GestureDetector(
+                                              onTap: () =>
+                                                  Navigator.pop(context),
+                                              child: const Icon(Icons.close),
+                                            ),
+                                          ],
+                                        ),
+                                        const Divider(thickness: 1),
+                                        Expanded(
+                                          child: ListView.separated(
+                                            controller: scrollController,
+                                            itemCount: checkoutOptions.length,
+                                            itemBuilder: (context, index) {
+                                              final item =
+                                                  checkoutOptions[index];
+                                              return ListTile(
+                                                title: TextWidget(
+                                                  title: item['title'],
+                                                  fontSize: 18,
+                                                  fontWeight: FontWeight.w600,
+                                                  color: const Color(
+                                                    0xff7C7C7C,
+                                                  ),
+                                                  letterSpacing: 0,
+                                                ),
+                                                trailing: Row(
+                                                  mainAxisSize:
+                                                      MainAxisSize.min,
+                                                  children: [
+                                                    TextWidget(
+                                                      title: item['value'],
+                                                      fontSize: 16,
+                                                      fontWeight:
+                                                          FontWeight.w600,
+                                                      color: const Color(
+                                                        0xff181725,
+                                                      ),
+                                                      letterSpacing: 0,
+                                                    ),
+                                                    const Icon(
+                                                      Icons.arrow_forward_ios,
+                                                      size: 16,
+                                                    ),
+                                                  ],
+                                                ),
+                                              );
+                                            },
+                                            separatorBuilder: (_, __) =>
+                                                const Divider(),
+                                          ),
+                                        ),
+                                        TextWidget(
+                                          title:
+                                              'By placing an order you agree to our ',
+                                          fontSize: 14,
+                                          fontWeight: FontWeight.w600,
+                                          color: Colors.black,
+                                          spans: [
+                                            TextSpan(
+                                              text: 'Terms and Conditions',
+                                              style: const TextStyle(
+                                                color: Colors.green,
+                                                decoration:
+                                                    TextDecoration.underline,
+                                              ),
+                                              recognizer: TapGestureRecognizer()
+                                                ..onTap = () {
+                                                  debugPrint(
+                                                    'Terms and Conditions tapped',
+                                                  );
+                                                },
+                                            ),
+                                          ],
+                                          letterSpacing: 0,
+                                        ),
+                                        Padding(
+                                          padding: const EdgeInsets.symmetric(
+                                            vertical: 25.0,
+                                          ),
+                                          child: CustomButtonWidget(
+                                            buttonName: 'Place Order',
+                                            onPressed: isLoading
+                                                ? null
+                                                : () async {
+                                                    ref
+                                                        .read(loadingProvider)
+                                                        .setLoading(true);
+                                                    await Future.delayed(
+                                                      Duration(seconds: 2),
+                                                    );
+
+                                                    if (!mounted) return;
+                                                    context.go(Path.order);
+
+                                                    ref
+                                                        .read(loadingProvider)
+                                                        .setLoading(false);
+                                                  },
+                                            child: isLoading
+                                                ? const SizedBox(
+                                                    height: 24,
+                                                    width: 24,
+                                                    child:
+                                                        CircularProgressIndicator(
+                                                          strokeWidth: 2,
+                                                          color: Colors.white,
+                                                        ),
+                                                  )
+                                                : null,
+                                          ),
+                                        ),
+                                      ],
+                                    ),
+                                  );
+                                },
+                              );
+                            },
+                          );
+                          ref.read(loadingProvider).setLoading(false);
+                        },
+                  child: isLoading
+                      ? const SizedBox(
+                          height: 24,
+                          width: 24,
+                          child: CircularProgressIndicator(
+                            strokeWidth: 2,
+                            color: Colors.white,
+                          ),
+                        )
+                      : null,
                 ),
               ),
             ],

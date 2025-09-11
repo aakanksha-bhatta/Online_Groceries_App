@@ -5,6 +5,7 @@ import 'package:go_router/go_router.dart';
 import 'package:online_groceries_app/config/route/path.dart';
 import 'package:online_groceries_app/core/services/cart_service.dart';
 import 'package:online_groceries_app/core/services/favorite_service.dart';
+import 'package:online_groceries_app/features/auth/presentation/provider/change_notifier.dart';
 import 'package:online_groceries_app/features/auth/presentation/provider/state_provider.dart';
 import 'package:online_groceries_app/features/auth/presentation/widget/add_minus_button_widget.dart';
 import 'package:online_groceries_app/features/auth/presentation/widget/custom_button_widget.dart';
@@ -32,6 +33,9 @@ class ProductDetailsPage extends ConsumerWidget {
     // final rating = ref.watch(currentRatingProvider);
     // final ratingNotifier = ref.read(currentRatingProvider.notifier);
     // final ratingNoti = ratingNotifier.checkRating(productId);
+    final loadingNotifier = ref.watch(loadingProvider);
+    final isLoading = loadingNotifier.isLoading;
+
     final ratingMap = ref.watch(currentRatingProvider);
     final currentRating = ratingMap[productId] ?? 0;
 
@@ -233,33 +237,47 @@ class ProductDetailsPage extends ConsumerWidget {
                     SizedBox(height: 20.14.h),
                     CustomButtonWidget(
                       buttonName: 'Add to Basket',
-                      padding: const EdgeInsets.only(left: 110),
-                      onPressed: () async {
-                        final selectedQuantity = ref.watch(
-                          selectedQuantityProvider,
-                        );
+                      onPressed: isLoading
+                          ? null
+                          : () async {
+                              loadingNotifier.setLoading(true);
+                              final selectedQuantity = ref.watch(
+                                selectedQuantityProvider,
+                              );
 
-                        try {
-                          await CartService().addToCart(
-                            productId: productId,
-                            productName: productName,
-                            productImage: productImage,
-                            productPrice: productPrice,
-                            productQuantity: productQuantity,
-                            selectedQuantity: selectedQuantity,
-                          );
-                          CustomSnackBar.show(
-                            context,
-                            '$productName added to basket',
-                          );
-                          context.go(Path.cart);
-                        } catch (e) {
-                          CustomSnackBar.show(
-                            context,
-                            'Failed to add $productName to basket',
-                          );
-                        }
-                      },
+                              try {
+                                await CartService().addToCart(
+                                  productId: productId,
+                                  productName: productName,
+                                  productImage: productImage,
+                                  productPrice: productPrice,
+                                  productQuantity: productQuantity,
+                                  selectedQuantity: selectedQuantity,
+                                );
+                                CustomSnackBar.show(
+                                  context,
+                                  '$productName added to basket',
+                                );
+                                context.go(Path.cart);
+                              } catch (e) {
+                                CustomSnackBar.show(
+                                  context,
+                                  'Failed to add $productName to basket',
+                                );
+                              } finally {
+                                loadingNotifier.setLoading(false);
+                              }
+                            },
+                      child: isLoading
+                          ? SizedBox(
+                              height: 24,
+                              width: 24,
+                              child: CircularProgressIndicator(
+                                strokeWidth: 2,
+                                color: Colors.white,
+                              ),
+                            )
+                          : null,
                     ),
                   ],
                 ),

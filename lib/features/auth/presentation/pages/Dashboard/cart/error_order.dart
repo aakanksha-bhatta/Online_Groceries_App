@@ -57,7 +57,7 @@ class ErrorOrder extends StatelessWidget {
 
             CustomButtonWidget(
               buttonName: 'Please Try Again',
-              padding: const EdgeInsets.only(left: 75),
+              // padding: const EdgeInsets.only(left: 75),
               onPressed: () {
                 Navigator.of(context).pop();
               },
@@ -67,7 +67,7 @@ class ErrorOrder extends StatelessWidget {
               buttonName: 'Back to Home',
               buttonColor: Colors.transparent,
               textColor: Colors.black,
-              padding: const EdgeInsets.only(left: 80),
+              // padding: const EdgeInsets.only(left: 80),
               onPressed: () {
                 context.go(Path.home);
               },

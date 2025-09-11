@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:online_groceries_app/core/services/product_service.dart';
 import 'package:online_groceries_app/features/auth/data/model/product.dart';
+import 'package:online_groceries_app/features/auth/presentation/provider/state_notifier.dart';
 import 'package:online_groceries_app/features/auth/presentation/widget/card_widget.dart';
 import 'package:online_groceries_app/features/auth/presentation/widget/search_bar_widget.dart';
 
@@ -18,12 +19,14 @@ class _SearchSeeAllPageState extends ConsumerState<SearchSeeAllPage> {
   @override
   Widget build(BuildContext context) {
     final productService = ProductService();
+    final searchQuery = ref.watch(searchProvider);
+
     return Scaffold(
       backgroundColor: Colors.white,
       body: Column(
         children: [
           SizedBox(height: 48),
-          Row(children: [SearchBarWidget()]),
+          Row(children: [Expanded(child: SearchBarWidget())]),
 
           Expanded(
             child: FutureBuilder<List<Product>>(
@@ -39,21 +42,31 @@ class _SearchSeeAllPageState extends ConsumerState<SearchSeeAllPage> {
 
                 final allProducts = snapshot.data ?? [];
 
-                if (allProducts.isEmpty) {
-                  return Center(child: Text('No products in this category.'));
+                final filteredProducts = searchQuery.isEmpty
+                    ? allProducts
+                    : allProducts
+                          .where(
+                            (product) => product.productName
+                                .toLowerCase()
+                                .contains(searchQuery),
+                          )
+                          .toList();
+
+                if (filteredProducts.isEmpty) {
+                  return Center(child: Text('No products found.'));
                 }
 
                 return GridView.builder(
                   padding: EdgeInsets.all(16),
                   gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                    crossAxisCount: 2, // Number of columns
-                    crossAxisSpacing: 10, // Spacing between columns
-                    mainAxisSpacing: 20, // Spacing between rows
-                    childAspectRatio: 0.7, // Aspect ratio of each grid item
+                    crossAxisCount: 2,
+                    crossAxisSpacing: 10,
+                    mainAxisSpacing: 20,
+                    childAspectRatio: 0.7,
                   ),
-                  itemCount: allProducts.length,
+                  itemCount: filteredProducts.length,
                   itemBuilder: (context, index) {
-                    final product = allProducts[index];
+                    final product = filteredProducts[index];
                     return CardWidget(
                       productId: product.productId,
                       productName: product.productName,

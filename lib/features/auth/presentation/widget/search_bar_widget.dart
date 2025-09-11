@@ -16,7 +16,7 @@ class SearchBarWidget extends ConsumerWidget {
           borderRadius: BorderRadius.circular(15.r),
         ),
         child: TextField(
-          onChanged: (value) => 
+          onChanged: (value) =>
               ref.read(searchProvider.notifier).updateQuery(value),
           decoration: InputDecoration(
             border: InputBorder.none,
