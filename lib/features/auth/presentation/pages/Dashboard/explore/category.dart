@@ -1,13 +1,53 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:go_router/go_router.dart';
+import 'package:online_groceries_app/config/route/path.dart';
 import 'package:online_groceries_app/features/auth/presentation/widget/app_bar_widget.dart';
 import 'package:online_groceries_app/features/auth/presentation/widget/check_box.dart';
 import 'package:online_groceries_app/features/auth/presentation/widget/custom_button_widget.dart';
 
-class Category extends StatelessWidget {
+class Category extends StatefulWidget {
   const Category({super.key});
 
   @override
+  State<Category> createState() => _CategoryState();
+}
+
+class _CategoryState extends State<Category> {
+  final List<String> categories = [
+    'Fresh Fruit & Vegetables',
+    'Meat & Fish',
+    'Cooking Oil & Ghee',
+    'Bakery and Snacks',
+    'Dairy & Eggs',
+    'Beverages',
+  ];
+
+  final Map<String, bool> selectedCategories = {};
+
+  @override
+  void initState() {
+    super.initState();
+    for (var category in categories) {
+      selectedCategories[category] = false;
+    }
+  }
+
+  void _applyFilter() {
+    final filtered = selectedCategories.entries
+        .where((entry) => entry.value)
+        .map((entry) => entry.key)
+        .toList();
+
+    if (filtered.isNotEmpty) {
+      context.go('/filtered-products', extra: filtered);
+    } else {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text('Please select at least one category.')),
+      );
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -18,7 +58,7 @@ class Category extends StatelessWidget {
           AppBarWidget(
             title: 'Filters',
             onTap: () {
-              Navigator.pop(context);
+              context.go(Path.explore);
             },
             icon: const Icon(Icons.close),
           ),
@@ -49,18 +89,23 @@ class Category extends StatelessWidget {
                         ),
                       ),
                       SizedBox(height: 20.h),
-                      CheckBox(categoryName: 'Fresh Fruits & Vegetable'),
-                      CheckBox(categoryName: 'Meat & Fish'),
-                      CheckBox(categoryName: 'Cooking Oil & Ghee'),
-                      CheckBox(categoryName: 'Bakery & Snack'),
-                      CheckBox(categoryName: 'Dairy & Egg'),
-                      CheckBox(categoryName: 'Beverages'),
-                      SizedBox(height: 250),
+                      ...categories.map(
+                        (category) => CheckBox(
+                          categoryName: category,
+                          isChecked: selectedCategories[category]!,
+                          onChanged: (value) {
+                            setState(() {
+                              selectedCategories[category] = value!;
+                            });
+                          },
+                        ),
+                      ),
+                      SizedBox(height: 250.h),
                       Align(
                         alignment: Alignment.bottomCenter,
                         child: CustomButtonWidget(
                           buttonName: 'Apply Filter',
-                          // padding: EdgeInsets.only(left: 120),
+                          onPressed: _applyFilter,
                         ),
                       ),
                     ],

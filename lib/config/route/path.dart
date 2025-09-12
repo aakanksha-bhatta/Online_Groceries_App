@@ -21,4 +21,7 @@ class Path {
   static const category = '/category';
   static const see = '/see';
   static const user = '/user';
+  static const practice = '/practice';
+  static const details = '/details';
+  static const accorder = '/accorder';
 }

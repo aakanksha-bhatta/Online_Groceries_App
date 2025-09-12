@@ -24,16 +24,30 @@ class CartService {
           .collection('cart')
           .doc(productId);
 
-      await cartItemRef.set({
-        'productId': productId,
-        'productName': productName,
-        'productImage': productImage,
-        'productPrice': productPrice,
-        'productQuantity': productQuantity,
-        'selectedQuantity': selectedQuantity,
-        'totalPrice': productPrice * selectedQuantity,
-        'timestamp': FieldValue.serverTimestamp(),
-      });
+      final cartDoc = await cartItemRef.get();
+
+      if (cartDoc.exists) {
+        final existingData = cartDoc.data()!;
+        final currentQty = existingData['selectedQuantity'] ?? 0;
+        final updatedQty = currentQty + selectedQuantity;
+
+        await cartItemRef.update({
+          'selectedQuantity': updatedQty,
+          'totalPrice': productPrice * updatedQty,
+          'timestamp': FieldValue.serverTimestamp(),
+        });
+      } else {
+        await cartItemRef.set({
+          'productId': productId,
+          'productName': productName,
+          'productImage': productImage,
+          'productPrice': productPrice,
+          'productQuantity': productQuantity,
+          'selectedQuantity': selectedQuantity,
+          'totalPrice': productPrice * selectedQuantity,
+          'timestamp': FieldValue.serverTimestamp(),
+        });
+      }
     } catch (e) {
       rethrow;
     }

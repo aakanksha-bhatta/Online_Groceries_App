@@ -1,7 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:online_groceries_app/features/auth/presentation/pages/chat/chat_message.dart';
+import 'package:online_groceries_app/features/auth/presentation/pages/Dashboard/account/chat/chat_message.dart';
 import 'package:online_groceries_app/features/auth/presentation/widget/text_widget.dart';
 
 class UserList extends StatefulWidget {
@@ -36,7 +36,6 @@ class _UserListState extends State<UserList> {
               letterSpacing: 0,
             ),
           ),
-          automaticallyImplyLeading: false,
         ),
         body: Padding(
           padding: const EdgeInsets.all(16.0),

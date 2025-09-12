@@ -1,3 +1,4 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 final searchProvider = StateNotifierProvider<SearchNotifier, String>((ref) {
@@ -11,3 +12,7 @@ class SearchNotifier extends StateNotifier<String> {
     state = query.trim().toLowerCase();
   }
 }
+
+final userIdProvider = Provider<String?>((ref) {
+  return FirebaseAuth.instance.currentUser?.uid;
+});

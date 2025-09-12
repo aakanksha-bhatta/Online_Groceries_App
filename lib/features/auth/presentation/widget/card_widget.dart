@@ -113,7 +113,7 @@ class CardWidget extends ConsumerWidget {
                           final selectedQuantity = ref.watch(
                             selectedQuantityProvider,
                           );
-                    
+
                           try {
                             await CartService().addToCart(
                               productId: productId,
@@ -122,7 +122,6 @@ class CardWidget extends ConsumerWidget {
                               productPrice: productPrice,
                               productQuantity: productQuantity,
                               selectedQuantity: selectedQuantity,
-
                             );
                             CustomSnackBar.show(
                               context,

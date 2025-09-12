@@ -3,7 +3,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:online_groceries_app/config/route/path.dart';
-import 'package:online_groceries_app/features/auth/presentation/pages/chat/chat_user_list.dart';
+import 'package:online_groceries_app/features/auth/presentation/pages/Dashboard/account/chat/chat_user_list.dart';
 import 'package:online_groceries_app/features/auth/presentation/widget/custom_button_widget.dart';
 import 'package:online_groceries_app/features/auth/presentation/widget/custom_snack_bar.dart';
 
