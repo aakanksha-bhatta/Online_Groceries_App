@@ -30,6 +30,7 @@ class ChatScreenState extends State<ChatScreen> {
   void _sendMessage() async {
     final text = _controller.text.trim();
     if (text.isEmpty) return;
+    _controller.clear();
 
     final currentUser = FirebaseAuth.instance.currentUser;
     if (currentUser == null) return;
@@ -37,35 +38,38 @@ class ChatScreenState extends State<ChatScreen> {
     final userId = currentUser.uid;
     final receiverUsername = widget.userName;
 
-    final timestamp = FieldValue.serverTimestamp();
+    final localTimestamp = DateTime.now();
 
-    await FirebaseFirestore.instance
-        .collection('chats')
-        .doc(chatId)
-        .collection('messages')
-        .add({
-          'text': text,
-          'timestamp': timestamp,
-          'senderId': userId,
-          'receiverUsername': receiverUsername,
-        });
-    _controller.clear();
-    //   setState(() {
-    //     // _messages.add(text);
-    //     _controller.clear();
-    //   });
+    try {
+      await FirebaseFirestore.instance
+          .collection('chats')
+          .doc(chatId)
+          .collection('messages')
+          .add({
+            'text': text,
+            'timestamp': FieldValue.serverTimestamp(),
+            'createdAt': localTimestamp,
+            'senderId': userId,
+            'receiverUsername': receiverUsername,
+          });
+    } catch (e) {
+      print('Failed to send message: $e');
+    }
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text(widget.userName, style: TextStyle(color: Colors.white)),
-        centerTitle: true,
-        elevation: 0,
         backgroundColor: Colors.green,
+        elevation: 0,
         iconTheme: IconThemeData(color: Colors.white),
+        title: Align(
+          alignment: Alignment.centerLeft,
+          child: Text(widget.userName, style: TextStyle(color: Colors.white)),
+        ),
       ),
+
       body: Column(
         children: [
           Expanded(
@@ -87,7 +91,8 @@ class ChatScreenState extends State<ChatScreen> {
                   reverse: true,
                   itemCount: messages.length,
                   itemBuilder: (context, index) {
-                    final data = messages[index].data() as Map<String, dynamic>;
+                    final doc = messages[index]; // Firestore DocumentSnapshot
+                    final data = doc.data() as Map<String, dynamic>;
                     final isMe =
                         data['senderId'] ==
                         FirebaseAuth.instance.currentUser?.uid;
@@ -113,16 +118,63 @@ class ChatScreenState extends State<ChatScreen> {
                               ),
                             SizedBox(width: 8),
                             Flexible(
-                              child: Container(
-                                padding: EdgeInsets.all(12),
-                                margin: EdgeInsets.symmetric(vertical: 4),
-                                decoration: BoxDecoration(
-                                  color: isMe
-                                      ? Colors.green[100]
-                                      : Colors.grey[300],
-                                  borderRadius: BorderRadius.circular(12),
+                              child: GestureDetector(
+                                onLongPress: () async {
+                                  // Optional: Confirm deletion with dialog before deleting
+                                  final confirm = await showDialog<bool>(
+                                    context: context,
+                                    builder: (context) => AlertDialog(
+                                      title: Text('Delete Message?'),
+                                      content: Text(
+                                        'Are you sure you want to delete this message?',
+                                      ),
+                                      actions: [
+                                        TextButton(
+                                          onPressed: () =>
+                                              Navigator.of(context).pop(false),
+                                          child: Text('Cancel'),
+                                        ),
+                                        TextButton(
+                                          onPressed: () =>
+                                              Navigator.of(context).pop(true),
+                                          child: Text('Delete'),
+                                        ),
+                                      ],
+                                    ),
+                                  );
+
+                                  if (confirm == true) {
+                                    try {
+                                      await FirebaseFirestore.instance
+                                          .collection('chats')
+                                          .doc(chatId)
+                                          .collection('messages')
+                                          .doc(doc.id)
+                                          .delete();
+                                    } catch (e) {
+                                      ScaffoldMessenger.of(
+                                        context,
+                                      ).showSnackBar(
+                                        SnackBar(
+                                          content: Text(
+                                            'Failed to delete message: $e',
+                                          ),
+                                        ),
+                                      );
+                                    }
+                                  }
+                                },
+                                child: Container(
+                                  padding: EdgeInsets.all(12),
+                                  margin: EdgeInsets.symmetric(vertical: 4),
+                                  decoration: BoxDecoration(
+                                    color: isMe
+                                        ? Colors.green[100]
+                                        : Colors.grey[300],
+                                    borderRadius: BorderRadius.circular(12),
+                                  ),
+                                  child: Text(data['text'] ?? ''),
                                 ),
-                                child: Text(data['text'] ?? ''),
                               ),
                             ),
                           ],
@@ -134,9 +186,9 @@ class ChatScreenState extends State<ChatScreen> {
               },
             ),
           ),
-
+          Divider(color: Colors.grey, thickness: 1),
           Padding(
-            padding: EdgeInsets.only(left: 10, right: 10, bottom: 30),
+            padding: EdgeInsets.only(left: 5, right: 5, bottom: 10, top: 3),
             child: Row(
               children: [
                 Expanded(
@@ -147,7 +199,12 @@ class ChatScreenState extends State<ChatScreen> {
                       border: OutlineInputBorder(
                         borderRadius: BorderRadius.circular(30),
                       ),
+                      focusedBorder: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(30),
+                        borderSide: BorderSide(color: Colors.black, width: 1),
+                      ),
                     ),
+
                     onSubmitted: (_) => _sendMessage(),
                   ),
                 ),

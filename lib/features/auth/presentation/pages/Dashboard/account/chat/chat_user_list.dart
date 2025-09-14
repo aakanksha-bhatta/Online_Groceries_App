@@ -1,6 +1,9 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:go_router/go_router.dart';
+import 'package:online_groceries_app/config/route/path.dart';
 import 'package:online_groceries_app/features/auth/presentation/pages/Dashboard/account/chat/chat_message.dart';
 import 'package:online_groceries_app/features/auth/presentation/widget/text_widget.dart';
 
@@ -21,168 +24,179 @@ class _UserListState extends State<UserList> {
   @override
   Widget build(BuildContext context) {
     final user = FirebaseAuth.instance.currentUser;
+
     return Container(
       decoration: BoxDecoration(color: Colors.white),
       child: Scaffold(
         appBar: AppBar(
           backgroundColor: Colors.green,
-          title: Align(
-            alignment: Alignment.center,
-            child: TextWidget(
-              title: "Message",
-              fontSize: 28,
-              fontWeight: FontWeight.w600,
-              color: Colors.white,
-              letterSpacing: 0,
-            ),
+          leading: IconButton(
+            icon: Icon(Icons.arrow_back, color: Colors.white),
+            onPressed: () {
+              context.go(Path.account);
+            },
+          ),
+          title: TextWidget(
+            title: "Message",
+            fontSize: 28,
+            fontWeight: FontWeight.w600,
+            color: Colors.white,
+            letterSpacing: 0,
           ),
         ),
         body: Padding(
-          padding: const EdgeInsets.all(16.0),
+          padding: const EdgeInsets.all(12.0),
           child: Column(
             children: [
               Padding(
-                padding: EdgeInsets.all(12),
-                child: TextField(
-                  decoration: InputDecoration(
-                    hintText: "Search...",
-                    prefixIcon: Icon(Icons.search),
-                    border: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(20),
-                    ),
+                padding: EdgeInsets.all(5),
+                child: Container(
+                  decoration: BoxDecoration(
+                    border: Border.all(),
+                    borderRadius: BorderRadius.circular(30.r),
                   ),
-                  onChanged: (value) {
-                    setState(() {
-                      searchText = value.trim();
-                    });
-                  },
+                  child: TextField(
+                    decoration: InputDecoration(
+                      hintText: "Search...",
+                      hintStyle: TextStyle(
+                        color: const Color(0xff7C7C7C),
+                        fontSize: 18.sp,
+                        fontWeight: FontWeight.w500,
+
+                        // height: 1.0,
+                      ),
+                      prefixIcon: Icon(Icons.search),
+                      border: InputBorder.none,
+                    ),
+                    onChanged: (value) {
+                      setState(() {
+                        searchText = value.trim();
+                      });
+                    },
+                  ),
                 ),
               ),
-
-              // Expanded(
-              //   child: StreamBuilder<QuerySnapshot>(
-              //     stream: FirebaseFirestore.instance
-              //         .collection('users')
-              //         .doc(FirebaseAuth.instance.currentUser!.uid)
-              //         .collection('chats')
-              //         .orderBy('timestamp', descending: true)
-              //         .snapshots(),
-              //     builder: (context, snapshot) {
-              //       if (!snapshot.hasData) {
-              //         return Center(child: CircularProgressIndicator());
-              //       }
-
-              //       final docs = snapshot.data!.docs;
-
-              //       return ListView.builder(
-              //         reverse: true,
-              //         itemCount: docs.length,
-              //         itemBuilder: (context, index) {
-              //           final data = docs[index].data() as Map<String, dynamic>;
-              //           return Align(
-              //             alignment: Alignment.centerRight,
-              //             child: Padding(
-              //               padding: const EdgeInsets.symmetric(vertical: 4),
-              //               child: Text(data['text'] ?? ''),
-              //             ),
-              //           );
-              //         },
-              //       );
-              //     },
-              //   ),
-              // ),
               Expanded(
                 child: StreamBuilder<QuerySnapshot>(
-                  stream: (searchText.isEmpty)
-                      ? FirebaseFirestore.instance
-                            .collection('users')
-                            .snapshots()
-                      : FirebaseFirestore.instance
-                            .collection('users')
-                            .where(
-                              'username',
-                              isGreaterThanOrEqualTo: searchText,
-                            )
-                            .where(
-                              'username',
-                              isLessThanOrEqualTo: searchText + '\uf8ff',
-                            )
-                            .snapshots(),
+                  stream: FirebaseFirestore.instance
+                      .collection('users')
+                      .snapshots(),
                   builder: (context, snapshot) {
-                    if (!snapshot.hasData)
-                      return Center(child: Text("Search Users"));
+                    if (!snapshot.hasData) {
+                      return Center(child: Text("Loading users..."));
+                    }
 
-                    final docs = snapshot.data!.docs;
+                    final allDocs = snapshot.data!.docs;
+
+                    final docs = allDocs.where((doc) {
+                      final data = doc.data() as Map<String, dynamic>;
+                      final username = data['username'] ?? '';
+                      return username.toLowerCase().contains(
+                        searchText.toLowerCase(),
+                      );
+                    }).toList();
 
                     if (docs.isEmpty) {
                       return Center(child: Text("No users found"));
                     }
 
-                    return ListView.builder(
-                      itemCount: docs.length,
-                      itemBuilder: (context, index) {
-                        final data = docs[index].data() as Map<String, dynamic>;
-                        return ListTile(
-                          leading: CircleAvatar(
-                            radius: 25,
-                            backgroundImage:
-                                (data['photoURL'] != null &&
-                                    data['photoURL'].toString().isNotEmpty)
-                                ? NetworkImage(data['photoURL'])
-                                      as ImageProvider
-                                : AssetImage('assets/images/signin_bg.png'),
-                          ),
-                          title: Text(data['username'] ?? ''),
-                          subtitle: FutureBuilder<QuerySnapshot>(
-                            future: FirebaseFirestore.instance
-                                .collection('chats')
-                                .doc(
-                                  getChatId(
-                                    FirebaseAuth.instance.currentUser!.uid,
-                                    docs[index].id,
-                                  ),
-                                )
-                                .collection('messages')
-                                .orderBy('timestamp', descending: true)
-                                .limit(1)
-                                .get(),
-                            builder: (context, snapshot) {
-                              if (!snapshot.hasData) return Text("Loading...");
-                              if (snapshot.data!.docs.isEmpty) {
-                                return Text("Hey there! I am new User");
-                              }
+                    return Column(
+                      children: [
+                        Expanded(
+                          child: ListView.separated(
+                            itemCount: docs.length,
+                            separatorBuilder: (context, index) =>
+                                Divider(height: 1, color: Colors.grey.shade300),
+                            itemBuilder: (context, index) {
+                              final data =
+                                  docs[index].data() as Map<String, dynamic>;
 
-                              final messageData =
-                                  snapshot.data!.docs.first.data()
-                                      as Map<String, dynamic>;
-                              final currentUserId =
-                                  FirebaseAuth.instance.currentUser!.uid;
-                              final isIncoming =
-                                  messageData['senderId'] != currentUserId;
-
-                              return Text(
-                                messageData['text'] ?? '',
-                                style: TextStyle(
-                                  fontWeight: isIncoming
-                                      ? FontWeight.bold
-                                      : FontWeight.normal,
+                              return ListTile(
+                                contentPadding: EdgeInsets.symmetric(
+                                  horizontal: 8,
+                                  vertical: 6,
                                 ),
+                                leading: CircleAvatar(
+                                  radius: 25,
+                                  backgroundImage:
+                                      (data['photoURL'] != null &&
+                                          data['photoURL']
+                                              .toString()
+                                              .isNotEmpty)
+                                      ? NetworkImage(data['photoURL'])
+                                            as ImageProvider
+                                      : AssetImage(
+                                          'assets/images/signin_bg.png',
+                                        ),
+                                ),
+                                title: Text(
+                                  data['username'] ?? '',
+                                  style: TextStyle(fontWeight: FontWeight.bold),
+                                ),
+                                subtitle: StreamBuilder<QuerySnapshot>(
+                                  stream: FirebaseFirestore.instance
+                                      .collection('chats')
+                                      .doc(
+                                        getChatId(
+                                          FirebaseAuth
+                                              .instance
+                                              .currentUser!
+                                              .uid,
+                                          docs[index].id,
+                                        ),
+                                      )
+                                      .collection('messages')
+                                      .orderBy('timestamp', descending: true)
+                                      .limit(1)
+                                      .snapshots(),
+                                  builder: (context, snapshot) {
+                                    if (!snapshot.hasData)
+                                      return Text("Loading...");
+                                    if (snapshot.data!.docs.isEmpty) {
+                                      return Text(
+                                        "Hey there! I am new User",
+                                        maxLines: 1,
+                                        overflow: TextOverflow.ellipsis,
+                                      );
+                                    }
+
+                                    final messageData =
+                                        snapshot.data!.docs.first.data()
+                                            as Map<String, dynamic>;
+                                    final currentUserId =
+                                        FirebaseAuth.instance.currentUser!.uid;
+                                    final isIncoming =
+                                        messageData['senderId'] !=
+                                        currentUserId;
+
+                                    return Text(
+                                      messageData['text'] ?? '',
+                                      maxLines: 1,
+                                      overflow: TextOverflow.ellipsis,
+                                      style: TextStyle(
+                                        fontWeight: isIncoming
+                                            ? FontWeight.bold
+                                            : FontWeight.normal,
+                                      ),
+                                    );
+                                  },
+                                ),
+
+                                onTap: () {
+                                  Navigator.of(context).push(
+                                    MaterialPageRoute(
+                                      builder: (context) => ChatScreen(
+                                        userName: data['username'],
+                                        userId: docs[index].id,
+                                      ),
+                                    ),
+                                  );
+                                },
                               );
                             },
                           ),
-
-                          onTap: () {
-                            Navigator.of(context).push(
-                              MaterialPageRoute(
-                                builder: (context) => ChatScreen(
-                                  userName: data['username'],
-                                  userId: docs[index].id,
-                                ),
-                              ),
-                            );
-                          },
-                        );
-                      },
+                        ),
+                      ],
                     );
                   },
                 ),
