@@ -29,7 +29,8 @@ class Account extends ConsumerWidget {
         'route': Path.details,
       },
       {'icon': Icons.location_on_outlined, 'title': 'Delivery Address'},
-      {'icon': Icons.payment_outlined, 'title': 'Payment Methods'},
+      // {'icon': Icons.payment_outlined, 'title': 'Payment Methods'},
+      {'icon': Icons.chat, 'title': 'Chat', 'route': Path.user},
       {
         'icon': Icons.local_offer_outlined,
         'title': 'Practice',
@@ -38,7 +39,6 @@ class Account extends ConsumerWidget {
       {'icon': Icons.notifications_none, 'title': 'Notifications'},
       {'icon': Icons.help_outline, 'title': 'Help'},
       {'icon': Icons.info_outline, 'title': 'About'},
-      {'icon': Icons.chat, 'title': 'Chat', 'route': Path.user},
     ];
     // to call user name and email
     final userDataAsync = ref.watch(userDataProvider);

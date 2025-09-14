@@ -62,8 +62,6 @@ class _UserListState extends State<UserList> {
                         color: const Color(0xff7C7C7C),
                         fontSize: 18.sp,
                         fontWeight: FontWeight.w500,
-
-                        // height: 1.0,
                       ),
                       prefixIcon: Icon(Icons.search),
                       border: InputBorder.none,
@@ -124,10 +122,10 @@ class _UserListState extends State<UserList> {
                                               .toString()
                                               .isNotEmpty)
                                       ? NetworkImage(data['photoURL'])
-                                            as ImageProvider
                                       : AssetImage(
-                                          'assets/images/signin_bg.png',
-                                        ),
+                                              'assets/images/signin_bg.png',
+                                            )
+                                            as ImageProvider,
                                 ),
                                 title: Text(
                                   data['username'] ?? '',
@@ -147,12 +145,30 @@ class _UserListState extends State<UserList> {
                                       )
                                       .collection('messages')
                                       .orderBy('timestamp', descending: true)
-                                      .limit(1)
+                                      .limit(5)
                                       .snapshots(),
                                   builder: (context, snapshot) {
                                     if (!snapshot.hasData)
                                       return Text("Loading...");
-                                    if (snapshot.data!.docs.isEmpty) {
+
+                                    final currentUserId =
+                                        FirebaseAuth.instance.currentUser!.uid;
+
+                                    final filteredMessages = snapshot.data!.docs
+                                        .where((doc) {
+                                          final data =
+                                              doc.data()
+                                                  as Map<String, dynamic>;
+                                          final deletedFor = List<String>.from(
+                                            data['deletedFor'] ?? [],
+                                          );
+                                          return !deletedFor.contains(
+                                            currentUserId,
+                                          );
+                                        })
+                                        .toList();
+
+                                    if (filteredMessages.isEmpty) {
                                       return Text(
                                         "Hey there! I am new User",
                                         maxLines: 1,
@@ -161,10 +177,8 @@ class _UserListState extends State<UserList> {
                                     }
 
                                     final messageData =
-                                        snapshot.data!.docs.first.data()
+                                        filteredMessages.first.data()
                                             as Map<String, dynamic>;
-                                    final currentUserId =
-                                        FirebaseAuth.instance.currentUser!.uid;
                                     final isIncoming =
                                         messageData['senderId'] !=
                                         currentUserId;

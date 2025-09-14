@@ -2,12 +2,19 @@ import 'package:flutter/material.dart';
 
 class CustomSnackBar {
   static void show(BuildContext context, String message) {
-    final messenger = ScaffoldMessenger.of(context);
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      if (!context.mounted) return;
 
-    messenger.removeCurrentSnackBar();
+      final messenger = ScaffoldMessenger.of(context);
 
-    messenger.showSnackBar(
-      SnackBar(content: Text(message), duration: Duration(seconds: 2)),
-    );
+      messenger
+        ..removeCurrentSnackBar()
+        ..showSnackBar(
+          SnackBar(
+            content: Text(message),
+            duration: const Duration(seconds: 2),
+          ),
+        );
+    });
   }
 }

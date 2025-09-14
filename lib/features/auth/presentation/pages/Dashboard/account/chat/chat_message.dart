@@ -51,7 +51,6 @@ class ChatScreenState extends State<ChatScreen> {
             'createdAt': localTimestamp,
             'senderId': userId,
             'receiverUsername': receiverUsername,
-            // No deletedFor field on new messages
           });
     } catch (e) {
       print('Failed to send message: $e');
@@ -89,7 +88,6 @@ class ChatScreenState extends State<ChatScreen> {
 
                 final allMessages = snapshot.data!.docs;
 
-                // Filter out messages deleted for current user
                 final messages = allMessages.where((doc) {
                   final data = doc.data() as Map<String, dynamic>;
                   final deletedFor = List<String>.from(
@@ -97,12 +95,20 @@ class ChatScreenState extends State<ChatScreen> {
                   );
                   return !deletedFor.contains(currentUserId);
                 }).toList();
+                if (messages.isEmpty) {
+                  return Center(
+                    child: Text(
+                      'Hey there!, I am new User',
+                      style: TextStyle(fontSize: 18, color: Colors.grey),
+                    ),
+                  );
+                }
 
                 return ListView.builder(
                   reverse: true,
                   itemCount: messages.length,
                   itemBuilder: (context, index) {
-                    final doc = messages[index]; // Firestore DocumentSnapshot
+                    final doc = messages[index];
                     final data = doc.data() as Map<String, dynamic>;
                     final isMe = data['senderId'] == currentUserId;
 
@@ -129,11 +135,8 @@ class ChatScreenState extends State<ChatScreen> {
                             Flexible(
                               child: GestureDetector(
                                 onLongPress: () async {
-                                  // Build list of options based on who sent the message
                                   List<Widget> options = [];
-
                                   if (isMe) {
-                                    // Show both options for messages sent by current user
                                     options.addAll([
                                       ListTile(
                                         leading: Icon(
@@ -156,7 +159,6 @@ class ChatScreenState extends State<ChatScreen> {
                                       ),
                                     ]);
                                   } else {
-                                    // Only delete for me option for received messages
                                     options.add(
                                       ListTile(
                                         leading: Icon(
@@ -255,7 +257,7 @@ class ChatScreenState extends State<ChatScreen> {
           ),
           Divider(color: Colors.grey, thickness: 1),
           Padding(
-            padding: EdgeInsets.only(left: 5, right: 5, bottom: 10, top: 3),
+            padding: EdgeInsets.only(left: 5, right: 5, bottom: 5),
             child: Row(
               children: [
                 Expanded(

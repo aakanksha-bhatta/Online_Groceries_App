@@ -6,16 +6,23 @@ import 'package:online_groceries_app/core/services/auth_service.dart';
 class Details extends StatelessWidget {
   Details({super.key});
 
-  AuthService authService = AuthService();
+  final AuthService authService = AuthService();
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Colors.white,
+      appBar: AppBar(
+        backgroundColor: Colors.white,
+        elevation: 0,
+        leading: IconButton(
+          icon: const Icon(Icons.arrow_back_ios, color: Colors.black),
+          onPressed: () => context.go(Path.account),
+        ),
+      ),
       body: FutureBuilder<Map<String, dynamic>?>(
         future: authService.fetchUserData(),
         builder: (context, snapshot) {
-          //snapshot contain latest state,data,error
           if (snapshot.connectionState == ConnectionState.waiting) {
             return const Center(child: CircularProgressIndicator());
           }
@@ -31,17 +38,6 @@ class Details extends StatelessWidget {
 
           return Column(
             children: [
-              Stack(
-                children: [
-                  Padding(
-                    padding: const EdgeInsets.all(8.0),
-                    child: InkWell(
-                      onTap: () => context.go(Path.account),
-                      child: const Icon(Icons.arrow_back_ios, size: 18),
-                    ),
-                  ),
-                ],
-              ),
               const SizedBox(height: 20),
               Center(
                 child: Column(
