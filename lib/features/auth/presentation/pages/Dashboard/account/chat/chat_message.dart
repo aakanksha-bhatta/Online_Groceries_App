@@ -51,6 +51,7 @@ class ChatScreenState extends State<ChatScreen> {
             'createdAt': localTimestamp,
             'senderId': userId,
             'receiverUsername': receiverUsername,
+            // No deletedFor field on new messages
           });
     } catch (e) {
       print('Failed to send message: $e');
@@ -59,6 +60,8 @@ class ChatScreenState extends State<ChatScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final currentUserId = FirebaseAuth.instance.currentUser!.uid;
+
     return Scaffold(
       appBar: AppBar(
         backgroundColor: Colors.green,
@@ -69,7 +72,6 @@ class ChatScreenState extends State<ChatScreen> {
           child: Text(widget.userName, style: TextStyle(color: Colors.white)),
         ),
       ),
-
       body: Column(
         children: [
           Expanded(
@@ -85,7 +87,16 @@ class ChatScreenState extends State<ChatScreen> {
                   return Center(child: CircularProgressIndicator());
                 }
 
-                final messages = snapshot.data!.docs;
+                final allMessages = snapshot.data!.docs;
+
+                // Filter out messages deleted for current user
+                final messages = allMessages.where((doc) {
+                  final data = doc.data() as Map<String, dynamic>;
+                  final deletedFor = List<String>.from(
+                    data['deletedFor'] ?? [],
+                  );
+                  return !deletedFor.contains(currentUserId);
+                }).toList();
 
                 return ListView.builder(
                   reverse: true,
@@ -93,9 +104,7 @@ class ChatScreenState extends State<ChatScreen> {
                   itemBuilder: (context, index) {
                     final doc = messages[index]; // Firestore DocumentSnapshot
                     final data = doc.data() as Map<String, dynamic>;
-                    final isMe =
-                        data['senderId'] ==
-                        FirebaseAuth.instance.currentUser?.uid;
+                    final isMe = data['senderId'] == currentUserId;
 
                     return Padding(
                       padding: const EdgeInsets.symmetric(horizontal: 8.0),
@@ -120,30 +129,65 @@ class ChatScreenState extends State<ChatScreen> {
                             Flexible(
                               child: GestureDetector(
                                 onLongPress: () async {
-                                  // Optional: Confirm deletion with dialog before deleting
-                                  final confirm = await showDialog<bool>(
-                                    context: context,
-                                    builder: (context) => AlertDialog(
-                                      title: Text('Delete Message?'),
-                                      content: Text(
-                                        'Are you sure you want to delete this message?',
+                                  // Build list of options based on who sent the message
+                                  List<Widget> options = [];
+
+                                  if (isMe) {
+                                    // Show both options for messages sent by current user
+                                    options.addAll([
+                                      ListTile(
+                                        leading: Icon(
+                                          Icons.delete_forever,
+                                          color: Colors.grey,
+                                        ),
+                                        title: Text('Delete for Everyone'),
+                                        onTap: () => Navigator.of(
+                                          context,
+                                        ).pop('everyone'),
                                       ),
-                                      actions: [
-                                        TextButton(
-                                          onPressed: () =>
-                                              Navigator.of(context).pop(false),
-                                          child: Text('Cancel'),
+                                      ListTile(
+                                        leading: Icon(
+                                          Icons.delete,
+                                          color: Colors.grey,
                                         ),
-                                        TextButton(
-                                          onPressed: () =>
-                                              Navigator.of(context).pop(true),
-                                          child: Text('Delete'),
+                                        title: Text('Delete for Me'),
+                                        onTap: () =>
+                                            Navigator.of(context).pop('me'),
+                                      ),
+                                    ]);
+                                  } else {
+                                    // Only delete for me option for received messages
+                                    options.add(
+                                      ListTile(
+                                        leading: Icon(
+                                          Icons.delete,
+                                          color: Colors.grey,
                                         ),
-                                      ],
+                                        title: Text('Delete'),
+                                        onTap: () =>
+                                            Navigator.of(context).pop('me'),
+                                      ),
+                                    );
+                                  }
+
+                                  options.add(
+                                    ListTile(
+                                      leading: Icon(Icons.close),
+                                      title: Text('Cancel'),
+                                      onTap: () =>
+                                          Navigator.of(context).pop(null),
                                     ),
                                   );
 
-                                  if (confirm == true) {
+                                  final selectedOption =
+                                      await showModalBottomSheet<String>(
+                                        context: context,
+                                        builder: (context) => SafeArea(
+                                          child: Wrap(children: options),
+                                        ),
+                                      );
+
+                                  if (selectedOption == 'everyone') {
                                     try {
                                       await FirebaseFirestore.instance
                                           .collection('chats')
@@ -157,7 +201,30 @@ class ChatScreenState extends State<ChatScreen> {
                                       ).showSnackBar(
                                         SnackBar(
                                           content: Text(
-                                            'Failed to delete message: $e',
+                                            'Failed to delete message for everyone: $e',
+                                          ),
+                                        ),
+                                      );
+                                    }
+                                  } else if (selectedOption == 'me') {
+                                    try {
+                                      await FirebaseFirestore.instance
+                                          .collection('chats')
+                                          .doc(chatId)
+                                          .collection('messages')
+                                          .doc(doc.id)
+                                          .update({
+                                            'deletedFor': FieldValue.arrayUnion(
+                                              [currentUserId],
+                                            ),
+                                          });
+                                    } catch (e) {
+                                      ScaffoldMessenger.of(
+                                        context,
+                                      ).showSnackBar(
+                                        SnackBar(
+                                          content: Text(
+                                            'Failed to delete message for me: $e',
                                           ),
                                         ),
                                       );
@@ -204,7 +271,6 @@ class ChatScreenState extends State<ChatScreen> {
                         borderSide: BorderSide(color: Colors.black, width: 1),
                       ),
                     ),
-
                     onSubmitted: (_) => _sendMessage(),
                   ),
                 ),
@@ -215,7 +281,6 @@ class ChatScreenState extends State<ChatScreen> {
                     color: Colors.green,
                     shape: BoxShape.circle,
                   ),
-
                   child: IconButton(
                     icon: Icon(Icons.send, color: Colors.white),
                     onPressed: _sendMessage,
