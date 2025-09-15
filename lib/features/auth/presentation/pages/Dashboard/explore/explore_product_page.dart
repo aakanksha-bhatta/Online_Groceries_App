@@ -80,66 +80,62 @@ class _ExploreProductPageState extends ConsumerState<ExploreProductPage> {
                 if (filteredProducts.isEmpty) {
                   return Center(child: Text('No products found.'));
                 }
-                return Padding(
-                  padding: const EdgeInsets.only(top: 20.0),
-                  child: GridView.builder(
-                    itemCount: filteredProducts.length,
-                    padding: EdgeInsets.symmetric(horizontal: 16),
-                    gridDelegate:
-                        const SliverGridDelegateWithFixedCrossAxisCount(
-                          crossAxisCount: 2,
-                          crossAxisSpacing: 12,
-                          mainAxisSpacing: 12,
-                          childAspectRatio: 0.9,
-                        ),
-                    itemBuilder: (context, index) {
-                      final product = filteredProducts[index];
-                      return InkWell(
-                        onTap: () {
-                          context.go(
-                            '${Path.item}?category=${Uri.encodeComponent(product.name)}',
-                          );
-                        },
-                        child: Container(
-                          decoration: BoxDecoration(
-                            color: product.color.withOpacity(0.2),
-                            borderRadius: BorderRadius.circular(10),
-                            border: Border.all(
-                              color: product.color.withOpacity(0.7),
-                            ),
-                          ),
-                          padding: const EdgeInsets.all(12),
-                          child: Column(
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            children: [
-                              Container(
-                                height: 74.90,
-                                width: 111.37,
-                                decoration: BoxDecoration(
-                                  image: DecorationImage(
-                                    fit: BoxFit.contain,
-                                    image: AssetImage(product.pngAssetPath),
-                                  ),
-                                ),
-                              ),
-                              const SizedBox(height: 10),
-                              Align(
-                                alignment: Alignment.center,
-                                child: TextWidget(
-                                  title: product.name,
-                                  overflow: TextOverflow.clip,
-                                  fontSize: 16,
-                                  fontWeight: FontWeight.w400,
-                                  color: const Color(0xff181725),
-                                  letterSpacing: 0,
-                                ),
-                              ),
-                            ],
-                          ),
-                        ),
-                      );
-                    },
+                return GridView.builder(
+                  itemCount: filteredProducts.length,
+                  padding: EdgeInsets.only(left: 16, right: 16, bottom: 12),
+                  gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+                    crossAxisCount: 2,
+                    crossAxisSpacing: 12,
+                    mainAxisSpacing: 12,
+                    childAspectRatio: 0.9,
                   ),
+                  itemBuilder: (context, index) {
+                    final product = filteredProducts[index];
+                    return InkWell(
+                      onTap: () {
+                        context.go(
+                          '${Path.item}?category=${Uri.encodeComponent(product.name)}',
+                        );
+                      },
+                      child: Container(
+                        decoration: BoxDecoration(
+                          color: product.color.withOpacity(0.2),
+                          borderRadius: BorderRadius.circular(10),
+                          border: Border.all(
+                            color: product.color.withOpacity(0.7),
+                          ),
+                        ),
+                        padding: const EdgeInsets.all(12),
+                        child: Column(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            Container(
+                              height: 74.90,
+                              width: 111.37,
+                              decoration: BoxDecoration(
+                                image: DecorationImage(
+                                  fit: BoxFit.contain,
+                                  image: AssetImage(product.pngAssetPath),
+                                ),
+                              ),
+                            ),
+                            const SizedBox(height: 10),
+                            Align(
+                              alignment: Alignment.center,
+                              child: TextWidget(
+                                title: product.name,
+                                overflow: TextOverflow.clip,
+                                fontSize: 16,
+                                fontWeight: FontWeight.w400,
+                                color: const Color(0xff181725),
+                                letterSpacing: 0,
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                    );
+                  },
                 );
               },
             ),

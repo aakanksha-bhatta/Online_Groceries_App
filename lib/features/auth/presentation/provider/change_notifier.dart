@@ -3,10 +3,20 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 class LoadingNotifier extends ChangeNotifier {
   bool _isLoading = false;
+  bool _isUploading = false;
 
   bool get isLoading => _isLoading;
+  bool get isUploading => _isUploading;
 
-  void setLoading(bool value) {
+  Future<void> setUploading() async {
+    if (_isUploading == true) {
+      await Future.delayed(Duration(seconds: 2));
+    }
+    _isUploading = !_isUploading;
+    notifyListeners();
+  }
+
+  Future<void> setLoading(bool value) async {
     _isLoading = value;
     notifyListeners();
   }

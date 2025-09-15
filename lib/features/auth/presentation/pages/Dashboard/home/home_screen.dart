@@ -17,6 +17,7 @@ class HomeScreen extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    int limit = 3;
     final productAsyncValue = ref.watch(productListProvider);
     return Scaffold(
       backgroundColor: Colors.white,
@@ -52,17 +53,6 @@ class HomeScreen extends ConsumerWidget {
                 ),
                 SizedBox(height: 16.h),
                 SearchBarWidget(),
-                Container(
-                  height: 114.99.h,
-                  width: 368.2.w,
-                  decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(8.r),
-                    image: DecorationImage(
-                      image: AssetImage('assets/images/signin_bg.png'),
-                      fit: BoxFit.fitWidth,
-                    ),
-                  ),
-                ),
               ],
             ),
           ),
@@ -87,9 +77,12 @@ class HomeScreen extends ConsumerWidget {
                 if (filteredProducts.isEmpty) {
                   return Center(child: Text('No products found.'));
                 }
-                final exclusiveProducts = [...filteredProducts]..shuffle();
-                final bestSellerProducts = [...filteredProducts]..shuffle();
-                final groceryProducts = [...filteredProducts]..shuffle();
+                final exclusiveProducts = [...filteredProducts.take(limit)]
+                  ..shuffle();
+                final bestSellerProducts = [...filteredProducts.take(limit)]
+                  ..shuffle();
+                final groceryProducts = [...filteredProducts.take(limit)]
+                  ..shuffle();
 
                 return SingleChildScrollView(
                   child: Padding(
@@ -97,6 +90,18 @@ class HomeScreen extends ConsumerWidget {
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
+                        Container(
+                          height: 114.99.h,
+                          width: 368.2.w,
+                          decoration: BoxDecoration(
+                            borderRadius: BorderRadius.circular(8.r),
+                            image: DecorationImage(
+                              image: AssetImage('assets/images/signin_bg.png'),
+                              fit: BoxFit.fitWidth,
+                            ),
+                          ),
+                        ),
+
                         SizedBox(height: 20.h),
 
                         // Exclusive Offer Section
@@ -106,26 +111,69 @@ class HomeScreen extends ConsumerWidget {
                             context.go(Path.see);
                           },
                         ),
-                        SizedBox(height: 12.h),
+                        SizedBox(height: 15.h),
                         SizedBox(
                           height: 250.h,
                           child: ListView.separated(
                             scrollDirection: Axis.horizontal,
-                            itemCount: exclusiveProducts.length,
+                            itemCount: 4,
                             separatorBuilder: (_, __) => SizedBox(width: 12.w),
                             itemBuilder: (context, index) {
-                              final product = exclusiveProducts[index];
-                              return CardWidget(
-                                productId: product.productId,
-                                productName: product.productName,
-                                productImage: product.productImage,
-                                productPrice: product.productPrice,
-                                productQuantity: product.productQuantity,
-                              );
+                              if (index < 3 &&
+                                  index < exclusiveProducts.length) {
+                                final product = exclusiveProducts[index];
+                                return CardWidget(
+                                  productId: product.productId,
+                                  productName: product.productName,
+                                  productImage: product.productImage,
+                                  productPrice: product.productPrice,
+                                  productQuantity: product.productQuantity,
+                                );
+                              } else {
+                                // "See More" card
+                                return GestureDetector(
+                                  onTap: () {
+                                    context.go(Path.see);
+                                  },
+                                  child: Container(
+                                    height: 248.51.h,
+                                    width: 173.32.w,
+                                    decoration: BoxDecoration(
+                                      borderRadius: BorderRadius.circular(25.r),
+                                      border: Border.all(
+                                        color: Color(0xffE2E2E2),
+                                      ),
+                                      color: Colors.white,
+                                    ),
+                                    child: Center(
+                                      child: Column(
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.center,
+                                        children: [
+                                          Icon(
+                                            Icons.arrow_forward_ios,
+                                            size: 32,
+                                            color: Colors.grey,
+                                          ),
+                                          SizedBox(height: 10.h),
+                                          TextWidget(
+                                            title: 'See more',
+                                            fontSize: 16,
+                                            fontWeight: FontWeight.w400,
+                                            color: Colors.black,
+                                            letterSpacing: 0,
+                                          ),
+                                        ],
+                                      ),
+                                    ),
+                                  ),
+                                );
+                              }
                             },
                           ),
                         ),
 
+                        SizedBox(height: 25),
                         // Best Sellers Section
                         RowHelperTextWidget(
                           title: "Best Sellers",
@@ -133,26 +181,67 @@ class HomeScreen extends ConsumerWidget {
                             context.go(Path.see);
                           },
                         ),
-                        SizedBox(height: 12.h),
+                        SizedBox(height: 15.h),
                         SizedBox(
                           height: 250.h,
                           child: ListView.separated(
                             scrollDirection: Axis.horizontal,
-                            itemCount: bestSellerProducts.length,
+                            itemCount: 4,
                             separatorBuilder: (_, __) => SizedBox(width: 12.w),
                             itemBuilder: (context, index) {
-                              final product = bestSellerProducts[index];
-                              return CardWidget(
-                                productId: product.productId,
-                                productName: product.productName,
-                                productImage: product.productImage,
-                                productPrice: product.productPrice,
-                                productQuantity: product.productQuantity,
-                              );
+                              if (index < 3 &&
+                                  index < exclusiveProducts.length) {
+                                final product = bestSellerProducts[index];
+                                return CardWidget(
+                                  productId: product.productId,
+                                  productName: product.productName,
+                                  productImage: product.productImage,
+                                  productPrice: product.productPrice,
+                                  productQuantity: product.productQuantity,
+                                );
+                              } else {
+                                return GestureDetector(
+                                  onTap: () {
+                                    context.go(Path.see);
+                                  },
+                                  child: Container(
+                                    height: 248.51.h,
+                                    width: 173.32.w,
+                                    decoration: BoxDecoration(
+                                      borderRadius: BorderRadius.circular(25.r),
+                                      border: Border.all(
+                                        color: Color(0xffE2E2E2),
+                                      ),
+                                      color: Colors.white,
+                                    ),
+                                    child: Center(
+                                      child: Column(
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.center,
+                                        children: [
+                                          Icon(
+                                            Icons.arrow_forward_ios,
+                                            size: 32,
+                                            color: Colors.grey,
+                                          ),
+                                          SizedBox(height: 10.h),
+                                          TextWidget(
+                                            title: 'See more',
+                                            fontSize: 16,
+                                            fontWeight: FontWeight.w400,
+                                            color: Colors.black,
+                                            letterSpacing: 0,
+                                          ),
+                                        ],
+                                      ),
+                                    ),
+                                  ),
+                                );
+                              }
                             },
                           ),
                         ),
-
+                        SizedBox(height: 25),
                         // Grocery Section
                         RowHelperTextWidget(
                           title: "Grocery",
@@ -160,11 +249,12 @@ class HomeScreen extends ConsumerWidget {
                             context.go(Path.see);
                           },
                         ),
-                        SizedBox(height: 12.h),
+                        SizedBox(height: 15.h),
                         SizedBox(
                           height: 250.h,
                           child: ListView.separated(
                             scrollDirection: Axis.horizontal,
+                            padding: EdgeInsets.only(bottom: 10),
                             itemCount: groceryProducts.length,
                             separatorBuilder: (_, __) => SizedBox(width: 12.w),
                             itemBuilder: (context, index) {

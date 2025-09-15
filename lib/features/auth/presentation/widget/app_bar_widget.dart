@@ -31,6 +31,7 @@ class AppBarWidget extends StatelessWidget {
   Widget build(BuildContext context) {
     return Padding(
       padding: EdgeInsets.only(top: 56.83.h, left: 25.01.w),
+      // padding: EdgeInsetsGeometry.all(0),
       child: Row(
         children: [
           Material(
