@@ -4,12 +4,15 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:online_groceries_app/features/auth/presentation/provider/state_notifier.dart';
 
 class SearchBarWidget extends ConsumerWidget {
-  const SearchBarWidget({super.key});
+  final EdgeInsetsGeometry? padding;
+  const SearchBarWidget({super.key, this.padding});
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     return Padding(
-      padding: EdgeInsets.symmetric(horizontal: 24.71.w, vertical: 20.h),
+      padding:
+          padding ??
+          EdgeInsetsGeometry.symmetric(horizontal: 24.71.w, vertical: 15.h),
       child: Container(
         decoration: BoxDecoration(
           color: const Color(0xffF2F3F2),

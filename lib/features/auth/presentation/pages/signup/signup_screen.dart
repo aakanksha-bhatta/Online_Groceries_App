@@ -188,7 +188,7 @@ class SignupScreen extends ConsumerWidget {
                               'Registration Successfully',
                             );
                             context.go(Path.login);
-                          } else {
+                          }  else {
                             CustomSnackBar.show(
                               context,
                               'User registration failed',

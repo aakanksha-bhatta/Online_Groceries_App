@@ -10,6 +10,7 @@ class Validation {
     if (!emailRegex.hasMatch(value)) {
       return 'Invalid Email Format';
     }
+    
     return null;
   }
 

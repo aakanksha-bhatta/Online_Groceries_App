@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:go_router/go_router.dart';
+import 'package:online_groceries_app/config/route/path.dart';
 import 'package:online_groceries_app/core/services/product_service.dart';
 import 'package:online_groceries_app/features/auth/data/model/product.dart';
 import 'package:online_groceries_app/features/auth/presentation/provider/state_notifier.dart';
@@ -23,10 +25,31 @@ class _SearchSeeAllPageState extends ConsumerState<SearchSeeAllPage> {
 
     return Scaffold(
       backgroundColor: Colors.white,
+
       body: Column(
         children: [
-          SizedBox(height: 48),
-          Row(children: [Expanded(child: SearchBarWidget())]),
+          SizedBox(height: 30),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.start,
+            children: [
+              IconButton(
+                padding: EdgeInsets.only(top: 24.7),
+                icon: Icon(Icons.arrow_back_ios),
+                onPressed: () {
+                  context.go(Path.home);
+                },
+              ),
+              Expanded(
+                child: SearchBarWidget(
+                  padding: EdgeInsets.only(
+                    top: 24.71,
+                    right: 20,
+                    bottom: 10.71,
+                  ),
+                ),
+              ),
+            ],
+          ),
 
           Expanded(
             child: FutureBuilder<List<Product>>(

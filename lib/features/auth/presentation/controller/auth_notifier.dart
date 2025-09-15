@@ -26,9 +26,13 @@ class AuthNotifier extends AsyncNotifier<User?> {
         state = AsyncError('Invalid email or password.', StackTrace.current);
         return null;
       }
-    } catch (e, st) {
-      state = AsyncError(e, st);
-      return null;
+    } on FirebaseAuthException catch (e, st) {
+      if (e.code == 'email-already-in-use') {
+        print('This email is already registered. Try logging in instead.');
+      } else {
+        state = AsyncError(e, st);
+        return null;
+      }
     }
   }
 
@@ -70,9 +74,14 @@ class AuthNotifier extends AsyncNotifier<User?> {
   }
 
   Future<void> signOut() async {
+    state = const AsyncLoading();
     final authService = ref.read(authServiceProvider);
-    await authService.signOut();
-    state = const AsyncData(null);
+    try {
+      await authService.signOut();
+      state = const AsyncData(null);
+    } catch (e, st) {
+      state = AsyncError(e, st);
+    }
   }
 }
 

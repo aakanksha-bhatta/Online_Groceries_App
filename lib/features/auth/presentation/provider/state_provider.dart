@@ -10,17 +10,15 @@ import 'package:online_groceries_app/core/services/rating_service.dart';
 import 'package:online_groceries_app/features/auth/data/model/product.dart';
 
 // user provider to call name and email in account
-final userDataProvider = FutureProvider<Map<String, dynamic>>((ref) async {
-  final uid = FirebaseAuth.instance.currentUser?.uid;
-  if (uid == null) throw Exception('User not logged in');
+final userDataProvider = StreamProvider<Map<String, dynamic>>((ref) {
+  final user = FirebaseAuth.instance.currentUser;
+  if (user == null) return const Stream.empty();
 
-  final doc = await FirebaseFirestore.instance
+  return FirebaseFirestore.instance
       .collection('users')
-      .doc(uid)
-      .get();
-  if (!doc.exists) throw Exception('User document not found');
-
-  return doc.data()!;
+      .doc(user.uid)
+      .snapshots()
+      .map((doc) => doc.data() ?? {});
 });
 
 final passwordVisibilityProvider = StateProvider<bool>(

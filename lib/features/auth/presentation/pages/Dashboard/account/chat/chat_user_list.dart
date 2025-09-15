@@ -25,94 +25,103 @@ class _UserListState extends State<UserList> {
   Widget build(BuildContext context) {
     final user = FirebaseAuth.instance.currentUser;
 
-    return Container(
-      decoration: BoxDecoration(color: Colors.white),
-      child: Scaffold(
-        appBar: AppBar(
-          backgroundColor: Colors.green,
-          leading: IconButton(
-            icon: Icon(Icons.arrow_back, color: Colors.white),
-            onPressed: () {
-              context.go(Path.account);
-            },
-          ),
-          title: TextWidget(
-            title: "Message",
-            fontSize: 28,
-            fontWeight: FontWeight.w600,
-            color: Colors.white,
-            letterSpacing: 0,
-          ),
+    return Scaffold(
+      backgroundColor: Colors.white,
+      appBar: AppBar(
+        backgroundColor: Colors.green,
+        leading: IconButton(
+          icon: Icon(Icons.arrow_back, color: Colors.white),
+          onPressed: () {
+            context.go(Path.account);
+          },
         ),
-        body: Padding(
-          padding: const EdgeInsets.all(12.0),
-          child: Column(
-            children: [
-              Padding(
-                padding: EdgeInsets.all(5),
-                child: Container(
-                  decoration: BoxDecoration(
-                    border: Border.all(),
-                    borderRadius: BorderRadius.circular(30.r),
-                  ),
-                  child: TextField(
-                    decoration: InputDecoration(
-                      hintText: "Search...",
-                      hintStyle: TextStyle(
-                        color: const Color(0xff7C7C7C),
-                        fontSize: 18.sp,
-                        fontWeight: FontWeight.w500,
-                      ),
-                      prefixIcon: Icon(Icons.search),
-                      border: InputBorder.none,
+        title: TextWidget(
+          title: "Message",
+          fontSize: 28,
+          fontWeight: FontWeight.w600,
+          color: Colors.white,
+          letterSpacing: 0,
+        ),
+      ),
+      body: Padding(
+        padding: const EdgeInsets.all(12.0),
+        child: Column(
+          children: [
+            Padding(
+              padding: EdgeInsets.all(5),
+              child: Container(
+                decoration: BoxDecoration(
+                  border: Border.all(),
+                  borderRadius: BorderRadius.circular(30.r),
+                ),
+                child: TextField(
+                  decoration: InputDecoration(
+                    hintText: "Search...",
+                    hintStyle: TextStyle(
+                      color: const Color(0xff7C7C7C),
+                      fontSize: 18.sp,
+                      fontWeight: FontWeight.w500,
+
+                      // height: 1.0,
                     ),
-                    onChanged: (value) {
-                      setState(() {
-                        searchText = value.trim();
-                      });
-                    },
+                    prefixIcon: Icon(Icons.search),
+                    border: InputBorder.none,
                   ),
+                  onChanged: (value) {
+                    setState(() {
+                      searchText = value.trim();
+                    });
+                  },
                 ),
               ),
-              Expanded(
-                child: StreamBuilder<QuerySnapshot>(
-                  stream: FirebaseFirestore.instance
-                      .collection('users')
-                      .snapshots(),
-                  builder: (context, snapshot) {
-                    if (!snapshot.hasData) {
-                      return Center(child: Text("Loading users..."));
-                    }
+            ),
+            Expanded(
+              child: StreamBuilder<QuerySnapshot>(
+                stream: FirebaseFirestore.instance
+                    .collection('users')
+                    .snapshots(),
+                builder: (context, snapshot) {
+                  if (!snapshot.hasData) {
+                    return Center(child: Text("Loading users..."));
+                  }
 
-                    final allDocs = snapshot.data!.docs;
+                  final allDocs = snapshot.data!.docs;
 
-                    final docs = allDocs.where((doc) {
-                      final data = doc.data() as Map<String, dynamic>;
-                      final username = data['username'] ?? '';
-                      return username.toLowerCase().contains(
-                        searchText.toLowerCase(),
-                      );
-                    }).toList();
+                  final docs = allDocs.where((doc) {
+                    final data = doc.data() as Map<String, dynamic>;
+                    final username = data['username'] ?? '';
+                    return username.toLowerCase().contains(
+                      searchText.toLowerCase(),
+                    );
+                  }).toList();
 
-                    if (docs.isEmpty) {
-                      return Center(child: Text("No users found"));
-                    }
+                  if (docs.isEmpty) {
+                    return Center(child: Text("No users found"));
+                  }
 
-                    return Column(
-                      children: [
-                        Expanded(
-                          child: ListView.separated(
-                            itemCount: docs.length,
-                            separatorBuilder: (context, index) =>
-                                Divider(height: 1, color: Colors.grey.shade300),
-                            itemBuilder: (context, index) {
-                              final data =
-                                  docs[index].data() as Map<String, dynamic>;
+                  return Column(
+                    children: [
+                      Expanded(
+                        child: ListView.separated(
+                          itemCount: docs.length,
+                          separatorBuilder: (context, index) =>
+                              Divider(height: 0, color: Colors.grey.shade300),
+                          itemBuilder: (context, index) {
+                            final data =
+                                docs[index].data() as Map<String, dynamic>;
 
-                              return ListTile(
-                                contentPadding: EdgeInsets.symmetric(
-                                  horizontal: 8,
-                                  vertical: 6,
+                            return Container(
+                              height: 70,
+                              decoration: BoxDecoration(
+                                color: Colors.grey[50],
+                                borderRadius: BorderRadius.circular(10),
+                              ),
+                              margin: EdgeInsets.only(bottom: 5),
+                              child: ListTile(
+                                // contentPadding: EdgeInsets.all(0),
+                                contentPadding: EdgeInsets.only(
+                                  left: 10,
+                                  right: 10,
                                 ),
                                 leading: CircleAvatar(
                                   radius: 25,
@@ -206,17 +215,17 @@ class _UserListState extends State<UserList> {
                                     ),
                                   );
                                 },
-                              );
-                            },
-                          ),
+                              ),
+                            );
+                          },
                         ),
-                      ],
-                    );
-                  },
-                ),
+                      ),
+                    ],
+                  );
+                },
               ),
-            ],
-          ),
+            ),
+          ],
         ),
       ),
     );

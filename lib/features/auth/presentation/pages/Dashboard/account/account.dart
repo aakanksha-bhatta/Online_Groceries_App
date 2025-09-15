@@ -1,9 +1,17 @@
+import 'dart:convert';
+import 'dart:io';
+
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 import 'package:go_router/go_router.dart';
+import 'package:image_picker/image_picker.dart';
 import 'package:online_groceries_app/config/route/path.dart';
 import 'package:online_groceries_app/features/auth/presentation/controller/auth_notifier.dart';
+import 'package:online_groceries_app/features/auth/presentation/provider/change_notifier.dart';
 import 'package:online_groceries_app/features/auth/presentation/provider/state_provider.dart';
 import 'package:online_groceries_app/features/auth/presentation/widget/custom_button_widget.dart';
 import 'package:online_groceries_app/features/auth/presentation/widget/custom_navigation_bar.dart';
@@ -13,9 +21,39 @@ import 'package:online_groceries_app/features/auth/presentation/widget/text_widg
 class Account extends ConsumerWidget {
   const Account({super.key});
 
+  Future<void> _pickAndUploadImage(WidgetRef ref, BuildContext context) async {
+    final imgPicker = ImagePicker();
+    final pickedFile = await imgPicker.pickImage(source: ImageSource.camera);
+
+    if (pickedFile == null) return;
+
+    final loadingNotifier = ref.read(loadingProvider);
+
+    try {
+      await loadingNotifier.setUploading();
+      final file = File(pickedFile.path);
+      final bytes = await file.readAsBytes();
+      final base64Image = base64Encode(bytes);
+
+      final user = FirebaseAuth.instance.currentUser;
+      if (user == null) {
+        return;
+      }
+
+      await FirebaseFirestore.instance.collection('users').doc(user.uid).update(
+        {'photoBase64': base64Image},
+      );
+      ref.invalidate(userDataProvider);
+    } finally {
+      await loadingNotifier.setUploading();
+    }
+  }
+
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final state = ref.watch(authNotifierProvider);
+    final userDataAsync = ref.watch(userDataProvider);
+    final loading = ref.watch(loadingProvider);
 
     final List<Map<String, dynamic>> accountItems = [
       {
@@ -28,6 +66,7 @@ class Account extends ConsumerWidget {
         'title': 'My Details',
         'route': Path.details,
       },
+      {'icon': Icons.chat, 'title': 'Chat', 'route': Path.user},
       {'icon': Icons.location_on_outlined, 'title': 'Delivery Address'},
       // {'icon': Icons.payment_outlined, 'title': 'Payment Methods'},
       {'icon': Icons.chat, 'title': 'Chat', 'route': Path.user},
@@ -40,8 +79,6 @@ class Account extends ConsumerWidget {
       {'icon': Icons.help_outline, 'title': 'Help'},
       {'icon': Icons.info_outline, 'title': 'About'},
     ];
-    // to call user name and email
-    final userDataAsync = ref.watch(userDataProvider);
 
     return Scaffold(
       backgroundColor: Colors.white,
@@ -58,32 +95,33 @@ class Account extends ConsumerWidget {
                   decoration: BoxDecoration(
                     borderRadius: BorderRadius.circular(27.r),
                   ),
-                  child: userDataAsync.when(
-                    data: (userData) {
-                      final photoUrl = userData['photoURL'];
-
-                      if (photoUrl != null && photoUrl.toString().isNotEmpty) {
-                        return CircleAvatar(
-                          radius: 32,
-                          backgroundImage: NetworkImage(photoUrl),
-                          backgroundColor: Colors.transparent,
-                        );
-                      } else {
-                        return Image.asset(
-                          'assets/images/signin_bg.png',
-                          fit: BoxFit.contain,
-                        );
-                      }
-                    },
-                    loading: () => CircularProgressIndicator(
-                      color: Colors.black,
-                      strokeWidth: 1,
-                    ),
-                    error: (e, _) => Image.asset(
-                      'assets/images/signin_bg.png',
-                      fit: BoxFit.contain,
-                    ),
-                  ),
+                  child: loading.isLoading
+                      ? const Center(
+                          child: CircularProgressIndicator(strokeWidth: 1),
+                        )
+                      : userDataAsync.when(
+                          data: (userData) {
+                            final photoBase64 =
+                                userData['photoBase64'] as String?;
+                            if (photoBase64 != null && photoBase64.isNotEmpty) {
+                              try {
+                                final bytes = base64Decode(photoBase64);
+                                return CircleAvatar(
+                                  backgroundImage: MemoryImage(bytes),
+                                );
+                              } catch (_) {
+                                return Image.asset(
+                                  'assets/images/signin_bg.png',
+                                );
+                              }
+                            } else {
+                              return Image.asset('assets/images/signin_bg.png');
+                            }
+                          },
+                          loading: () => const CircularProgressIndicator(),
+                          error: (e, _) =>
+                              Image.asset('assets/images/signin_bg.png'),
+                        ),
                 ),
                 SizedBox(width: 15.w),
                 userDataAsync.when(
@@ -91,15 +129,37 @@ class Account extends ConsumerWidget {
                     return Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        TextWidget(
-                          title: userData['username'] ?? 'No Name',
-                          fontSize: 20,
-                          fontWeight: FontWeight.w400,
-                          color: Colors.black,
-                          letterSpacing: 0,
+                        Row(
+                          children: [
+                            TextWidget(
+                              title: userData['username'] ?? 'No Name',
+                              fontSize: 20,
+                              fontWeight: FontWeight.w400,
+                              color: Colors.black,
+                              letterSpacing: 0,
+                            ),
+                            SizedBox(width: 10),
+                            InkWell(
+                              onTap: () => _pickAndUploadImage(ref, context),
+                              child: loading.isLoading
+                                  ? const SizedBox(
+                                      height: 24,
+                                      width: 24,
+                                      child: CircularProgressIndicator(
+                                        color: Colors.white,
+                                        strokeWidth: 2,
+                                      ),
+                                    )
+                                  : SvgPicture.asset('assets/icons/pen.svg'),
+                              // child: SvgPicture.asset('assets/icons/pen.svg'),
+                            ),
+                          ],
                         ),
                         TextWidget(
-                          title: userData['useremail'] ?? 'No Email',
+                          title:
+                              userData['useremail'] ??
+                              userData['email'] ??
+                              'No Email',
                           fontSize: 16,
                           fontWeight: FontWeight.w400,
                           color: const Color(0xFF7C7C7C),
@@ -108,18 +168,13 @@ class Account extends ConsumerWidget {
                       ],
                     );
                   },
-                  loading: () => CircularProgressIndicator(
-                    color: Colors.white,
-                    strokeWidth: 1,
-                  ),
-                  error: (e, _) => Text('Error loading user'),
+                  loading: () => const CircularProgressIndicator(),
+                  error: (e, _) => const Text('Error loading user'),
                 ),
               ],
             ),
           ),
-
           Divider(thickness: 1, color: const Color(0xffE2E2E2)),
-
           Expanded(
             child: ListView.separated(
               padding: EdgeInsets.symmetric(horizontal: 25.w),
@@ -155,7 +210,6 @@ class Account extends ConsumerWidget {
                   Divider(color: Colors.grey.shade300, thickness: 1, height: 0),
             ),
           ),
-
           Padding(
             padding: const EdgeInsets.symmetric(vertical: 24.51),
             child: CustomButtonWidget(
@@ -169,7 +223,7 @@ class Account extends ConsumerWidget {
                   ? null
                   : () async {
                       try {
-                        await ref.read(authNotifierProvider.notifier).signOut();
+                        ref.read(authNotifierProvider);
                         context.go(Path.login);
                         CustomSnackBar.show(context, "Log Out successful");
                       } catch (e) {
