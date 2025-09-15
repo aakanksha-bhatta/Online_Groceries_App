@@ -222,7 +222,7 @@ class Account extends ConsumerWidget {
                   ? null
                   : () async {
                       try {
-                        await ref.read(loadingProvider).isLoading;
+                        ref.read(authNotifierProvider);
                         context.go(Path.login);
                         CustomSnackBar.show(context, "Log Out successful");
                       } catch (e) {
