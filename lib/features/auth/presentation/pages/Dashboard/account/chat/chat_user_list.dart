@@ -114,107 +114,132 @@ class _UserListState extends State<UserList> {
                               height: 70,
                               decoration: BoxDecoration(
                                 color: Colors.grey[50],
-                                borderRadius: BorderRadius.circular(10),
+                                borderRadius: BorderRadius.circular(100),
                               ),
                               margin: EdgeInsets.only(bottom: 5),
-                              child: ListTile(
-                                // contentPadding: EdgeInsets.all(0),
-                                contentPadding: EdgeInsets.only(
-                                  left: 10,
-                                  right: 10,
-                                ),
-                                leading: CircleAvatar(
-                                  radius: 25,
-                                  backgroundImage:
-                                      (data['photoURL'] != null &&
-                                          data['photoURL']
-                                              .toString()
-                                              .isNotEmpty)
-                                      ? NetworkImage(data['photoURL'])
-                                      : AssetImage(
-                                              'assets/images/signin_bg.png',
-                                            )
-                                            as ImageProvider,
-                                ),
-                                title: Text(
-                                  data['username'] ?? '',
-                                  style: TextStyle(fontWeight: FontWeight.bold),
-                                ),
-                                subtitle: StreamBuilder<QuerySnapshot>(
-                                  stream: FirebaseFirestore.instance
-                                      .collection('chats')
-                                      .doc(
-                                        getChatId(
-                                          FirebaseAuth
-                                              .instance
-                                              .currentUser!
-                                              .uid,
-                                          docs[index].id,
+                              child: Material(
+                                child: InkWell(
+                                  borderRadius: BorderRadius.circular(20),
+                                  onTap: () {
+                                    Navigator.of(context).push(
+                                      MaterialPageRoute(
+                                        builder: (context) => ChatScreen(
+                                          userName: data['username'],
+                                          userId: docs[index].id,
                                         ),
-                                      )
-                                      .collection('messages')
-                                      .orderBy('timestamp', descending: true)
-                                      .limit(5)
-                                      .snapshots(),
-                                  builder: (context, snapshot) {
-                                    if (!snapshot.hasData)
-                                      return Text("Loading...");
-
-                                    final currentUserId =
-                                        FirebaseAuth.instance.currentUser!.uid;
-
-                                    final filteredMessages = snapshot.data!.docs
-                                        .where((doc) {
-                                          final data =
-                                              doc.data()
-                                                  as Map<String, dynamic>;
-                                          final deletedFor = List<String>.from(
-                                            data['deletedFor'] ?? [],
-                                          );
-                                          return !deletedFor.contains(
-                                            currentUserId,
-                                          );
-                                        })
-                                        .toList();
-
-                                    if (filteredMessages.isEmpty) {
-                                      return Text(
-                                        "Hey there! I am new User",
-                                        maxLines: 1,
-                                        overflow: TextOverflow.ellipsis,
-                                      );
-                                    }
-
-                                    final messageData =
-                                        filteredMessages.first.data()
-                                            as Map<String, dynamic>;
-                                    final isIncoming =
-                                        messageData['senderId'] !=
-                                        currentUserId;
-
-                                    return Text(
-                                      messageData['text'] ?? '',
-                                      maxLines: 1,
-                                      overflow: TextOverflow.ellipsis,
-                                      style: TextStyle(
-                                        fontWeight: isIncoming
-                                            ? FontWeight.bold
-                                            : FontWeight.normal,
                                       ),
                                     );
                                   },
-                                ),
-
-                                onTap: () {
-                                  Navigator.of(context).push(
-                                    MaterialPageRoute(
-                                      builder: (context) => ChatScreen(
-                                        userName: data['username'],
-                                        userId: docs[index].id,
+                                  child: ListTile(
+                                    // contentPadding: EdgeInsets.all(0),
+                                    contentPadding: EdgeInsets.only(
+                                      left: 10,
+                                      right: 10,
+                                    ),
+                                    leading: CircleAvatar(
+                                      radius: 25,
+                                      backgroundImage:
+                                          (data['photoURL'] != null &&
+                                              data['photoURL']
+                                                  .toString()
+                                                  .isNotEmpty)
+                                          ? NetworkImage(data['photoURL'])
+                                          : AssetImage(
+                                                  'assets/images/signin_bg.png',
+                                                )
+                                                as ImageProvider,
+                                    ),
+                                    title: Text(
+                                      data['username'] ?? '',
+                                      style: TextStyle(
+                                        fontWeight: FontWeight.bold,
                                       ),
                                     ),
-                                  );
-                                },
+                                    subtitle: StreamBuilder<QuerySnapshot>(
+                                      stream: FirebaseFirestore.instance
+                                          .collection('chats')
+                                          .doc(
+                                            getChatId(
+                                              FirebaseAuth
+                                                  .instance
+                                                  .currentUser!
+                                                  .uid,
+                                              docs[index].id,
+                                            ),
+                                          )
+                                          .collection('messages')
+                                          .orderBy(
+                                            'timestamp',
+                                            descending: true,
+                                          )
+                                          .limit(5)
+                                          .snapshots(),
+                                      builder: (context, snapshot) {
+                                        if (!snapshot.hasData)
+                                          return Text("Loading...");
+
+                                        final currentUserId = FirebaseAuth
+                                            .instance
+                                            .currentUser!
+                                            .uid;
+
+                                        final filteredMessages = snapshot
+                                            .data!
+                                            .docs
+                                            .where((doc) {
+                                              final data =
+                                                  doc.data()
+                                                      as Map<String, dynamic>;
+                                              final deletedFor =
+                                                  List<String>.from(
+                                                    data['deletedFor'] ?? [],
+                                                  );
+                                              return !deletedFor.contains(
+                                                currentUserId,
+                                              );
+                                            })
+                                            .toList();
+
+                                        if (filteredMessages.isEmpty) {
+                                          return Text(
+                                            "Hey there! I am new User",
+                                            maxLines: 1,
+                                            overflow: TextOverflow.ellipsis,
+                                          );
+                                        }
+
+                                        final messageData =
+                                            filteredMessages.first.data()
+                                                as Map<String, dynamic>;
+                                        final isIncoming =
+                                            messageData['senderId'] !=
+                                            currentUserId;
+
+                                        return Text(
+                                          messageData['text'] ?? '',
+                                          maxLines: 1,
+                                          overflow: TextOverflow.ellipsis,
+                                          style: TextStyle(
+                                            fontWeight: isIncoming
+                                                ? FontWeight.bold
+                                                : FontWeight.normal,
+                                          ),
+                                        );
+                                      },
+                                    ),
+
+                                    // onTap: () {
+                                    //   Navigator.of(context).push(
+                                    //     MaterialPageRoute(
+                                    //       builder: (context) => ChatScreen(
+                                    //         userName: data['username'],
+                                    //         userId: docs[index].id,
+                                    //       ),
+                                    //     ),
+                                    //   );
+                                    // },
+                                  ),
+                                ),
                               ),
                             );
                           },

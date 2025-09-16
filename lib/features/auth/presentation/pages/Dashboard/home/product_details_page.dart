@@ -86,7 +86,7 @@ class ProductDetailsPage extends ConsumerWidget {
                   children: [
                     InkWell(
                       onTap: () {
-                        context.go(Path.home);
+                        context.pop();
                       },
                       child: const Icon(Icons.arrow_back_ios),
                     ),

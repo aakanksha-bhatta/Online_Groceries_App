@@ -5,7 +5,6 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:go_router/go_router.dart';
 import 'package:online_groceries_app/config/route/path.dart';
-import 'package:online_groceries_app/core/services/auth_service.dart';
 import 'package:online_groceries_app/core/util/validation.dart';
 import 'package:online_groceries_app/features/auth/presentation/controller/auth_notifier.dart';
 import 'package:online_groceries_app/features/auth/presentation/provider/state_provider.dart';
@@ -26,39 +25,53 @@ import 'package:online_groceries_app/l10n/app_localizations.dart';
 //   return controller.stream;
 // }
 
-class LoginPage extends ConsumerWidget {
-  LoginPage({super.key});
-
-  final emailController = TextEditingController();
-  final passwordController = TextEditingController();
-
-  final _formKey = GlobalKey<FormState>();
-  String? phoneError;
-  String? passwordError;
-  final auth = AuthService();
+class LoginPage extends ConsumerStatefulWidget {
+  const LoginPage({super.key});
 
   @override
-  Widget build(BuildContext context, WidgetRef ref) {
-    final isVisible = ref.watch(
-      passwordVisibilityProvider,
-    ); //listen current state value
-    // final userList = ref.watch(userListProvider);
+  ConsumerState<LoginPage> createState() => _LoginPageState();
+}
+
+class _LoginPageState extends ConsumerState<LoginPage> {
+  final emailController = TextEditingController();
+  final passwordController = TextEditingController();
+  final _formKey = GlobalKey<FormState>();
+
+  bool isFormFilled = false;
+
+  void checkFormFilled() {
+    final isFilled = emailController.text.isNotEmpty &&
+        passwordController.text.isNotEmpty;
+
+    if (isFormFilled != isFilled) {
+      setState(() {
+        isFormFilled = isFilled;
+      });
+    }
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    emailController.addListener(checkFormFilled);
+    passwordController.addListener(checkFormFilled);
+  }
+
+  @override
+  void dispose() {
+    emailController.dispose();
+    passwordController.dispose();
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final isVisible = ref.watch(passwordVisibilityProvider);
     final loginState = ref.watch(authNotifierProvider);
     final loc = AppLocalizations.of(context)!;
+
     return Scaffold(
       resizeToAvoidBottomInset: true,
-
-      // body: Column( // SHOWING STREAM BUILDER
-      //   children: [
-      //     SizedBox(height: 100),
-      //     StreamBuilder(
-      //       stream: getNumberStream(),
-      //       builder: (context, snapshot) {
-      //         return Text(snapshot.data.toString());
-      //       },
-      //     ),
-      //   ],
-      // ),
       body: BackgroundLayoutWidget(
         dynamicWidget: SingleChildScrollView(
           padding: EdgeInsets.symmetric(horizontal: 24.w),
@@ -103,7 +116,6 @@ class LoginPage extends ConsumerWidget {
                       controller: emailController,
                       validator: (value) => Validation.validEmail(loc, value),
                     ),
-
                     SizedBox(height: 30.h),
                     InputTextFormWidget(
                       labelText: loc.password,
@@ -113,7 +125,6 @@ class LoginPage extends ConsumerWidget {
                           Validation.validPassword(loc, value),
                       suffixIcon: IconButton(
                         onPressed: () {
-                          // .notifier updating state
                           ref.read(passwordVisibilityProvider.notifier).state =
                               !isVisible;
                         },
@@ -125,7 +136,6 @@ class LoginPage extends ConsumerWidget {
                   ],
                 ),
               ),
-
               Padding(
                 padding: EdgeInsets.only(top: 20.h, right: 4.w),
                 child: Align(
@@ -142,7 +152,7 @@ class LoginPage extends ConsumerWidget {
               SizedBox(height: 30.h),
               CustomButtonWidget(
                 buttonName: loc.login,
-                // padding: EdgeInsets.symmetric(horizontal: 139.96),
+                isEnabled: isFormFilled && !loginState.isLoading,
                 onPressed: loginState.isLoading
                     ? null
                     : () async {
@@ -157,7 +167,6 @@ class LoginPage extends ConsumerWidget {
                           if (user != null) {
                             CustomSnackBar.show(context, loc.loginSuccess);
                             context.go(Path.home);
-                            print('Login Successful: ${user.email}');
                           } else {
                             CustomSnackBar.show(
                               context,
@@ -179,6 +188,8 @@ class LoginPage extends ConsumerWidget {
               ),
 
               SizedBox(height: 25.h),
+
+              /// Sign-up Text
               Row(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [

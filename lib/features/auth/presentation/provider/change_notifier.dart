@@ -9,9 +9,6 @@ class LoadingNotifier extends ChangeNotifier {
   bool get isUploading => _isUploading;
 
   Future<void> setUploading() async {
-    if (_isUploading == true) {
-      await Future.delayed(Duration(seconds: 4));
-    }
     _isUploading = !_isUploading;
     notifyListeners();
   }

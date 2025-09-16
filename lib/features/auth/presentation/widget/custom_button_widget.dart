@@ -12,6 +12,9 @@ class CustomButtonWidget extends StatelessWidget {
   final Color? splashColor;
   final String? buttonIcon;
   final Widget? child;
+  final Icon? icon;
+  final bool isEnabled;
+  final Color? iconColor;
   final EdgeInsetsGeometry? padding;
 
   const CustomButtonWidget({
@@ -24,6 +27,9 @@ class CustomButtonWidget extends StatelessWidget {
     this.child,
     this.textColor,
     this.padding,
+    this.isEnabled = true,
+    this.icon,
+    this.iconColor,
   });
 
   @override
@@ -31,10 +37,12 @@ class CustomButtonWidget extends StatelessWidget {
     final theme = Theme.of(context);
 
     return Material(
-      color: buttonColor ?? theme.primaryColor,
+      color: isEnabled
+          ? (buttonColor ?? theme.primaryColor)
+          : Colors.green.shade200,
       borderRadius: BorderRadius.circular(19.r),
       child: InkWell(
-        onTap: onPressed,
+        onTap: isEnabled ? onPressed : null,
         splashColor: splashColor ?? AppColor.splashColor,
         borderRadius: BorderRadius.circular(19.r),
         child: Container(
@@ -48,12 +56,19 @@ class CustomButtonWidget extends StatelessWidget {
                       ? MainAxisAlignment.start
                       : MainAxisAlignment.center,
                   children: [
-                    if (buttonIcon != null)
+                    if (buttonIcon != null || icon != null)
                       Padding(
-                        padding: padding ??
+                        padding:
+                            padding ??
                             EdgeInsets.only(left: 35.39.w, right: 40.22.w),
-                        child: SvgPicture.asset(buttonIcon!),
+                        child: buttonIcon != null
+                            ? SvgPicture.asset(
+                                buttonIcon!,
+                                color: iconColor ?? Colors.white,
+                              )
+                            : icon,
                       ),
+
                     Padding(
                       padding: padding ?? EdgeInsets.zero,
                       child: Align(
@@ -62,7 +77,8 @@ class CustomButtonWidget extends StatelessWidget {
                           title: buttonName,
                           fontSize: 18.sp,
                           fontWeight: FontWeight.w600,
-                          color: textColor ??
+                          color:
+                              textColor ??
                               theme.textTheme.displayMedium?.color ??
                               Colors.white,
                           letterSpacing: 0,

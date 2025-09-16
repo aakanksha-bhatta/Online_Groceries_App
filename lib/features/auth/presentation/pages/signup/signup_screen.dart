@@ -6,7 +6,6 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:go_router/go_router.dart';
 import 'package:online_groceries_app/config/route/path.dart';
-import 'package:online_groceries_app/core/services/auth_service.dart';
 import 'package:online_groceries_app/core/util/validation.dart';
 import 'package:online_groceries_app/features/auth/presentation/controller/auth_notifier.dart';
 import 'package:online_groceries_app/features/auth/presentation/provider/state_provider.dart';
@@ -17,22 +16,57 @@ import 'package:online_groceries_app/features/auth/presentation/widget/input_tex
 import 'package:online_groceries_app/features/auth/presentation/widget/text_widget.dart';
 import 'package:online_groceries_app/l10n/app_localizations.dart';
 
-class SignupScreen extends ConsumerWidget {
-  SignupScreen({super.key});
+class SignupScreen extends ConsumerStatefulWidget {
+  const SignupScreen({super.key});
 
+  @override
+  ConsumerState<SignupScreen> createState() => _SignupScreenState();
+}
+
+class _SignupScreenState extends ConsumerState<SignupScreen> {
   final usernameController = TextEditingController();
   final emailController = TextEditingController();
   final passwordController = TextEditingController();
 
-  final auth = AuthService();
+  // final auth = AuthService();
+  bool isFormFilled = false;
 
-  final _formKey = GlobalKey<FormState>();
-  String? usernameError;
-  String? emailError;
-  String? passwordError;
+  void checkFormFilled() {
+    final isFilled =
+        usernameController.text.isNotEmpty &&
+        emailController.text.isNotEmpty &&
+        passwordController.text.isNotEmpty;
+
+    if (isFormFilled != isFilled) {
+      setState(() {
+        isFormFilled = isFilled;
+      });
+    }
+  }
 
   @override
-  Widget build(BuildContext context, WidgetRef ref) {
+  void initState() {
+    super.initState();
+      usernameController.addListener(checkFormFilled);
+    emailController.addListener(checkFormFilled);
+    passwordController.addListener(checkFormFilled);
+  }
+
+  @override
+  void dispose() {
+     usernameController.dispose();
+    emailController.dispose();
+    passwordController.dispose();
+    super.dispose();
+  }
+
+  final _formKey = GlobalKey<FormState>();
+  // String? usernameError;
+  // String? emailError;
+  // String? passwordError;
+
+  @override
+  Widget build(BuildContext context) {
     final isVisible = ref.watch(passwordVisibilityProvider);
     final loc = AppLocalizations.of(context)!;
     final signupState = ref.watch(authNotifierProvider);
@@ -161,7 +195,7 @@ class SignupScreen extends ConsumerWidget {
               SizedBox(height: 30.h),
               CustomButtonWidget(
                 buttonName: loc.signUp,
-                // padding: EdgeInsets.symmetric(horizontal: 139.96),
+                isEnabled: isFormFilled && !signupState.isLoading,
                 onPressed: signupState.isLoading
                     ? null
                     : () async {
@@ -188,10 +222,10 @@ class SignupScreen extends ConsumerWidget {
                               'Registration Successfully',
                             );
                             context.go(Path.login);
-                          }  else {
+                          } else {
                             CustomSnackBar.show(
                               context,
-                              'User registration failed',
+                              'Email Address is already used',
                             );
                           }
                         }

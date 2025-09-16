@@ -6,7 +6,6 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:flutter_svg/flutter_svg.dart';
 import 'package:go_router/go_router.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:online_groceries_app/config/route/path.dart';
@@ -69,12 +68,12 @@ class Account extends ConsumerWidget {
       {'icon': Icons.chat, 'title': 'Chat', 'route': Path.user},
       {'icon': Icons.location_on_outlined, 'title': 'Delivery Address'},
       // {'icon': Icons.payment_outlined, 'title': 'Payment Methods'},
-      {'icon': Icons.chat, 'title': 'Chat', 'route': Path.user},
-      {
-        'icon': Icons.local_offer_outlined,
-        'title': 'Practice',
-        'route': Path.practice,
-      },
+      // {'icon': Icons.chat, 'title': 'Chat', 'route': Path.user},
+      // {
+      //   'icon': Icons.local_offer_outlined,
+      //   'title': 'Practice',
+      //   'route': Path.practice,
+      // },
       {'icon': Icons.notifications_none, 'title': 'Notifications'},
       {'icon': Icons.help_outline, 'title': 'Help'},
       {'icon': Icons.info_outline, 'title': 'About'},
@@ -139,20 +138,20 @@ class Account extends ConsumerWidget {
                               letterSpacing: 0,
                             ),
                             SizedBox(width: 10),
-                            InkWell(
-                              onTap: () => _pickAndUploadImage(ref, context),
-                              child: loading.isLoading
-                                  ? const SizedBox(
-                                      height: 24,
-                                      width: 24,
-                                      child: CircularProgressIndicator(
-                                        color: Colors.white,
-                                        strokeWidth: 2,
-                                      ),
-                                    )
-                                  : SvgPicture.asset('assets/icons/pen.svg'),
-                              // child: SvgPicture.asset('assets/icons/pen.svg'),
-                            ),
+                            // InkWell(
+                            //   onTap: () => _pickAndUploadImage(ref, context),
+                            //   child: loading.isLoading
+                            //       ? const SizedBox(
+                            //           height: 24,
+                            //           width: 24,
+                            //           child: CircularProgressIndicator(
+                            //             color: Colors.white,
+                            //             strokeWidth: 2,
+                            //           ),
+                            //         )
+                            //       : SvgPicture.asset('assets/icons/pen.svg'),
+                            //   // child: SvgPicture.asset('assets/icons/pen.svg'),
+                            // ),
                           ],
                         ),
                         TextWidget(
@@ -174,6 +173,7 @@ class Account extends ConsumerWidget {
               ],
             ),
           ),
+          SizedBox(height: 25.h),
           Divider(thickness: 1, color: const Color(0xffE2E2E2)),
           Expanded(
             child: ListView.separated(
@@ -214,8 +214,9 @@ class Account extends ConsumerWidget {
             padding: const EdgeInsets.symmetric(vertical: 24.51),
             child: CustomButtonWidget(
               buttonName: 'Log Out',
-              textColor: const Color(0xff53B175),
+              textColor: Colors.red,
               buttonColor: const Color(0xffF2F3F2),
+              iconColor: Colors.red,
               buttonIcon: 'assets/icons/logout.svg',
               splashColor: const Color(0xffF2F3F2),
               padding: EdgeInsets.only(left: 25.17.w, right: 77.52.w),
@@ -223,8 +224,10 @@ class Account extends ConsumerWidget {
                   ? null
                   : () async {
                       try {
-                        ref.read(authNotifierProvider);
-                        context.go(Path.login);
+                        await ref.read(authNotifierProvider.notifier).signOut();
+                        if (context.mounted) {
+                          context.go(Path.login);
+                        }
                         CustomSnackBar.show(context, "Log Out successful");
                       } catch (e) {
                         CustomSnackBar.show(context, "Log Out failed");

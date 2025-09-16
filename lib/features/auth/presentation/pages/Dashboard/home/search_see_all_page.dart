@@ -33,8 +33,9 @@ class _SearchSeeAllPageState extends ConsumerState<SearchSeeAllPage> {
             mainAxisAlignment: MainAxisAlignment.start,
             children: [
               IconButton(
-                padding: EdgeInsets.only(top: 24.7),
+                padding: EdgeInsets.only(top: 8.7),
                 icon: Icon(Icons.arrow_back_ios),
+                splashRadius: 30,
                 onPressed: () {
                   context.go(Path.home);
                 },

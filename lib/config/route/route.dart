@@ -36,7 +36,7 @@ final GoRouter router = GoRouter(
     ),
     GoRoute(path: Path.splash, builder: (context, state) => SplashScreen()),
     GoRoute(path: Path.onboarding, builder: (context, state) => Onboarding()),
-    GoRoute(path: Path.login, builder: (context, state) => LoginPage()),
+    GoRoute(path: Path.login, builder: (context, state) => const LoginPage()),
     GoRoute(path: Path.signup, builder: (context, state) => SignupScreen()),
     GoRoute(path: Path.home, builder: (context, state) => HomeScreen()),
     GoRoute(path: Path.signin, builder: (context, state) => SigninScreen()),

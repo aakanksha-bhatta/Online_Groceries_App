@@ -9,7 +9,6 @@ import 'package:online_groceries_app/features/auth/presentation/controller/auth_
 import 'package:online_groceries_app/features/auth/presentation/widget/background_layout_widget.dart';
 import 'package:online_groceries_app/features/auth/presentation/widget/custom_button_widget.dart';
 import 'package:online_groceries_app/features/auth/presentation/widget/custom_snack_bar.dart';
-import 'package:online_groceries_app/features/auth/presentation/widget/intl_phone_input_widget.dart';
 import 'package:online_groceries_app/features/auth/presentation/widget/text_widget.dart';
 import 'package:online_groceries_app/l10n/app_localizations.dart';
 
@@ -45,30 +44,78 @@ class SigninScreen extends ConsumerWidget {
                     SizedBox(
                       width: 230.w,
                       child: TextWidget(
-                        title: loc.gerYourGroceriesInAsFastAsOneHour,
+                        title: 'Get your groceries with nectar',
+                        overflow: TextOverflow.fade,
                         fontSize: 26.sp,
                         fontWeight: FontWeight.w600,
                         color: AppColor.textColor,
                         letterSpacing: 0,
                       ),
                     ),
-                    GestureDetector(
-                      onTap: () {
-                        context.go(Path.mobile);
-                      },
-                      child: IntlPhoneInputWidget(isEnable: false),
+                    SizedBox(height: 30.h),
+                    CustomButtonWidget(
+                      buttonName: 'Login',
+                      icon: Icon(Icons.login, color: Colors.white),
+                      padding: EdgeInsets.only(right: 77),
+                      buttonColor: Color(0xFF53B175),
+                      splashColor: Color(0xFF7BC48B),
+                      // buttonIcon: 'assets/icons/account.svg',
+                      onPressed: state.isLoading
+                          ? null
+                          : () {
+                              context.go(Path.login);
+                            },
+                      child: state.isLoading
+                          ? SizedBox(
+                              height: 24,
+                              width: 24,
+                              child: CircularProgressIndicator(
+                                color: Colors.white,
+                                strokeWidth: 2,
+                              ),
+                            )
+                          : null,
                     ),
+                    SizedBox(height: 20.h),
+                    CustomButtonWidget(
+                      buttonName: 'SignUp',
+                      buttonColor: Color(0xFF53B175),
+                      splashColor: Color(0xFF7BC48B),
+                      padding: EdgeInsets.only(left: 72),
+                      buttonIcon: 'assets/icons/account.svg',
+                      onPressed: state.isLoading
+                          ? null
+                          : () {
+                              context.go(Path.signup);
+                            },
+                      child: state.isLoading
+                          ? SizedBox(
+                              height: 24,
+                              width: 24,
+                              child: CircularProgressIndicator(
+                                color: Colors.white,
+                                strokeWidth: 2,
+                              ),
+                            )
+                          : null,
+                    ),
+                    // GestureDetector(
+                    //   onTap: () {
+                    //     context.go(Path.mobile);
+                    //   },
+                    //   child: IntlPhoneInputWidget(isEnable: false),
+                    // ),
                     Padding(
-                      padding: EdgeInsets.only(left: 88.w, top: 40.h),
+                      padding: EdgeInsets.only(left: 82.w, top: 30.h),
                       child: TextWidget(
-                        title: loc.orConnectWithSocial,
+                        title: 'or connect with social media',
                         fontSize: 14.sp,
                         fontWeight: FontWeight.w600,
                         color: AppColor.secondaryTextColor,
                         letterSpacing: 0,
                       ),
                     ),
-                    SizedBox(height: 37.8.h),
+                    SizedBox(height: 30.8.h),
                     CustomButtonWidget(
                       buttonName: loc.continueWithGoogle,
                       buttonColor: Color(0xFF5383EC),
@@ -136,14 +183,6 @@ class SigninScreen extends ConsumerWidget {
                               ),
                             )
                           : null,
-                    ),
-                    SizedBox(height: 20.h),
-                    CustomButtonWidget(
-                      buttonName: loc.continueWithFacebook,
-                      buttonColor: Color(0xFF4A66AC),
-                      splashColor: Color(0xFF8095C7),
-                      buttonIcon: 'assets/icons/facebook.svg',
-                      onPressed: () {},
                     ),
                   ],
                 ),
