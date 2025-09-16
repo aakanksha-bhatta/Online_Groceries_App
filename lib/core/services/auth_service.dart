@@ -59,19 +59,40 @@ class AuthService {
   // for google sign in
   Future<UserCredential?> signInWithGoogle() async {
     try {
-      final googleUser = await GoogleSignIn().signIn();
+      print('Starting Google Sign-In...');
 
-      if (googleUser == null) return null;
+      final googleUser = await GoogleSignIn().signIn();
+      print(
+        "Google user: $googleUser",
+      ); // DEBUG: Check if user selected an account
+
+      if (googleUser == null) {
+        print("User cancelled the Google Sign-In");
+        return null;
+      }
 
       final googleAuth = await googleUser.authentication;
+      print("AccessToken: ${googleAuth.accessToken}"); // DEBUG: Access token
+      print("IdToken: ${googleAuth.idToken}"); // DEBUG: ID token
 
       final credential = GoogleAuthProvider.credential(
         accessToken: googleAuth.accessToken,
         idToken: googleAuth.idToken,
       );
-      return await auth.signInWithCredential(credential);
-    } catch (e) {
+
+      print(
+        "Firebase credential created: $credential",
+      ); // DEBUG: Firebase credential created
+
+      final userCredential = await auth.signInWithCredential(credential);
+      print(
+        "Firebase UserCredential: $userCredential",
+      ); // DEBUG: Signed in with Firebase
+
+      return userCredential;
+    } catch (e, st) {
       print('Error signing in with Google: $e');
+      print('Stack trace: $st');
       return null;
     }
   }

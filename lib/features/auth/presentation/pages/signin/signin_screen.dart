@@ -60,21 +60,9 @@ class SigninScreen extends ConsumerWidget {
                       buttonColor: Color(0xFF53B175),
                       splashColor: Color(0xFF7BC48B),
                       // buttonIcon: 'assets/icons/account.svg',
-                      onPressed: state.isLoading
-                          ? null
-                          : () {
-                              context.go(Path.login);
-                            },
-                      child: state.isLoading
-                          ? SizedBox(
-                              height: 24,
-                              width: 24,
-                              child: CircularProgressIndicator(
-                                color: Colors.white,
-                                strokeWidth: 2,
-                              ),
-                            )
-                          : null,
+                      onPressed: () {
+                        context.go(Path.login);
+                      },
                     ),
                     SizedBox(height: 20.h),
                     CustomButtonWidget(
@@ -83,21 +71,9 @@ class SigninScreen extends ConsumerWidget {
                       splashColor: Color(0xFF7BC48B),
                       padding: EdgeInsets.only(left: 72),
                       buttonIcon: 'assets/icons/account.svg',
-                      onPressed: state.isLoading
-                          ? null
-                          : () {
-                              context.go(Path.signup);
-                            },
-                      child: state.isLoading
-                          ? SizedBox(
-                              height: 24,
-                              width: 24,
-                              child: CircularProgressIndicator(
-                                color: Colors.white,
-                                strokeWidth: 2,
-                              ),
-                            )
-                          : null,
+                      onPressed: () {
+                        context.go(Path.signup);
+                      },
                     ),
                     // GestureDetector(
                     //   onTap: () {

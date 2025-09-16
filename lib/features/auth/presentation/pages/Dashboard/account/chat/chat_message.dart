@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
@@ -5,8 +7,14 @@ import 'package:flutter/material.dart';
 class ChatScreen extends StatefulWidget {
   late String userName;
   late String userId;
+  late String photo;
 
-  ChatScreen({super.key, required this.userName, required this.userId});
+  ChatScreen({
+    super.key,
+    required this.userName,
+    required this.userId,
+    required this.photo,
+  });
 
   @override
   ChatScreenState createState() => ChatScreenState();
@@ -127,10 +135,12 @@ class ChatScreenState extends State<ChatScreen> {
                             if (!isMe)
                               CircleAvatar(
                                 radius: 18,
-                                backgroundImage: AssetImage(
-                                  'assets/images/signin_bg.png',
-                                ),
+                                backgroundImage: (widget.photo.isNotEmpty)
+                                    ? MemoryImage(base64Decode(widget.photo))
+                                    : AssetImage('assets/images/signin_bg.png')
+                                          as ImageProvider,
                               ),
+
                             SizedBox(width: 8),
                             Flexible(
                               child: GestureDetector(

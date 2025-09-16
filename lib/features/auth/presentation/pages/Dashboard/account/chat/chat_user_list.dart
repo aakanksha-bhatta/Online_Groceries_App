@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
@@ -90,6 +92,7 @@ class _UserListState extends State<UserList> {
                   final docs = allDocs.where((doc) {
                     final data = doc.data() as Map<String, dynamic>;
                     final username = data['username'] ?? '';
+                    final photo = data['photoBase64'] as String? ?? '';
                     return username.toLowerCase().contains(
                       searchText.toLowerCase(),
                     );
@@ -126,6 +129,7 @@ class _UserListState extends State<UserList> {
                                         builder: (context) => ChatScreen(
                                           userName: data['username'],
                                           userId: docs[index].id,
+                                          photo: data['photoBase64'] ?? '',
                                         ),
                                       ),
                                     );
@@ -139,16 +143,19 @@ class _UserListState extends State<UserList> {
                                     leading: CircleAvatar(
                                       radius: 25,
                                       backgroundImage:
-                                          (data['photoURL'] != null &&
-                                              data['photoURL']
+                                          (data['photoBase64'] != null &&
+                                              data['photoBase64']
                                                   .toString()
                                                   .isNotEmpty)
-                                          ? NetworkImage(data['photoURL'])
+                                          ? MemoryImage(
+                                              base64Decode(data['photoBase64']),
+                                            )
                                           : AssetImage(
                                                   'assets/images/signin_bg.png',
                                                 )
                                                 as ImageProvider,
                                     ),
+
                                     title: Text(
                                       data['username'] ?? '',
                                       style: TextStyle(

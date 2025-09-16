@@ -22,7 +22,7 @@ import 'package:online_groceries_app/features/auth/presentation/pages/practice/p
 import 'package:online_groceries_app/features/auth/presentation/pages/setting/setting_screen.dart';
 import 'package:online_groceries_app/features/auth/presentation/pages/signin/location.dart';
 import 'package:online_groceries_app/features/auth/presentation/pages/signin/mobile_number_screen.dart';
-import 'package:online_groceries_app/features/auth/presentation/pages/signin/signin_screen.dart';
+import 'package:online_groceries_app/features/auth/presentation/pages/signin/signin_screen.dart' hide Details;
 import 'package:online_groceries_app/features/auth/presentation/pages/signin/verification.dart';
 import 'package:online_groceries_app/features/auth/presentation/pages/signup/signup_screen.dart';
 import 'package:online_groceries_app/features/auth/presentation/pages/splash/splash_screen.dart';
@@ -36,7 +36,7 @@ final GoRouter router = GoRouter(
     ),
     GoRoute(path: Path.splash, builder: (context, state) => SplashScreen()),
     GoRoute(path: Path.onboarding, builder: (context, state) => Onboarding()),
-    GoRoute(path: Path.login, builder: (context, state) => const LoginPage()),
+    GoRoute(path: Path.login, builder: (context, state) => LoginPage()),
     GoRoute(path: Path.signup, builder: (context, state) => SignupScreen()),
     GoRoute(path: Path.home, builder: (context, state) => HomeScreen()),
     GoRoute(path: Path.signin, builder: (context, state) => SigninScreen()),

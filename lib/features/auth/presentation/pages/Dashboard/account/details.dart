@@ -11,12 +11,11 @@ import 'package:go_router/go_router.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:online_groceries_app/config/route/path.dart';
 import 'package:online_groceries_app/core/services/auth_service.dart';
-import 'package:online_groceries_app/features/auth/presentation/provider/change_notifier.dart';
 import 'package:online_groceries_app/features/auth/presentation/provider/state_provider.dart';
 import 'package:online_groceries_app/features/auth/presentation/widget/custom_button_widget.dart';
 
 class Details extends ConsumerStatefulWidget {
-  Details({super.key});
+   Details({super.key});
 
   @override
   ConsumerState<Details> createState() => _DetailsState();
@@ -29,17 +28,20 @@ class _DetailsState extends ConsumerState<Details> {
   late TextEditingController usernameController;
   late TextEditingController emailController;
 
+  String? originalUsername;
+  String? originalPhotoBase64;
+
+  bool _isEdited = false;
   bool _isSaving = false;
+  String? _newPhotoBase64;
 
-  void checkFormEdited() {
-    final isFilled =
-        usernameController.text.isNotEmpty || emailController.text.isNotEmpty;
+  @override
+  void initState() {
+    super.initState();
+    usernameController = TextEditingController();
+    emailController = TextEditingController();
 
-    if (_isSaving != isFilled) {
-      setState(() {
-        _isSaving = isFilled;
-      });
-    }
+    usernameController.addListener(_checkIfEdited);
   }
 
   @override
@@ -49,7 +51,22 @@ class _DetailsState extends ConsumerState<Details> {
     super.dispose();
   }
 
-  void _showImageSourceActionSheet(WidgetRef ref, BuildContext context) {
+  void _checkIfEdited() {
+    final isUsernameChanged =
+        usernameController.text.trim() != (originalUsername ?? '').trim();
+    final isPhotoChanged =
+        _newPhotoBase64 != null && _newPhotoBase64 != originalPhotoBase64;
+
+    final shouldEnable = isUsernameChanged || isPhotoChanged;
+
+    if (shouldEnable != _isEdited) {
+      setState(() {
+        _isEdited = shouldEnable;
+      });
+    }
+  }
+
+  void _showImageSourceActionSheet(BuildContext context) {
     showModalBottomSheet(
       context: context,
       shape: const RoundedRectangleBorder(
@@ -64,7 +81,7 @@ class _DetailsState extends ConsumerState<Details> {
                 title: const Text('Camera'),
                 onTap: () {
                   Navigator.pop(context);
-                  _pickAndUploadImage(ref, context, ImageSource.camera);
+                  _pickAndUploadImage(ImageSource.camera);
                 },
               ),
               ListTile(
@@ -72,7 +89,7 @@ class _DetailsState extends ConsumerState<Details> {
                 title: const Text('Gallery'),
                 onTap: () {
                   Navigator.pop(context);
-                  _pickAndUploadImage(ref, context, ImageSource.gallery);
+                  _pickAndUploadImage(ImageSource.gallery);
                 },
               ),
               ListTile(
@@ -80,7 +97,7 @@ class _DetailsState extends ConsumerState<Details> {
                 title: const Text('Remove Photo'),
                 onTap: () {
                   Navigator.pop(context);
-                  _removeProfilePhoto(ref);
+                  _removeProfilePhoto();
                 },
               ),
             ],
@@ -90,42 +107,29 @@ class _DetailsState extends ConsumerState<Details> {
     );
   }
 
-  //image pick from gallery and camera
-  Future<void> _pickAndUploadImage(
-    WidgetRef ref,
-    BuildContext context,
-    ImageSource source,
-  ) async {
-    final imgPicker = ImagePicker();
-    final pickedFile = await imgPicker.pickImage(source: source);
+  Future<void> _pickAndUploadImage(ImageSource source) async {
+    final picker = ImagePicker();
+    final pickedFile = await picker.pickImage(source: source);
 
-    if (pickedFile == null) return;
+    if (pickedFile != null) {
+      final file = File(pickedFile.path);
+      final bytes = await file.readAsBytes();
+      final base64Image = base64Encode(bytes);
 
-    final loadingNotifier = ref.read(loadingProvider);
+      setState(() {
+        _newPhotoBase64 = base64Image;
+      });
 
-    await loadingNotifier.setUploading();
-    final file = File(pickedFile.path);
-    final bytes = await file.readAsBytes();
-    final base64Image = base64Encode(bytes);
-
-    final user = FirebaseAuth.instance.currentUser;
-    if (user == null) return;
-
-    await FirebaseFirestore.instance.collection('users').doc(user.uid).update({
-      'photoBase64': base64Image,
-    });
-
-    ref.invalidate(userDataProvider);
+      _checkIfEdited();
+    }
   }
 
-  // Remove profile photo
-  Future<void> _removeProfilePhoto(WidgetRef ref) async {
-    final user = FirebaseAuth.instance.currentUser;
-    if (user == null) return;
-    await FirebaseFirestore.instance.collection('users').doc(user.uid).update({
-      'photoBase64': '',
+  Future<void> _removeProfilePhoto() async {
+    setState(() {
+      _newPhotoBase64 = '';
     });
-    ref.invalidate(userDataProvider);
+
+    _checkIfEdited();
   }
 
   Future<void> _saveUserDetails() async {
@@ -137,15 +141,27 @@ class _DetailsState extends ConsumerState<Details> {
     setState(() => _isSaving = true);
 
     try {
+      final updateData = <String, dynamic>{
+        'username': usernameController.text.trim(),
+      };
+
+      if (_newPhotoBase64 != null) {
+        updateData['photoBase64'] = _newPhotoBase64;
+      }
+
       await FirebaseFirestore.instance
           .collection('users')
           .doc(user.uid)
-          .update({
-            'username': usernameController.text.trim(),
-            'useremail': emailController.text.trim(),
-          });
+          .update(updateData);
 
       ref.invalidate(userDataProvider);
+
+      setState(() {
+        _isEdited = false;
+        originalUsername = usernameController.text.trim();
+        originalPhotoBase64 = _newPhotoBase64;
+        _newPhotoBase64 = null;
+      });
 
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(content: Text('Profile updated successfully')),
@@ -161,7 +177,6 @@ class _DetailsState extends ConsumerState<Details> {
 
   @override
   Widget build(BuildContext context) {
-    // final State = ref.watch(loadingProvider);
     return Scaffold(
       backgroundColor: Colors.white,
       appBar: AppBar(
@@ -175,10 +190,6 @@ class _DetailsState extends ConsumerState<Details> {
       body: FutureBuilder<Map<String, dynamic>?>(
         future: authService.fetchUserData(),
         builder: (context, snapshot) {
-          // if (snapshot.connectionState == ConnectionState.waiting) {
-          //   return const Center(child: CircularProgressIndicator());
-          // }
-
           if (!snapshot.hasData || snapshot.hasError) {
             return const Center(child: Text('Failed to load user data'));
           }
@@ -186,118 +197,100 @@ class _DetailsState extends ConsumerState<Details> {
           final userData = snapshot.data!;
           final username = userData['username'] as String? ?? '';
           final email = userData['useremail'] as String? ?? '';
+          final photoBase64 = userData['photoBase64'] as String? ?? '';
 
-          usernameController = TextEditingController(text: username);
-          emailController = TextEditingController(text: email);
-          usernameController.addListener(checkFormEdited);
+          // Only set once
+          if (originalUsername == null) {
+            originalUsername = username;
+            originalPhotoBase64 = photoBase64;
 
-          final userDataAsync = ref.watch(userDataProvider);
-          // final loading = ref.watch(loadingProvider);
+            usernameController.text = username;
+            emailController.text = email;
+          }
+
+          final profileImage = _newPhotoBase64 ?? photoBase64;
 
           return Padding(
             padding: const EdgeInsets.all(16.0),
             child: Form(
               key: _formKey,
-              child: Column(
-                children: [
-                  const SizedBox(height: 20),
-                  Center(
-                    child: Column(
+              child: SingleChildScrollView(
+                child: Column(
+                  children: [
+                    const SizedBox(height: 20),
+                    Stack(
                       children: [
-                        Stack(
-                          children: [
-                            Container(
-                              height: 120.32.h,
-                              width: 120.44.w,
+                        Container(
+                          height: 120.32.h,
+                          width: 120.44.w,
+                          decoration: BoxDecoration(
+                            borderRadius: BorderRadius.circular(27.r),
+                          ),
+                          child: profileImage.isNotEmpty
+                              ? CircleAvatar(
+                                  backgroundImage: MemoryImage(
+                                    base64Decode(profileImage),
+                                  ),
+                                  radius: 60,
+                                )
+                              : Image.asset('assets/images/signin_bg.png'),
+                        ),
+                        Positioned(
+                          bottom: 0,
+                          right: 0,
+                          child: InkWell(
+                            onTap: () => _showImageSourceActionSheet(context),
+                            child: Container(
+                              height: 33,
+                              width: 33,
                               decoration: BoxDecoration(
-                                borderRadius: BorderRadius.circular(27.r),
+                                color: const Color(0xFF53B175),
+                                borderRadius: BorderRadius.circular(30),
                               ),
-                              child: userDataAsync.when(
-                                data: (userData) {
-                                  final photoBase64 =
-                                      userData['photoBase64'] as String?;
-                                  if (photoBase64 != null &&
-                                      photoBase64.isNotEmpty) {
-                                    try {
-                                      final bytes = base64Decode(photoBase64);
-                                      return CircleAvatar(
-                                        backgroundImage: MemoryImage(bytes),
-                                        radius: 60,
-                                      );
-                                    } catch (_) {
-                                      return Image.asset(
-                                        'assets/images/signin_bg.png',
-                                      );
-                                    }
-                                  } else {
-                                    return Image.asset(
-                                      'assets/images/signin_bg.png',
-                                    );
-                                  }
-                                },
-                                loading: () => null,
-                                error: (e, _) =>
-                                    Image.asset('assets/images/signin_bg.png'),
-                              ),
-                            ),
-                            Positioned(
-                              bottom: 0,
-                              right: 0,
-                              child: InkWell(
-                                onTap: () =>
-                                    _showImageSourceActionSheet(ref, context),
-                                child: Container(
-                                  height: 33,
-                                  width: 33,
-                                  decoration: BoxDecoration(
-                                    color: const Color(0xFF53B175),
-                                    borderRadius: BorderRadius.circular(30),
-                                  ),
-                                  child: Padding(
-                                    padding: const EdgeInsets.all(8.0),
-                                    child: SvgPicture.asset(
-                                      'assets/icons/pen.svg',
-                                      color: Colors.white,
-                                    ),
-                                  ),
+                              child: Padding(
+                                padding: const EdgeInsets.all(8.0),
+                                child: SvgPicture.asset(
+                                  'assets/icons/pen.svg',
+                                  color: Colors.white,
                                 ),
                               ),
                             ),
-                          ],
-                        ),
-                        const SizedBox(height: 50),
-                        TextFormField(
-                          controller: usernameController,
-                          decoration: const InputDecoration(
-                            labelText: 'Name',
-                            border: OutlineInputBorder(),
                           ),
-                          validator: (value) => value == null || value.isEmpty
-                              ? 'Please enter your name'
-                              : null,
-                        ),
-                        const SizedBox(height: 36),
-                        TextFormField(
-                          readOnly: true,
-                          controller: emailController,
-                          decoration: const InputDecoration(
-                            labelText: 'Email',
-                            border: OutlineInputBorder(),
-                          ),
-                          validator: (value) => value == null || value.isEmpty
-                              ? 'Please enter your email'
-                              : null,
-                        ),
-                        const SizedBox(height: 50),
-                        CustomButtonWidget(
-                          buttonName: 'Update',
-                          isEnabled: _isSaving,
-                          onPressed: _isSaving ? null : _saveUserDetails,
                         ),
                       ],
                     ),
-                  ),
-                ],
+                    const SizedBox(height: 50),
+                    TextFormField(
+                      controller: usernameController,
+                      decoration: const InputDecoration(
+                        labelText: 'Name',
+                        border: OutlineInputBorder(),
+                      ),
+                      validator: (value) => value == null || value.isEmpty
+                          ? 'Please enter your name'
+                          : null,
+                    ),
+                    const SizedBox(height: 36),
+                    TextFormField(
+                      readOnly: true,
+                      controller: emailController,
+                      decoration: const InputDecoration(
+                        labelText: 'Email',
+                        border: OutlineInputBorder(),
+                      ),
+                    ),
+                    const SizedBox(height: 50),
+                    CustomButtonWidget(
+                      buttonName: _isSaving ? 'Saving...' : 'Update',
+                      isEnabled: _isEdited && !_isSaving,
+                      onPressed: _isEdited && !_isSaving
+                          ? _saveUserDetails
+                          : null,
+                      buttonColor: Colors.green, // Active color
+                      textColor: Colors.white,
+                    ),
+                  ],
+                ),
               ),
             ),
           );
