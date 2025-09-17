@@ -1,17 +1,13 @@
 import 'dart:convert';
-import 'dart:io';
 
-import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:go_router/go_router.dart';
-import 'package:image_picker/image_picker.dart';
 import 'package:online_groceries_app/config/route/path.dart';
+import 'package:online_groceries_app/core/services/auth_service.dart';
 import 'package:online_groceries_app/features/auth/presentation/controller/auth_notifier.dart';
-import 'package:online_groceries_app/features/auth/presentation/provider/change_notifier.dart';
-import 'package:online_groceries_app/features/auth/presentation/provider/state_provider.dart';
+// import 'package:online_groceries_app/features/auth/presentation/provider/change_notifier.dart';
 import 'package:online_groceries_app/features/auth/presentation/widget/custom_button_widget.dart';
 import 'package:online_groceries_app/features/auth/presentation/widget/custom_navigation_bar.dart';
 import 'package:online_groceries_app/features/auth/presentation/widget/custom_snack_bar.dart';
@@ -20,39 +16,12 @@ import 'package:online_groceries_app/features/auth/presentation/widget/text_widg
 class Account extends ConsumerWidget {
   const Account({super.key});
 
-  Future<void> _pickAndUploadImage(WidgetRef ref, BuildContext context) async {
-    final imgPicker = ImagePicker();
-    final pickedFile = await imgPicker.pickImage(source: ImageSource.camera);
-
-    if (pickedFile == null) return;
-
-    final loadingNotifier = ref.read(loadingProvider);
-
-    try {
-      await loadingNotifier.setUploading();
-      final file = File(pickedFile.path);
-      final bytes = await file.readAsBytes();
-      final base64Image = base64Encode(bytes);
-
-      final user = FirebaseAuth.instance.currentUser;
-      if (user == null) {
-        return;
-      }
-
-      await FirebaseFirestore.instance.collection('users').doc(user.uid).update(
-        {'photoBase64': base64Image},
-      );
-      ref.invalidate(userDataProvider);
-    } finally {
-      await loadingNotifier.setUploading();
-    }
-  }
-
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final state = ref.watch(authNotifierProvider);
-    final userDataAsync = ref.watch(userDataProvider);
-    final loading = ref.watch(loadingProvider);
+    // final userDataAsync = ref.watch(userDataProvider);
+    // final loading = ref.watch(loadingProvider);
+    // final currentUser = ref.watch(authServiceProvider);
 
     final List<Map<String, dynamic>> accountItems = [
       {
@@ -78,102 +47,83 @@ class Account extends ConsumerWidget {
       {'icon': Icons.help_outline, 'title': 'Help'},
       {'icon': Icons.info_outline, 'title': 'About'},
     ];
+    // final currentUser = AuthNotifier().getCurrentUser();
 
     return Scaffold(
       backgroundColor: Colors.white,
       body: Column(
         children: [
           Padding(
-            padding: EdgeInsets.only(top: 69.82.h, left: 25.w, right: 25.w),
-            child: Row(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Container(
-                  height: 64.32.h,
-                  width: 63.44.w,
-                  decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(27.r),
-                  ),
-                  child: loading.isLoading
-                      ? const Center(
-                          child: CircularProgressIndicator(strokeWidth: 1),
-                        )
-                      : userDataAsync.when(
-                          data: (userData) {
-                            final photoBase64 =
-                                userData['photoBase64'] as String?;
-                            if (photoBase64 != null && photoBase64.isNotEmpty) {
-                              try {
-                                final bytes = base64Decode(photoBase64);
-                                return CircleAvatar(
-                                  backgroundImage: MemoryImage(bytes),
-                                );
-                              } catch (_) {
-                                return Image.asset(
-                                  'assets/images/signin_bg.png',
-                                );
-                              }
-                            } else {
-                              return Image.asset('assets/images/signin_bg.png');
-                            }
-                          },
-                          loading: () => const CircularProgressIndicator(),
-                          error: (e, _) =>
-                              Image.asset('assets/images/signin_bg.png'),
-                        ),
-                ),
-                SizedBox(width: 15.w),
-                userDataAsync.when(
-                  data: (userData) {
-                    return Column(
+            padding: EdgeInsets.only(
+              top: 62.82.h,
+              left: 25.w,
+              right: 25.w,
+              bottom: 10.66,
+            ),
+            child: StreamBuilder(
+              stream: AuthService().userDataStream(),
+              builder: (context, snapshot) {
+                if (!snapshot.hasData || snapshot.hasError) {
+                  return const CircularProgressIndicator();
+                }
+
+                final userData = snapshot.data!;
+                final username = userData['username'] as String? ?? '';
+                final email =
+                    (userData['useremail'] ?? userData['email']) as String? ??
+                    '';
+                final photoBase64 = userData['photoBase64'] as String?;
+                final photoURL = userData['photoURL'] as String?;
+                final profileImage = photoBase64 ?? photoURL ?? '';
+
+                ImageProvider? buildProfileImageProvider(String image) {
+                  if (image.isEmpty) {
+                    return null;
+                  } else if (image.startsWith('http')) {
+                    return NetworkImage(image);
+                  } else {
+                    try {
+                      String base64Str = image.contains(',')
+                          ? image.split(',').last
+                          : image;
+                      return MemoryImage(base64Decode(base64Str));
+                    } catch (e) {
+                      return null;
+                    }
+                  }
+                }
+
+                return Row(
+                  children: [
+                    CircleAvatar(
+                      backgroundImage:
+                          buildProfileImageProvider(profileImage) ??
+                          const AssetImage('assets/images/signin_bg.png'),
+                      radius: 27,
+                    ),
+                    SizedBox(width: 20.8.w),
+                    Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        Row(
-                          children: [
-                            TextWidget(
-                              title: userData['username'] ?? 'No Name',
-                              fontSize: 20,
-                              fontWeight: FontWeight.w400,
-                              color: Colors.black,
-                              letterSpacing: 0,
-                            ),
-                            SizedBox(width: 10),
-                            // InkWell(
-                            //   onTap: () => _pickAndUploadImage(ref, context),
-                            //   child: loading.isLoading
-                            //       ? const SizedBox(
-                            //           height: 24,
-                            //           width: 24,
-                            //           child: CircularProgressIndicator(
-                            //             color: Colors.white,
-                            //             strokeWidth: 2,
-                            //           ),
-                            //         )
-                            //       : SvgPicture.asset('assets/icons/pen.svg'),
-                            //   // child: SvgPicture.asset('assets/icons/pen.svg'),
-                            // ),
-                          ],
+                        Text(
+                          username,
+                          style: TextStyle(
+                            fontSize: 20,
+                            fontWeight: FontWeight.w600,
+                          ),
                         ),
-                        TextWidget(
-                          title:
-                              userData['useremail'] ??
-                              userData['email'] ??
-                              'No Email',
-                          fontSize: 16,
-                          fontWeight: FontWeight.w400,
-                          color: const Color(0xFF7C7C7C),
-                          letterSpacing: 0,
+                        Text(
+                          email,
+                          style: TextStyle(fontSize: 16, color: Colors.grey),
                         ),
                       ],
-                    );
-                  },
-                  loading: () => const CircularProgressIndicator(),
-                  error: (e, _) => const Text('Error loading user'),
-                ),
-              ],
+                    ),
+                  ],
+                );
+              },
             ),
           ),
-          SizedBox(height: 25.h),
+          // SizedBox(height: 25.h),
           Divider(thickness: 1, color: const Color(0xffE2E2E2)),
           Expanded(
             child: ListView.separated(

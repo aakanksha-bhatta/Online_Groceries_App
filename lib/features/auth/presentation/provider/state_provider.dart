@@ -10,16 +10,18 @@ import 'package:online_groceries_app/core/services/rating_service.dart';
 import 'package:online_groceries_app/features/auth/data/model/product.dart';
 
 // user provider to call name and email in account
-final userDataProvider = StreamProvider<Map<String, dynamic>>((ref) {
-  final user = FirebaseAuth.instance.currentUser;
-  if (user == null) return const Stream.empty();
-
-  return FirebaseFirestore.instance
-      .collection('users')
-      .doc(user.uid)
-      .snapshots()
-      .map((doc) => doc.data() ?? {});
-});
+// final userDataProvider = StreamProvider<Map<String, dynamic>>((ref) {
+//   final user = FirebaseAuth.instance.currentUser;
+  
+//   if (user == null) {
+//     return const Stream.empty();
+//   }
+//   return FirebaseFirestore.instance
+//       .collection('users')
+//       .doc(user.uid)
+//       .snapshots()
+//       .map((doc) => doc.data() ?? {});
+// });
 
 final passwordVisibilityProvider = StateProvider<bool>(
   (ref) => false,

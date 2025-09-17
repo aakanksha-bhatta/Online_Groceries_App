@@ -152,4 +152,17 @@ class AuthService {
     if (!doc.exists) return null;
     return doc.data();
   }
+  
+  Stream<Map<String, dynamic>?> userDataStream() {
+    final currentUser = FirebaseAuth.instance.currentUser;
+    if (currentUser == null) {
+      return Stream.value(null); 
+    }
+
+    return FirebaseFirestore.instance
+        .collection('users')
+        .doc(currentUser.uid)
+        .snapshots()
+        .map((snapshot) => snapshot.data());
+  }
 }

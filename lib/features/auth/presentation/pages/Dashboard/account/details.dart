@@ -11,11 +11,10 @@ import 'package:go_router/go_router.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:online_groceries_app/config/route/path.dart';
 import 'package:online_groceries_app/core/services/auth_service.dart';
-import 'package:online_groceries_app/features/auth/presentation/provider/state_provider.dart';
 import 'package:online_groceries_app/features/auth/presentation/widget/custom_button_widget.dart';
 
 class Details extends ConsumerStatefulWidget {
-   Details({super.key});
+  Details({super.key});
 
   @override
   ConsumerState<Details> createState() => _DetailsState();
@@ -154,7 +153,7 @@ class _DetailsState extends ConsumerState<Details> {
           .doc(user.uid)
           .update(updateData);
 
-      ref.invalidate(userDataProvider);
+      // ref.invalidate(userDataProvider);
 
       setState(() {
         _isEdited = false;
@@ -187,8 +186,8 @@ class _DetailsState extends ConsumerState<Details> {
           onPressed: () => context.go(Path.account),
         ),
       ),
-      body: FutureBuilder<Map<String, dynamic>?>(
-        future: authService.fetchUserData(),
+      body: StreamBuilder<Map<String, dynamic>?>(
+        stream: authService.userDataStream(),
         builder: (context, snapshot) {
           if (!snapshot.hasData || snapshot.hasError) {
             return const Center(child: Text('Failed to load user data'));
@@ -196,19 +195,38 @@ class _DetailsState extends ConsumerState<Details> {
 
           final userData = snapshot.data!;
           final username = userData['username'] as String? ?? '';
-          final email = userData['useremail'] as String? ?? '';
-          final photoBase64 = userData['photoBase64'] as String? ?? '';
+          final email =
+              (userData['useremail'] ?? userData['email']) as String? ?? '';
 
-          // Only set once
+          final photoBase64 = userData['photoBase64'] as String?;
+          final photoURL = userData['photoURL'] as String?;
+
+          final profileImage = _newPhotoBase64 ?? photoBase64 ?? photoURL ?? '';
+
           if (originalUsername == null) {
             originalUsername = username;
-            originalPhotoBase64 = photoBase64;
+            originalPhotoBase64 = profileImage;
 
             usernameController.text = username;
             emailController.text = email;
           }
 
-          final profileImage = _newPhotoBase64 ?? photoBase64;
+          ImageProvider? buildProfileImageProvider(String image) {
+            if (image.isEmpty) {
+              return null;
+            } else if (image.startsWith('http')) {
+              return NetworkImage(image);
+            } else {
+              try {
+                String base64Str = image.contains(',')
+                    ? image.split(',').last
+                    : image;
+                return MemoryImage(base64Decode(base64Str));
+              } catch (e) {
+                return null;
+              }
+            }
+          }
 
           return Padding(
             padding: const EdgeInsets.all(16.0),
@@ -228,9 +246,12 @@ class _DetailsState extends ConsumerState<Details> {
                           ),
                           child: profileImage.isNotEmpty
                               ? CircleAvatar(
-                                  backgroundImage: MemoryImage(
-                                    base64Decode(profileImage),
+                                  backgroundImage: buildProfileImageProvider(
+                                    profileImage,
                                   ),
+                                  // MemoryImage(
+                                  //   base64Decode(profileImage),
+                                  // ),
                                   radius: 60,
                                 )
                               : Image.asset('assets/images/signin_bg.png'),
@@ -286,7 +307,7 @@ class _DetailsState extends ConsumerState<Details> {
                       onPressed: _isEdited && !_isSaving
                           ? _saveUserDetails
                           : null,
-                      buttonColor: Colors.green, // Active color
+                      buttonColor: Colors.green,
                       textColor: Colors.white,
                     ),
                   ],
