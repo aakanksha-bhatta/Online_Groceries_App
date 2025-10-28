@@ -61,9 +61,12 @@ It allows users to send and receive real-time messages using **Firebase Firestor
 ### Screenshot for Chat App
 
 <p align="center">
-  <img src="https://github.com/user-attachments/assets/de04902b.jpg" width="30%" />
-  <img src="https://github.com/user-attachments/assets/c206ebf3.jpg" width="30%" />
-  <img src="https://github.com/user-attachments/assets/8cb63a11.jpg" width="30%" />
+  <img src="![chat_list](https://github.com/user-attachments/assets/475cef6e-5b68-48c6-9e4c-705b5c31f95a)
+" width="30%" />
+  <img src="![chat_mssg](https://github.com/user-attachments/assets/2d9f06ca-6da8-4340-b70d-b1abcb7acb35)
+" width="30%" />
+  <img src="![chat_del](https://github.com/user-attachments/assets/ebcbceec-6c9b-47c7-862a-6a216fd2f165)
+" width="30%" />
 </p>
 
 ---
