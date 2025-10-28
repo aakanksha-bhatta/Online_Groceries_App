@@ -5,7 +5,7 @@ This app features secure authentication, responsive UI, and Firebase integration
 
 ---
 
-## Add Depemdencies 
+## Dependencies 
 This project makes use of the following key packages:
 
 - **flutter_riverpod** 
